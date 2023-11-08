@@ -4,6 +4,9 @@ import Cookies from 'js-cookie'
 
 import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
+// 引入 echarts
+import * as echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
