@@ -1,365 +1,147 @@
 <template>
-  <!--  <div class="app-container home">-->
-  <!--    <el-row :gutter="20">-->
-  <!--      <el-col :sm="24" :lg="12" style="padding-left: 20px">-->
-  <!--        <h2>后台管理框架</h2>-->
-  <!--        <p>-->
-  <!--          是基于 RuoYi-Vue 针对 分布式集群 场景升级(不兼容原框架)-->
-  <!--          <br/>-->
-  <!--          * 前端开发框架 Vue、Element UI<br/>-->
-  <!--          * 后端开发框架 Spring Boot<br/>-->
-  <!--          * 容器框架 Undertow 基于 XNIO 的高性能容器<br/>-->
-  <!--          * 权限认证框架 Sa-Token、Jwt 支持多终端认证系统<br/>-->
-  <!--          * 关系数据库 MySQL 适配 8.X 最低 5.7<br/>-->
-  <!--          * 关系数据库 Oracle 适配 11g 12c<br/>-->
-  <!--          * 关系数据库 PostgreSQL 适配 13 14<br/>-->
-  <!--          * 关系数据库 SQLServer 适配 2017 2019<br/>-->
-  <!--          * 缓存数据库 Redis 适配 6.X 最低 4.X<br/>-->
-  <!--          * 数据库框架 Mybatis-Plus 快速 CRUD 增加开发效率<br/>-->
-  <!--          * 数据库框架 p6spy 更强劲的 SQL 分析<br/>-->
-  <!--          * 多数据源框架 dynamic-datasource 支持主从与多种类数据库异构<br/>-->
-  <!--          * 序列化框架 Jackson 统一使用 jackson 高效可靠<br/>-->
-  <!--          * Redis客户端 Redisson 性能强劲、API丰富<br/>-->
-  <!--          * 分布式限流 Redisson 全局、请求IP、集群ID 多种限流<br/>-->
-  <!--          * 分布式锁 Lock4j 注解锁、工具锁 多种多样<br/>-->
-  <!--          * 分布式幂等 Redisson 拦截重复提交<br/>-->
-  <!--          * 分布式链路追踪 SkyWalking 支持链路追踪、网格分析、度量聚合、可视化<br/>-->
-  <!--          * 分布式任务调度 Xxl-Job 高性能 高可靠 易扩展<br/>-->
-  <!--          * 分布式文件存储 Minio 本地存储<br/>-->
-  <!--          * 分布式云存储 七牛、阿里、腾讯 云存储<br/>-->
-  <!--          * 监控框架 SpringBoot-Admin 全方位服务监控<br/>-->
-  <!--          * 校验框架 Validation 增强接口安全性 严谨性<br/>-->
-  <!--          * Excel框架 Alibaba EasyExcel 性能优异 扩展性强<br/>-->
-  <!--          * 文档框架 SpringDoc、javadoc 无注解零入侵基于java注释<br/>-->
-  <!--          * 工具类框架 Hutool、Lombok 减少代码冗余 增加安全性<br/>-->
-  <!--          * 代码生成器 适配MP、SpringDoc规范化代码 一键生成前后端代码<br/>-->
-  <!--          * 部署方式 Docker 容器编排 一键部署业务集群<br/>-->
-  <!--          * 国际化 SpringMessage Spring标准国际化方案<br/>-->
-  <!--        </p>-->
-  <!--        <p>-->
-  <!--          <b>当前版本:</b> <span>v{{ version }}</span>-->
-  <!--        </p>-->
-  <!--        <p>-->
-  <!--          <el-tag type="danger">&yen;免费开源</el-tag>-->
-  <!--        </p>-->
-  <!--        <p>-->
-  <!--          <el-button-->
-  <!--              type="primary"-->
-  <!--              size="mini"-->
-  <!--              icon="el-icon-cloudy"-->
-  <!--              plain-->
-  <!--              @click="goTarget('https://gitee.com/dromara/RuoYi-Vue-Plus')"-->
-  <!--          >访问码云-->
-  <!--          </el-button-->
-  <!--          >-->
-  <!--          <el-button-->
-  <!--              type="primary"-->
-  <!--              size="mini"-->
-  <!--              icon="el-icon-cloudy"-->
-  <!--              plain-->
-  <!--              @click="goTarget('https://github.com/dromara/RuoYi-Vue-Plus')"-->
-  <!--          >访问GitHub-->
-  <!--          </el-button-->
-  <!--          >-->
-  <!--          <el-button-->
-  <!--              type="primary"-->
-  <!--              size="mini"-->
-  <!--              icon="el-icon-cloudy"-->
-  <!--              plain-->
-  <!--              @click="goTarget('https://gitee.com/dromara/RuoYi-Vue-Plus/wikis/pages?sort_id=4106467&doc_id=1469725')"-->
-  <!--          >更新日志-->
-  <!--          </el-button-->
-  <!--          >-->
-  <!--        </p>-->
-  <!--      </el-col>-->
+  <div>
+    <h3 style="color: black;text-align: left">chatisland数据情况分析</h3>
+    <hr>
+    <div ref="chart2" style="width:50%;height:376px; float: left"></div>
+    <div style="width:50%;height:376px;float: right" ref="chart"></div>
 
-  <!--      <el-col :sm="24" :lg="12" style="padding-left: 50px">-->
-  <!--        <el-row>-->
-  <!--          <el-col :span="12">-->
-  <!--            <h2>技术选型</h2>-->
-  <!--          </el-col>-->
-  <!--        </el-row>-->
-  <!--        <el-row>-->
-  <!--          <el-col :span="6">-->
-  <!--            <h4>后端技术</h4>-->
-  <!--            <ul>-->
-  <!--              <li>SpringBoot</li>-->
-  <!--              <li>Sa-Token</li>-->
-  <!--              <li>JWT</li>-->
-  <!--              <li>MyBatis</li>-->
-  <!--              <li>Druid</li>-->
-  <!--              <li>Jackson</li>-->
-  <!--              <li>...</li>-->
-  <!--            </ul>-->
-  <!--          </el-col>-->
-  <!--          <el-col :span="6">-->
-  <!--            <h4>前端技术</h4>-->
-  <!--            <ul>-->
-  <!--              <li>Vue</li>-->
-  <!--              <li>Vuex</li>-->
-  <!--              <li>Element-ui</li>-->
-  <!--              <li>Axios</li>-->
-  <!--              <li>Sass</li>-->
-  <!--              <li>Quill</li>-->
-  <!--              <li>...</li>-->
-  <!--            </ul>-->
-  <!--          </el-col>-->
-  <!--        </el-row>-->
-  <!--      </el-col>-->
-  <!--    </el-row>-->
-  <!--    <el-divider/>-->
-  <!--  </div>-->
-  <div class="home">
-    <div class="barChart" ref="barChart"></div>
+<!--    <div style="width:100%;height:376px;float: left">-->
+<!--      <div style="margin-top: 5px">-->
+<!--        <hr>-->
+<!--        <h1 style="float: left">友情提示:</h1><br><br><br><br>-->
+<!--        <span style="float: left">1、商家可以根据租赁汽车的排名情况、加大对热门汽车的推广和上新</span>-->
+<!--        <br><br>-->
+<!--        <span style="float: left">2、根据各类汽车租赁情况的总体展示，及时调整汽车商品的管理</span>-->
+<!--        <br><br>-->
+<!--        <span style="float: left">3、商家可以及时了解用户对租赁汽车商品的租赁情况</span>-->
+
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
+//局部引用
+import axios from "axios";
 
-// export default {
-// mounted() {
-//   // 初始化 echarts
-//   this.initBarChart();
-// },
-
-
-export default {
-  mounted() {
-    // 初始化 echarts
-    this.initBarChart();
-  },
-
-  name: "Index",
-  data() {
+const echarts = require('echarts');
+export default{
+  data(){
     return {
-      // 版本号
-      version: "4.8.0",
-    };
+
+    }
   },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
-    initBarChart() {
-      // 通过 $ref 进行挂载
-      let myChart = this.$echarts.init(this.$refs.barChart);
-      // let myChart1 = this.$echarts.init(this.$refs.barChart);
-      // let option = {
-      //   tooltip: {
-      //     trigger: 'axis',
-      //     axisPointer: {
-      //       type: 'shadow'
-      //     }
-      //   },
-      //   legend: {},
-      //   grid: {
-      //     left: '3%',
-      //     right: '4%',
-      //     bottom: '3%',
-      //     containLabel: true
-      //   },
-      //   xAxis: [
-      //     {
-      //       type: 'category',
-      //       data: ['china', 'usa', 'canada', 'germany', 'britain', 'russia', 'france']
-      //     }
-      //   ],
-      //   yAxis: [
-      //     {
-      //       type: 'value'
-      //     }
-      //   ],
-      //   series: [
-      //     {
-      //       name: 'Direct',
-      //       type: 'bar',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [320, 332, 301, 334, 390, 330, 320]
-      //     },
-      //     {
-      //       name: 'Email',
-      //       type: 'bar',
-      //       stack: 'Ad',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [120, 132, 101, 134, 90, 230, 210]
-      //     },
-      //     {
-      //       name: 'Union Ads',
-      //       type: 'bar',
-      //       stack: 'Ad',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [220, 182, 191, 234, 290, 330, 310]
-      //     },
-      //     {
-      //       name: 'Video Ads',
-      //       type: 'bar',
-      //       stack: 'Ad',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [150, 232, 201, 154, 190, 330, 410]
-      //     },
-      //     {
-      //       name: 'Search Engine',
-      //       type: 'bar',
-      //       data: [862, 1018, 964, 1026, 1679, 1600, 1570],
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       markLine: {
-      //         lineStyle: {
-      //           type: 'dashed'
-      //         },
-      //         data: [[{type: 'min'}, {type: 'max'}]]
-      //       }
-      //     },
-      //     {
-      //       name: 'Baidu',
-      //       type: 'bar',
-      //       barWidth: 5,
-      //       stack: 'Search Engine',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [620, 732, 701, 734, 1090, 1130, 1120]
-      //     },
-      //     {
-      //       name: 'Google',
-      //       type: 'bar',
-      //       stack: 'Search Engine',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [120, 132, 101, 134, 290, 230, 220]
-      //     },
-      //     {
-      //       name: 'Bing',
-      //       type: 'bar',
-      //       stack: 'Search Engine',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [60, 72, 71, 74, 190, 130, 110]
-      //     },
-      //     {
-      //       name: 'Others',
-      //       type: 'bar',
-      //       stack: 'Search Engine',
-      //       emphasis: {
-      //         focus: 'series'
-      //       },
-      //       data: [62, 82, 91, 84, 109, 110, 120]
-      //     }
-      //   ]
-      // };
-      let option = {
-        xAxis: {
-          type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: "bar",
-            showBackground: true,
-            backgroundStyle: {
-              color: "rgba(180, 180, 180, 0.2)",
+
+    initCharts2(){
+      const _this = this
+      // 基于准备好的dom，初始化echarts实例
+      let myChart2 = echarts.init(this.$refs.chart2);
+      var values =[];
+
+      //请求后台数据
+      axios.get('/dev-api/chatisland/list').then(function (resp) {
+        if(resp.data.code===200){
+          console.log(resp.data.data.carRank.length)
+          console.log(resp)
+          for( var i =0;i<resp.data.data.carRank.length;i++){
+            var test={"value":resp.data.data.carRank[i].value,"name":resp.data.data.carRank[i].name}
+            values.push(test);
+
+          }
+
+          // 绘制图表
+          myChart2.setOption({
+            title: {
+              text: '汽车租赁排名前六展示',
+              left:'center'
             },
-          },
-        ],
-      };
-      myChart.setOption(option);
-      // myChart1.setOption(option1);
+            tooltip: {
+              trigger: 'item'
+            },
+            legend: {
+              orient:'vertical',
+              left: 'left',
+              data:values
+            },
+            series: [
+              {
+                name: '数据来源',
+                type: 'pie',
+                radius:'60%',
+                avoidLabelOverlap: false,
+                label: {
+                  show: false,
+                  position: 'center'
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: '40',
+                    fontWeight: 'bold'
+                  }
+                },
+                labelLine: {
+                  show: false
+                },
+                data: values
+              }
+            ]
+
+
+          });
+
+        }
+      })
+
     },
+    initCharts(){
+      const _this =this
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = echarts.init(this.$refs.chart);
+      var names=[];  //横坐标数组
+      var values =[]; //纵坐标数组
+
+
+      //请求后台数据
+      axios.get('/static/getcartypenum').then(function (resp) {
+        if(resp.data.code==200){
+          console.log(resp.data.data.carTypeNum.length)
+          console.log(resp)
+          for( var i =0;i<resp.data.data.carTypeNum.length;i++){
+            names.push(resp.data.data.carTypeNum[i].name);
+            values.push(resp.data.data.carTypeNum[i].value);
+
+          }
+
+          // 绘制图表
+          myChart.setOption({
+            title: { text: '不同类型汽车租赁情况' },
+            tooltip: {},
+            xAxis: {
+              data: names
+            },
+            yAxis: {},
+            series: [{
+              name: '租赁数量',
+              type: 'bar',
+              data: values
+            }]
+          });
+
+        }
+      })
+
+    }
   },
-};
+  //一加载页面就调用
+  mounted () {
+    this.initCharts();
+    this.initCharts2();
+  }
+}
 </script>
-
-<style scoped lang="scss">
-.home {
-  blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee;
-  }
-
-  hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee;
-  }
-
-  .col-item {
-    margin-bottom: 20px;
-  }
-
-  ul {
-    padding: 0;
-    margin: 0;
-  }
-
-  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
-
-  ul {
-    list-style-type: none;
-  }
-
-  h4 {
-    margin-top: 0px;
-  }
-
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
-  }
-
-  p {
-    margin-top: 10px;
-
-    b {
-      font-weight: 700;
-    }
-  }
-
-  .update-log {
-    ol {
-      display: block;
-      list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 40px;
-    }
-  }
-}
-
-.home {
-  width: 500px;
-  height: 400px;
-  margin: auto;
-  border: 3px solid lightcoral;
-
-  //  宽高是必须给的，可以给百分比、具体的像素等....
-  .barChart {
-    width: 100%;
-    height: 100%;
-  }
-}
+<style>
 </style>
+
 

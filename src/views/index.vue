@@ -109,9 +109,9 @@
   <!--    </el-row>-->
   <!--    <el-divider/>-->
   <!--  </div>-->
-  <div class="home">
-    <div class="barChart" ref="barChart"></div>
-  </div>
+<!--  <div class="home">-->
+<!--    <div class="barChart" ref="barChart"></div>-->
+<!--  </div>-->
 </template>
 
 <script>

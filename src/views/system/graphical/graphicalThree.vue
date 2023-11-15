@@ -109,8 +109,13 @@
   <!--    </el-row>-->
   <!--    <el-divider/>-->
   <!--  </div>-->
+  <div>
+  <div class="home">
+    <div class="barChart1" ref="barChart1"></div>
+  </div>
   <div class="home">
     <div class="barChart" ref="barChart"></div>
+  </div>
   </div>
 </template>
 
@@ -139,10 +144,12 @@ export default {
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
+
     },
     initBarChart() {
       // 通过 $ref 进行挂载
       let myChart = this.$echarts.init(this.$refs.barChart);
+      let myChart1 = this.$echarts.init(this.$refs.barChart1);
       let option = {
         tooltip: {
           trigger: 'item'
@@ -187,13 +194,16 @@ export default {
         ]
       };
       myChart.setOption(option);
-      // myChart1.setOption(option1);
+      myChart1.setOption(option);
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
+
+
+
 .home {
   blockquote {
     padding: 10px 20px;
@@ -262,10 +272,16 @@ export default {
   width: 500px;
   height: 400px;
   margin: auto;
-  border: 3px solid lightcoral;
+  border: 0px solid lightcoral;
+  background-color: #FCFCFC;
 
   //  宽高是必须给的，可以给百分比、具体的像素等....
   .barChart {
+    width: 100%;
+    height: 100%;
+  }
+  //  宽高是必须给的，可以给百分比、具体的像素等....
+  .barChart1 {
     width: 100%;
     height: 100%;
   }
