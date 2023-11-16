@@ -1,8 +1,7 @@
 <template>
-
   <div>
     <hr>
-    <h3 style="color: black;text-align: left">人设维度</h3>
+    <h3 style="color: black;text-align: left">人设维度 - 消耗深度</h3>
     <hr>
   <div class="home">
     <div class="barChart" ref="barChart"></div>
@@ -11,13 +10,6 @@
 </template>
 
 <script>
-
-// export default {
-// mounted() {
-//   // 初始化 echarts
-//   this.initBarChart();
-// },
-
 
 export default {
   mounted() {
@@ -57,7 +49,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: ['人设1', '人设2', '人设3', '人设4', '人设5', '人设6', '人设7']
           }
         ],
         yAxis: [
@@ -67,90 +59,30 @@ export default {
         ],
         series: [
           {
-            name: 'Direct',
+            name: '建联',
             type: 'bar',
             emphasis: {
               focus: 'series'
             },
-            data: [320, 332, 301, 334, 390, 330, 320]
+            data: [10, 5, 4, 12, 2, 3, 7]
           },
           {
-            name: 'Email',
+            name: '解锁',
             type: 'bar',
             stack: 'Ad',
             emphasis: {
               focus: 'series'
             },
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: [9, 13, 11, 5, 12, 8, 7]
           },
           {
-            name: 'Union Ads',
+            name: '赠送',
             type: 'bar',
             stack: 'Ad',
             emphasis: {
               focus: 'series'
             },
-            data: [220, 182, 191, 234, 290, 330, 310]
-          },
-          {
-            name: 'Video Ads',
-            type: 'bar',
-            stack: 'Ad',
-            emphasis: {
-              focus: 'series'
-            },
-            data: [150, 232, 201, 154, 190, 330, 410]
-          },
-          {
-            name: 'Search Engine',
-            type: 'bar',
-            data: [862, 1018, 964, 1026, 1679, 1600, 1570],
-            emphasis: {
-              focus: 'series'
-            },
-            markLine: {
-              lineStyle: {
-                type: 'dashed'
-              },
-              data: [[{ type: 'min' }, { type: 'max' }]]
-            }
-          },
-          {
-            name: 'Baidu',
-            type: 'bar',
-            barWidth: 5,
-            stack: 'Search Engine',
-            emphasis: {
-              focus: 'series'
-            },
-            data: [620, 732, 701, 734, 1090, 1130, 1120]
-          },
-          {
-            name: 'Google',
-            type: 'bar',
-            stack: 'Search Engine',
-            emphasis: {
-              focus: 'series'
-            },
-            data: [120, 132, 101, 134, 290, 230, 220]
-          },
-          {
-            name: 'Bing',
-            type: 'bar',
-            stack: 'Search Engine',
-            emphasis: {
-              focus: 'series'
-            },
-            data: [60, 72, 71, 74, 190, 130, 110]
-          },
-          {
-            name: 'Others',
-            type: 'bar',
-            stack: 'Search Engine',
-            emphasis: {
-              focus: 'series'
-            },
-            data: [62, 82, 91, 84, 109, 110, 120]
+            data: [1, 5, 4, 3, 8, 12, 7]
           }
         ]
       };
