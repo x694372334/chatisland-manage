@@ -151,8 +151,34 @@ export default {
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 5, name: '标签一' },
-              { value: 24, name: '标签二' }
+              { value: 5, name: 'flirt' },
+              { value: 4, name: 'submissive' },
+              { value: 6, name: 'dominate' },
+              { value: 9, name: 'foreplay' },
+              { value: 7, name: 'dates' },
+              { value: 3, name: 'friendship' },
+              { value: 8, name: 'sensual' },
+              { value: 6, name: 'watching' },
+              { value: 5, name: 'texting' },
+              { value: 2, name: 'bdsm' },
+              { value: 5, name: 'couples' },
+              { value: 2, name: 'singles' },
+              { value: 1, name: 'kink' },
+              { value: 5, name: 'poly' },
+              { value: 10, name: 'group' },
+              { value: 6, name: 'threeway' },
+              { value: 15, name: 'relationship' },
+              { value: 12, name: 'advice' },
+              { value: 13, name: 'confession' },
+              { value: 0, name: 'novelty' },
+              { value: 0, name: 'lifestyle' },
+              { value: 7, name: 'cooking' },
+              { value: 8, name: 'sports' },
+              { value: 9, name: 'singing' },
+              { value: 6, name: 'reading' },
+              { value: 4, name: 'dancing' },
+              { value: 5, name: 'drawing' },
+              { value: 24, name: 'other' }
             ],
             emphasis: {
               itemStyle: {
@@ -271,8 +297,8 @@ export default {
 }
 
 .home {
-  width: 500px;
-  height: 400px;
+  width: 1000px;
+  height: 500px;
   margin: auto;
   border: 0px solid lightcoral;
   background-color: #FCFCFC;

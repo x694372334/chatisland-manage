@@ -201,7 +201,7 @@ export default {
   width: 1000px;
   height: 400px;
   margin: auto;
-  border: 3px solid lightcoral;
+  border: 0px solid #000000;
 
   //  宽高是必须给的，可以给百分比、具体的像素等....
   .barChart {

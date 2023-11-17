@@ -65,9 +65,9 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: 'Precipitation',
+            name: '',
             min: 0,
-            max: 250,
+            max: 150,
             interval: 50,
             axisLabel: {
               formatter: '{value}'
@@ -75,7 +75,7 @@ export default {
           },
           {
             type: 'value',
-            name: 'Temperature',
+            name: '',
             min: 0,
             max: 25,
             interval: 5,
