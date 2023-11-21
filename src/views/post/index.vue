@@ -103,7 +103,26 @@
           <el-input v-model="form.postTitle" placeholder="请输入标题" />
         </el-form-item>
         <el-form-item label="post标签" prop="postLabel">
-          <el-input v-model="form.postLabel" placeholder="请输入post标签" />
+          <el-checkbox v-model="checked">Flirt</el-checkbox>
+          <el-checkbox v-model="checked">Texting</el-checkbox>
+          <el-checkbox v-model="checked">Advice</el-checkbox>
+          <el-checkbox v-model="checked">Confession</el-checkbox>
+          <el-checkbox v-model="checked">Lifestyle</el-checkbox>
+          <el-checkbox v-model="checked">Other</el-checkbox>
+          <el-checkbox v-model="checked">Relationship</el-checkbox>
+          <el-checkbox v-model="checked">Cooking</el-checkbox>
+          <el-checkbox v-model="checked">Friendship</el-checkbox>
+          <el-checkbox v-model="checked">Couples</el-checkbox>
+          <el-checkbox v-model="checked">Watching</el-checkbox>
+          <el-checkbox v-model="checked">Dancing</el-checkbox>
+          <el-checkbox v-model="checked">Drawing</el-checkbox>
+          <el-checkbox v-model="checked">Dates</el-checkbox>
+          <el-checkbox v-model="checked">Group</el-checkbox>
+          <el-checkbox v-model="checked">Novelty</el-checkbox>
+          <el-checkbox v-model="checked">Reading</el-checkbox>
+          <el-checkbox v-model="checked">Singing</el-checkbox>
+          <el-checkbox v-model="checked">Singles</el-checkbox>
+          <el-checkbox v-model="checked">Sport</el-checkbox>
         </el-form-item>
         <el-form-item label="post内容" prop="description">
           <el-input

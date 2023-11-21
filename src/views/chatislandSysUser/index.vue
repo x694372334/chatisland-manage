@@ -131,7 +131,9 @@
           <el-upload
             class="upload-demo"
             drag
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action=""
+            :auto-upload="false"
+            :on-change="handleChange"
             multiple>
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -147,42 +149,57 @@
           <el-input v-model="form.age" placeholder="请输入年龄" />
         </el-form-item>
         <el-form-item label="性别" prop="age">
-          <el-input v-model="form.sex" placeholder="请输入性别" />
+          <el-select v-model="form.sex" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="会员" prop="isVip">
+          <el-select v-model="form.isVip" placeholder="请选择">
+            <el-option
+              v-for="item in member"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="标签" prop="userLabel">
-          <el-checkbox v-model="checked">Flirt</el-checkbox>
-          <el-checkbox v-model="checked">Texting</el-checkbox>
-          <el-checkbox v-model="checked">Advice</el-checkbox>
-          <el-checkbox v-model="checked">Confession</el-checkbox>
-          <el-checkbox v-model="checked">Lifestyle</el-checkbox>
-          <el-checkbox v-model="checked">Other</el-checkbox>
-          <el-checkbox v-model="checked">Relationship</el-checkbox>
-          <el-checkbox v-model="checked">Cooking</el-checkbox>
-          <el-checkbox v-model="checked">Friendship</el-checkbox>
-          <el-checkbox v-model="checked">Couples</el-checkbox>
-          <el-checkbox v-model="checked">Watching</el-checkbox>
-          <el-checkbox v-model="checked">Dancing</el-checkbox>
-          <el-checkbox v-model="checked">Drawing</el-checkbox>
-          <el-checkbox v-model="checked">Dates</el-checkbox>
-          <el-checkbox v-model="checked">Group</el-checkbox>
-          <el-checkbox v-model="checked">Novelty</el-checkbox>
-          <el-checkbox v-model="checked">Reading</el-checkbox>
-          <el-checkbox v-model="checked">Singing</el-checkbox>
-          <el-checkbox v-model="checked">Singles</el-checkbox>
-          <el-checkbox v-model="checked">Sport</el-checkbox>
+          <el-checkbox v-for="city in cities" @change="warrantNameChange" :label="city" :key="city">{{city}}</el-checkbox>
+<!--          <el-checkbox v-model="checked">Flirt</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Texting</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Advice</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Confession</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Lifestyle</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Other</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Relationship</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Cooking</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Friendship</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Couples</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Watching</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Dancing</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Drawing</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Dates</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Group</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Novelty</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Reading</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Singing</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Singles</el-checkbox>-->
+<!--          <el-checkbox v-model="checked">Sport</el-checkbox>-->
         </el-form-item>
         <el-form-item label="个人简介" prop="aboutMe">
           <el-input
             type="textarea"
             placeholder="请输入内容"
             v-model="form.aboutMe"
-            maxlength="100"
+            maxlength="300"
             show-word-limit
           >
           </el-input>
-        </el-form-item>
-        <el-form-item label="会员" prop="isVip">
-          <el-input v-model="form.isVip" placeholder="请输入是否是会员" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -199,7 +216,31 @@ import { listUser, getUser, delUser, addUser, updateUser } from "@/api/system/us
 export default {
   name: "User",
   data() {
+    const cityOptions = ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'];
     return {
+      warrantName:[],
+      cities: cityOptions,
+      //表单定义
+      addForm:{
+        "warrantName":"",
+      },
+      options: [{
+        value: '0',
+        label: '女'
+      }, {
+        value: '1',
+        label: '男'
+      },{
+        value: '2',
+        label: '其他'
+      }],
+      member: [{
+        value: '0',
+        label: '是'
+      }, {
+        value: '1',
+        label: '否'
+      }],
       // 按钮loading
       buttonLoading: false,
       checked: false,
@@ -260,7 +301,7 @@ export default {
         systemUserSetting: undefined
       },
       // 表单参数
-      form: {},
+      form: {userLabel:undefined},
       // 表单校验
       rules: {
         userId: [
@@ -414,7 +455,7 @@ export default {
       const userId = row.userId || this.ids
       getUser(userId).then(response => {
         this.loading = false;
-        this.form = response.data;
+        this.form = response.data.user;
         this.open = true;
         this.title = "修改用户信息";
       });
@@ -477,7 +518,15 @@ export default {
       this.download('system/user/export', {
         ...this.queryParams
       }, `user_${new Date().getTime()}.xlsx`)
-    }
+    },
+    handleChange(file, fileList){
+      this.form.chatislandCover = fileList;
+    },
+    warrantNameChange(){
+      this.form.chatislandLabel = this.warrantName.join(",");
+    },
   }
 };
+
+
 </script>
