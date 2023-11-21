@@ -121,6 +121,32 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/chatisland',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/chatisland/index'),
+        name: 'chatisland-list',
+        meta: { title: 'chatisland' }
+      }
+    ]
+  },
+  {
+    path: '/post',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/post/index'),
+        name: 'post-list',
+        meta: { title: 'post' }
+      }
+    ]
+  },
+  {
     path: '/system/dict-data',
     component: Layout,
     hidden: true,
