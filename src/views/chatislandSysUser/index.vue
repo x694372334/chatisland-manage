@@ -33,7 +33,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:user:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,7 +45,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:user:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -55,7 +57,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:user:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -65,18 +68,19 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:user:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="用户ID" align="center" prop="userId" v-if="true"/>
-      <el-table-column label="用户账号" align="center" prop="userName" />
-      <el-table-column label="用户昵称" align="center" prop="nickName" />
-      <el-table-column label="用户性别" align="center" prop="sex" />
-      <el-table-column label="用户标签" align="center" prop="userLabel" />
+      <el-table-column label="用户账号" align="center" prop="userName"/>
+      <el-table-column label="用户昵称" align="center" prop="nickName"/>
+      <el-table-column label="用户性别" align="center" prop="sex"/>
+      <el-table-column label="用户标签" align="center" prop="userLabel"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 
@@ -101,14 +105,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:user:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:user:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,29 +130,39 @@
     <!-- 添加或修改用户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-<!--        <el-form-item label="头像地址" prop="avatar">-->
-<!--          <el-input v-model="form.avatar" placeholder="请输入头像地址" />-->
-<!--        </el-form-item>-->
-        <el-form-item label="头像地址" prop="avatar">
-          <el-upload
-            class="upload-demo"
-            drag
-            action=""
-            :auto-upload="false"
-            :on-change="handleChange"
-            multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          </el-upload>
+        <!--        <el-form-item label="头像地址" prop="avatar">-->
+        <!--          <el-input v-model="form.avatar" placeholder="请输入头像地址" />-->
+        <!--        </el-form-item>-->
+        <el-form-item label="头像地址" prop="avatarName">
+          <el-select v-model="form.avatarName" placeholder="请选择">
+            <el-option v-if="form.isVip==='0'||form.isVip===undefined" style="height: 50px;"
+                       v-for="item in avatarList"
+                       :key="item"
+                       :label="item"
+                       :value="item">
+              <el-row type="flex" align="middle">
+                <el-col :span="12">{{ item }}.png</el-col>
+                <el-col :span="12"><img style="width: 50px; height: 50px;" :src="avatarHost+item+'.png'"/></el-col>
+              </el-row>
+
+            </el-option>
+            <el-option v-if="form.isVip==='1'"
+                       v-for="item in vipAvatarList"
+                       :key="item"
+                       :label="item"
+                       :value="item">
+              <img :src="avatarHost+item+'.png'"/>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="用户账号" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入用户账号" />
+          <el-input v-model="form.userName" placeholder="请输入用户账号"/>
         </el-form-item>
         <el-form-item label="用户昵称" prop="nickName">
-          <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
+          <el-input v-model="form.nickName" placeholder="请输入用户昵称"/>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" placeholder="请输入年龄" />
+          <el-input v-model="form.age" placeholder="请输入年龄"/>
         </el-form-item>
         <el-form-item label="性别" prop="age">
           <el-select v-model="form.sex" placeholder="请选择">
@@ -169,27 +185,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="标签" prop="userLabel">
-          <el-checkbox v-for="city in cities" @change="warrantNameChange" :label="city" :key="city">{{city}}</el-checkbox>
-<!--          <el-checkbox v-model="checked">Flirt</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Texting</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Advice</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Confession</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Lifestyle</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Other</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Relationship</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Cooking</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Friendship</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Couples</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Watching</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Dancing</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Drawing</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Dates</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Group</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Novelty</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Reading</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Singing</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Singles</el-checkbox>-->
-<!--          <el-checkbox v-model="checked">Sport</el-checkbox>-->
+          <el-checkbox-group v-model="userLabel" @change="chooseUserLabel">
+            <el-checkbox v-for="item in tagList" :label="item" :key="item">{{ item }}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item label="个人简介" prop="aboutMe">
           <el-input
@@ -211,26 +209,25 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser } from "@/api/system/user";
+import {listUser, getUser, delUser, addUser, updateUser} from "@/api/system/user";
 
 export default {
   name: "User",
   data() {
-    const cityOptions = ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'];
     return {
-      warrantName:[],
-      cities: cityOptions,
-      //表单定义
-      addForm:{
-        "warrantName":"",
-      },
+      warrantName: [],
+      tagList: ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'],
+      avatarHost: 'https://chat-island.s3.us-west-1.amazonaws.com/avatar/',
+      avatarList: ['man_1', 'man_2', 'man_3', 'man_4', 'other_1', 'other_2', 'other_3', 'other_4', 'other_5', 'other_6', 'other_7', 'woman_1', 'woman_2', 'woman_3', 'woman_4'],
+      vipAvatarList: ['man_1', 'man_2', 'man_3', 'man_4', 'other_1', 'other_2', 'other_3', 'other_4', 'other_5', 'other_6', 'other_7', 'woman_1', 'woman_2', 'woman_3', 'woman_4',
+        'vip_1', 'vip_2', 'vip_3', 'vip_4', 'vip_5', 'vip_6', 'vip_7', 'vip_8', 'vip_9', 'vip_10', 'vip_11', 'vip_12', 'vip_13', 'vip_14', 'vip_15'],
       options: [{
         value: '0',
         label: '女'
       }, {
         value: '1',
         label: '男'
-      },{
+      }, {
         value: '2',
         label: '其他'
       }],
@@ -290,7 +287,7 @@ export default {
         accid: undefined,
         language: undefined,
         onlineStatus: undefined,
-        isVip: undefined,
+        isVip: '0',
         vipSource: undefined,
         vipDescribeDate: undefined,
         vipExpireDate: undefined,
@@ -301,14 +298,24 @@ export default {
         systemUserSetting: undefined
       },
       // 表单参数
-      form: {userLabel:undefined},
+      form: {
+        avatarName: '',
+        userName: '',
+        nickName: '',
+        age: undefined,
+        sex: '',
+        isVip: '',
+        userLabel: '',
+        aboutMe: ''
+      },
+      userLabel: [],
       // 表单校验
       rules: {
         userId: [
-          { required: true, message: "用户ID不能为空", trigger: "blur" }
+          {required: true, message: "用户ID不能为空", trigger: "blur"}
         ],
         userName: [
-          { required: true, message: "用户账号不能为空", trigger: "blur" }
+          {required: true, message: "用户账号不能为空", trigger: "blur"}
         ],
         // nickName: [
         //   { required: true, message: "用户昵称不能为空", trigger: "blur" }
@@ -340,28 +347,30 @@ export default {
 
   methods: {
 
-    showChatisland(row, index, done){
+    showChatisland(row, index, done) {
       const userId = row.userId;
       console.log(userId)
       this.$router.push({
         path: "/chatisland/index",
-        query:{
-          userId:userId,
-          from:JSON.stringify(this.form)
-        }});
+        query: {
+          userId: userId,
+          from: JSON.stringify(this.form)
+        }
+      });
     },
 
-    showPost(row, index, done){
+    showPost(row, index, done) {
       const userId = row.userId;
       console.log(userId)
       this.$router.push({
         path: "/post/index",
-        query:{
-          userId:userId,
-          from:JSON.stringify(this.form)
-        }});
+        query: {
+          userId: userId,
+          from: JSON.stringify(this.form)
+        }
+      });
     },
-    showPicture(row, index, done){
+    showPicture(row, index, done) {
       const roleId = row.userId;
       console.log(roleId)
       this.$router.push({path: '/characterPicture/index', query: {userId: roleId}});
@@ -439,7 +448,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.userId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -519,12 +528,13 @@ export default {
         ...this.queryParams
       }, `user_${new Date().getTime()}.xlsx`)
     },
-    handleChange(file, fileList){
+    handleChange(file, fileList) {
       this.form.chatislandCover = fileList;
     },
-    warrantNameChange(){
-      this.form.chatislandLabel = this.warrantName.join(",");
-    },
+    chooseUserLabel() {
+      this.form.userLabel = JSON.stringify(this.userLabel)
+      console.log(this.form.userLabel)
+    }
   }
 };
 

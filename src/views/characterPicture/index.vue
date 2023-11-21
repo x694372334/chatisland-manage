@@ -51,8 +51,12 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="主键Id" align="center" prop="id"/>
       <el-table-column label="用户编号" align="center" prop="userId"/>
-      <el-table-column label="文件名称" align="center" prop="pictureFilePath"/>
-      <el-table-column label="文件访问路径" align="center" prop="pictureFileName"/>
+      <el-table-column label="文件预览" align="center">
+        <template slot-scope="scope">
+          <img :src="scope.row.pictureFilePath" style="width:240px;height: 180px;">
+        </template>
+      </el-table-column>
+      <el-table-column label="文件名称" align="center" prop="pictureFileName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -78,7 +82,7 @@
     <!-- 添加对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="人设用户" prop="userId">
+        <el-form-item v-if="form.userId===undefined"  label="人设用户" prop="userId">
           <el-select v-model="form.userId">
             <el-option v-for="item in userList" :key="item.userId" :value="item.userId" :label="item.nickName">{{item.nickName}}</el-option>
           </el-select>
@@ -222,6 +226,9 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      if (this.$route.query.userId !== undefined){
+        this.form.userId = new Number(this.$route.query.userId).valueOf()
+      }
       this.open = true;
       this.title = "上传图片";
     },
