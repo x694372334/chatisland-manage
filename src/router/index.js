@@ -147,6 +147,19 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/characterPicture',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/characterPicture/index'),
+        name: 'characterPicture-list',
+        meta: { title: 'characterPicture' }
+      }
+    ]
+  },
+  {
     path: '/system/dict-data',
     component: Layout,
     hidden: true,

@@ -100,6 +100,11 @@
                      type="text"
                      @click="showPost(scope.row,scope.index)">post
           </el-button>
+          <el-button icon="el-icon-position"
+                     size="small"
+                     type="text"
+                     @click="showPicture(scope.row,scope.index)">人设图片
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -277,6 +282,11 @@ export default {
       const roleId = row.userId;
       console.log(roleId)
       this.$router.push("/post/index");
+    },
+    showPicture(row, index, done){
+      const roleId = row.userId;
+      console.log(roleId)
+      this.$router.push({path: '/characterPicture/index', query: {userId: roleId}});
     },
     /** 查询用户信息列表 */
     getList() {
