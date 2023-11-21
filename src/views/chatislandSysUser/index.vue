@@ -18,15 +18,6 @@
         />
       </el-form-item>
 
-      <el-form-item label="用户标签" prop="userLabel">
-        <el-input
-          v-model="queryParams.userLabel"
-          placeholder="请输入用户标签"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -86,7 +77,6 @@
       <el-table-column label="用户昵称" align="center" prop="nickName" />
       <el-table-column label="用户性别" align="center" prop="sex" />
       <el-table-column label="用户标签" align="center" prop="userLabel" />
-      <el-table-column label="karma值" align="center" prop="karma" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 
@@ -134,8 +124,18 @@
     <!-- 添加或修改用户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+<!--        <el-form-item label="头像地址" prop="avatar">-->
+<!--          <el-input v-model="form.avatar" placeholder="请输入头像地址" />-->
+<!--        </el-form-item>-->
         <el-form-item label="头像地址" prop="avatar">
-          <el-input v-model="form.avatar" placeholder="请输入头像地址" />
+          <el-upload
+            class="upload-demo"
+            drag
+            action="https://jsonplaceholder.typicode.com/posts/"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="用户账号" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户账号" />
@@ -143,19 +143,45 @@
         <el-form-item label="用户昵称" prop="nickName">
           <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
         </el-form-item>
-        <el-form-item label="age" prop="age">
+        <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" placeholder="请输入年龄" />
         </el-form-item>
-        <el-form-item label="gender" prop="age">
+        <el-form-item label="性别" prop="age">
           <el-input v-model="form.sex" placeholder="请输入性别" />
         </el-form-item>
-        <el-form-item label="label" prop="userLabel">
-          <el-input v-model="form.userLabel" placeholder="请输入用户标签" />
+        <el-form-item label="标签" prop="userLabel">
+          <el-checkbox v-model="checked">Flirt</el-checkbox>
+          <el-checkbox v-model="checked">Texting</el-checkbox>
+          <el-checkbox v-model="checked">Advice</el-checkbox>
+          <el-checkbox v-model="checked">Confession</el-checkbox>
+          <el-checkbox v-model="checked">Lifestyle</el-checkbox>
+          <el-checkbox v-model="checked">Other</el-checkbox>
+          <el-checkbox v-model="checked">Relationship</el-checkbox>
+          <el-checkbox v-model="checked">Cooking</el-checkbox>
+          <el-checkbox v-model="checked">Friendship</el-checkbox>
+          <el-checkbox v-model="checked">Couples</el-checkbox>
+          <el-checkbox v-model="checked">Watching</el-checkbox>
+          <el-checkbox v-model="checked">Dancing</el-checkbox>
+          <el-checkbox v-model="checked">Drawing</el-checkbox>
+          <el-checkbox v-model="checked">Dates</el-checkbox>
+          <el-checkbox v-model="checked">Group</el-checkbox>
+          <el-checkbox v-model="checked">Novelty</el-checkbox>
+          <el-checkbox v-model="checked">Reading</el-checkbox>
+          <el-checkbox v-model="checked">Singing</el-checkbox>
+          <el-checkbox v-model="checked">Singles</el-checkbox>
+          <el-checkbox v-model="checked">Sport</el-checkbox>
         </el-form-item>
         <el-form-item label="个人简介" prop="aboutMe">
-          <el-input v-model="form.aboutMe" placeholder="请输入个人简介" />
+          <el-input
+            type="textarea"
+            placeholder="请输入内容"
+            v-model="form.aboutMe"
+            maxlength="100"
+            show-word-limit
+          >
+          </el-input>
         </el-form-item>
-        <el-form-item label="Member" prop="isVip">
+        <el-form-item label="会员" prop="isVip">
           <el-input v-model="form.isVip" placeholder="请输入是否是会员" />
         </el-form-item>
       </el-form>
@@ -176,6 +202,7 @@ export default {
     return {
       // 按钮loading
       buttonLoading: false,
+      checked: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -242,27 +269,27 @@ export default {
         userName: [
           { required: true, message: "用户账号不能为空", trigger: "blur" }
         ],
-        nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" }
-        ],
-        sex: [
-          { required: true, message: "用户性别不能为空", trigger: "change" }
-        ],
-        avatar: [
-          { required: true, message: "头像地址不能为空", trigger: "blur" }
-        ],
-        aboutMe: [
-          { required: true, message: "个人简介不能为空", trigger: "blur" }
-        ],
-        userLabel: [
-          { required: true, message: "用户标签不能为空", trigger: "blur" }
-        ],
-        avatarName: [
-          { required: true, message: "头像名称不能为空", trigger: "blur" }
-        ],
-        age: [
-          { required: true, message: "年龄不能为空", trigger: "blur" }
-        ],
+        // nickName: [
+        //   { required: true, message: "用户昵称不能为空", trigger: "blur" }
+        // ],
+        // sex: [
+        //   { required: true, message: "用户性别不能为空", trigger: "change" }
+        // ],
+        // avatar: [
+        //   { required: true, message: "头像地址不能为空", trigger: "blur" }
+        // ],
+        // aboutMe: [
+        //   { required: true, message: "个人简介不能为空", trigger: "blur" }
+        // ],
+        // userLabel: [
+        //   { required: true, message: "用户标签不能为空", trigger: "blur" }
+        // ],
+        // avatarName: [
+        //   { required: true, message: "头像名称不能为空", trigger: "blur" }
+        // ],
+        // age: [
+        //   { required: true, message: "年龄不能为空", trigger: "blur" }
+        // ],
       }
     };
   },
@@ -273,15 +300,25 @@ export default {
   methods: {
 
     showChatisland(row, index, done){
-      const roleId = row.userId;
-      console.log(roleId)
-      this.$router.push("/chatisland/index");
+      const userId = row.userId;
+      console.log(userId)
+      this.$router.push({
+        path: "/chatisland/index",
+        query:{
+          userId:userId,
+          from:JSON.stringify(this.form)
+        }});
     },
 
     showPost(row, index, done){
-      const roleId = row.userId;
-      console.log(roleId)
-      this.$router.push("/post/index");
+      const userId = row.userId;
+      console.log(userId)
+      this.$router.push({
+        path: "/post/index",
+        query:{
+          userId:userId,
+          from:JSON.stringify(this.form)
+        }});
     },
     showPicture(row, index, done){
       const roleId = row.userId;

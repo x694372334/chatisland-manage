@@ -100,17 +100,50 @@
     <!-- 添加或修改chatisLand对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="主键id" prop="chatislandId">
-          <el-input v-model="form.chatislandId" placeholder="请输入主键id" />
-        </el-form-item>
         <el-form-item label="名称" prop="chatislandName">
           <el-input v-model="form.chatislandName" placeholder="请输入名称" />
         </el-form-item>
-        <el-form-item label="chatisland标签" prop="chatislandLabel">
-          <el-input v-model="form.chatislandLabel" placeholder="请输入chatisland标签" />
+        <el-form-item label="标签" prop="chatislandLabel">
+          <el-checkbox v-model="checked">Flirt</el-checkbox>
+          <el-checkbox v-model="checked">Texting</el-checkbox>
+          <el-checkbox v-model="checked">Advice</el-checkbox>
+          <el-checkbox v-model="checked">Confession</el-checkbox>
+          <el-checkbox v-model="checked">Lifestyle</el-checkbox>
+          <el-checkbox v-model="checked">Other</el-checkbox>
+          <el-checkbox v-model="checked">Relationship</el-checkbox>
+          <el-checkbox v-model="checked">Cooking</el-checkbox>
+          <el-checkbox v-model="checked">Friendship</el-checkbox>
+          <el-checkbox v-model="checked">Couples</el-checkbox>
+          <el-checkbox v-model="checked">Watching</el-checkbox>
+          <el-checkbox v-model="checked">Dancing</el-checkbox>
+          <el-checkbox v-model="checked">Drawing</el-checkbox>
+          <el-checkbox v-model="checked">Dates</el-checkbox>
+          <el-checkbox v-model="checked">Group</el-checkbox>
+          <el-checkbox v-model="checked">Novelty</el-checkbox>
+          <el-checkbox v-model="checked">Reading</el-checkbox>
+          <el-checkbox v-model="checked">Singing</el-checkbox>
+          <el-checkbox v-model="checked">Singles</el-checkbox>
+          <el-checkbox v-model="checked">Sport</el-checkbox>
         </el-form-item>
-        <el-form-item label="chatisland封面" prop="chatislandCover">
-          <el-input v-model="form.chatislandCover" placeholder="请输入chatisland封面" />
+        <el-form-item label="封面" prop="chatislandCover">
+          <el-upload
+            class="upload-demo"
+            drag
+            action="https://jsonplaceholder.typicode.com/posts/"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="内容" prop="description">
+          <el-input
+            type="textarea"
+            placeholder="请输入内容"
+            v-model="form.description"
+            maxlength="100"
+            show-word-limit
+          >
+          </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -122,7 +155,13 @@
 </template>
 
 <script>
-import { listChatisland, getChatisland, delChatisland, addChatisland, updateChatisland } from "@/api/chatislandApi/chatisland";
+import {
+  addChatisland,
+  delChatisland,
+  getChatisland,
+  listChatisland,
+  updateChatisland
+} from "@/api/chatislandApi/chatisland";
 
 export default {
   name: "Chatisland",
@@ -167,15 +206,6 @@ export default {
         ],
         chatislandName: [
           { required: true, message: "名称不能为空", trigger: "blur" }
-        ],
-        chatislandLabel: [
-          { required: true, message: "chatisland标签不能为空", trigger: "blur" }
-        ],
-        chatislandCover: [
-          { required: true, message: "chatisland封面不能为空", trigger: "blur" }
-        ],
-        description: [
-          { required: true, message: "chatisland描述不能为空", trigger: "blur" }
         ]
       }
     };
@@ -186,6 +216,15 @@ export default {
   methods: {
     /** 查询chatisLand列表 */
     getList() {
+      if ( this.$route.query.form) {
+        this.areaObj = JSON.parse(this.$route.query.form);
+        console.log(this.areaObj,"areaObj-------------")
+      }
+      if(null!=this.$route.query.userId){
+        const userId = this.$route.query.userId;
+        console.log(userId);
+        this.queryParams.createBy = userId;
+      }
       this.loading = true;
       listChatisland(this.queryParams).then(response => {
         this.chatislandList = response.rows;

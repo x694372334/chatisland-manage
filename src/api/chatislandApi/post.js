@@ -20,7 +20,7 @@ export function getPost(postId) {
 // 新增post列
 export function addPost(data) {
   return request({
-    url: '/system/chatislandPost',
+    url: '/system/chatislandPost/postBackgroundAdd',
     method: 'post',
     data: data
   })

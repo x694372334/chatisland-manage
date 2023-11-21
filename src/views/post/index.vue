@@ -1,34 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="主键Id" prop="postId">
-        <el-input
-          v-model="queryParams.postId"
-          placeholder="请输入主键Id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="post标题" prop="postTitle">
+
+      <el-form-item label="标题" prop="postTitle">
         <el-input
           v-model="queryParams.postTitle"
           placeholder="请输入post标题"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="post标签" prop="postLabel">
-        <el-input
-          v-model="queryParams.postLabel"
-          placeholder="请输入post标签"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="备注" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入备注"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -122,24 +99,21 @@
     <!-- 添加或修改post列对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="主键Id" prop="postId">
-          <el-input v-model="form.postId" placeholder="请输入主键Id" />
-        </el-form-item>
         <el-form-item label="post标题" prop="postTitle">
-          <el-upload
-            class="upload-demo"
-            drag
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          </el-upload>
+          <el-input v-model="form.postTitle" placeholder="请输入标题" />
         </el-form-item>
         <el-form-item label="post标签" prop="postLabel">
           <el-input v-model="form.postLabel" placeholder="请输入post标签" />
         </el-form-item>
-        <el-form-item label="备注" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="post内容" prop="description">
+          <el-input
+            type="textarea"
+            placeholder="请输入内容"
+            v-model="form.description"
+            maxlength="100"
+            show-word-limit
+          >
+          </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -211,6 +185,15 @@ export default {
   methods: {
     /** 查询post列列表 */
     getList() {
+      if ( this.$route.query.form) {
+        this.areaObj = JSON.parse(this.$route.query.form);
+        console.log(this.areaObj,"areaObj-------------")
+      }
+      if(null!=this.$route.query.userId){
+        const userId = this.$route.query.userId;
+        console.log(userId);
+        this.queryParams.createBy = userId;
+      }
       this.loading = true;
       listPost(this.queryParams).then(response => {
         this.postList = response.rows;
@@ -285,6 +268,7 @@ export default {
               this.buttonLoading = false;
             });
           } else {
+            console.log(this.form);
             addPost(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;

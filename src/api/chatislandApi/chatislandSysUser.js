@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询用户信息列表
 export function listUser(query) {
   return request({
-    url: '/system/user/list',
+    url: '/system/user/listBackgroud',
     method: 'get',
     params: query
   })
