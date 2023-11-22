@@ -25,7 +25,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:chatisland:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -36,7 +37,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:chatisland:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -47,7 +49,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:chatisland:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -57,18 +60,19 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:chatisland:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="chatislandList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="chatislandId" />
-      <el-table-column label="名称" align="center" prop="chatislandName" />
-      <el-table-column label="chatisland标签" align="center" prop="chatislandLabel" />
-      <el-table-column label="chatisland封面" align="center" prop="chatislandCover" />
-      <el-table-column label="chatisland描述" align="center" prop="description" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="主键id" align="center" prop="chatislandId"/>
+      <el-table-column label="名称" align="center" prop="chatislandName"/>
+      <el-table-column label="chatisland标签" align="center" prop="chatislandLabel"/>
+      <el-table-column label="chatisland封面" align="center" prop="chatislandCover"/>
+      <el-table-column label="chatisland描述" align="center" prop="description"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -77,14 +81,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:chatisland:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:chatisland:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,44 +107,64 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="名称" prop="chatislandName">
-          <el-input v-model="form.chatislandName" placeholder="请输入名称" />
+          <el-input v-model="form.chatislandName" placeholder="请输入名称"/>
         </el-form-item>
         <el-form-item label="标签" prop="chatislandLabel">
-          <el-checkbox v-model="checked">Flirt</el-checkbox>
-          <el-checkbox v-model="checked">Texting</el-checkbox>
-          <el-checkbox v-model="checked">Advice</el-checkbox>
-          <el-checkbox v-model="checked">Confession</el-checkbox>
-          <el-checkbox v-model="checked">Lifestyle</el-checkbox>
-          <el-checkbox v-model="checked">Other</el-checkbox>
-          <el-checkbox v-model="checked">Relationship</el-checkbox>
-          <el-checkbox v-model="checked">Cooking</el-checkbox>
-          <el-checkbox v-model="checked">Friendship</el-checkbox>
-          <el-checkbox v-model="checked">Couples</el-checkbox>
-          <el-checkbox v-model="checked">Watching</el-checkbox>
-          <el-checkbox v-model="checked">Dancing</el-checkbox>
-          <el-checkbox v-model="checked">Drawing</el-checkbox>
-          <el-checkbox v-model="checked">Dates</el-checkbox>
-          <el-checkbox v-model="checked">Group</el-checkbox>
-          <el-checkbox v-model="checked">Novelty</el-checkbox>
-          <el-checkbox v-model="checked">Reading</el-checkbox>
-          <el-checkbox v-model="checked">Singing</el-checkbox>
-          <el-checkbox v-model="checked">Singles</el-checkbox>
-          <el-checkbox v-model="checked">Sport</el-checkbox>
+          <el-checkbox-group v-model="chooseTag" @change="changeLabel">
+            <el-checkbox v-for="item in tagList" :label="item" :key="item">{{ item }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="状态" prop="isSenior">
+          <el-select v-model="form.isSenior" @change="form.chatislandCover=undefined">
+            <el-option label="普通" value="0"></el-option>
+            <el-option label="锁定" value="1"></el-option>
+            <el-option label="非锁定" value="2"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="封面" prop="chatislandCover">
-          <el-upload
-            class="upload-demo"
-            drag
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple>
+          <el-select v-if="form.isSenior !=='1'&& form.isSenior!=='2'" v-model="form.chatislandCover">
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="1" label="cover_1.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_1.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="2" label="cover_2.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_2.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="3" label="cover_3.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_3.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="4" label="cover_4.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_4.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="5" label="cover_5.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_5.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="6" label="cover_6.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_6.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="7" label="cover_7.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_7.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="8" label="cover_8.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_8.png"/></el-option>
+            <el-option style="text-align:center;height:100px;margin-top: 5px;" value="9" label="cover_9.png"><img
+              style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_9.png"/></el-option>
+          </el-select>
+          <img style="max-width: 100%;" v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined" :src="form.chatislandCover" />
+          <el-upload v-if="form.isSenior !==undefined && form.isSenior !== '0'"
+                     class="upload-demo"
+                     drag
+                     :on-success="uploadSuccess"
+                     :action="uploadUrl">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
+        </el-form-item>
+        <el-form-item v-if="form.isSenior==='1'" label="钻石数量" prop="diamondCount">
+          <el-select v-model="form.diamondCount">
+            <el-option value="3" label="3"></el-option>
+            <el-option value="5" label="5"></el-option>
+            <el-option value="10" label="10"></el-option>
+            <el-option value="20" label="20"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="内容" prop="description">
           <el-input
             type="textarea"
             placeholder="请输入内容"
+            :rows="5"
             v-model="form.description"
             maxlength="100"
             show-word-limit
@@ -167,6 +193,12 @@ export default {
   name: "Chatisland",
   data() {
     return {
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/oss/upload", // 上传的图片服务器地址
+      chooseTag: [],
+      coverList: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      tagList: ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'],
+      userId: undefined,
+      isVip: undefined,
       // 按钮loading
       buttonLoading: false,
       // 遮罩层
@@ -198,14 +230,17 @@ export default {
         description: undefined
       },
       // 表单参数
-      form: {},
+      form: {
+        chatislandName: '',
+        chatislandLabel: '',
+        isSenior: undefined,
+        chatislandCover: '',
+        diamondCount: undefined
+      },
       // 表单校验
       rules: {
-        chatislandId: [
-          { required: true, message: "主键id不能为空", trigger: "blur" }
-        ],
         chatislandName: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          {required: true, message: "名称不能为空", trigger: "blur"}
         ]
       }
     };
@@ -216,13 +251,12 @@ export default {
   methods: {
     /** 查询chatisLand列表 */
     getList() {
-      if ( this.$route.query.form) {
-        this.areaObj = JSON.parse(this.$route.query.form);
-        console.log(this.areaObj,"areaObj-------------")
+      if (this.$route.query.isVip) {
+        this.isVip = this.$route.query.isVip;
       }
-      if(null!=this.$route.query.userId){
+      if (null != this.$route.query.userId) {
         const userId = this.$route.query.userId;
-        console.log(userId);
+        this.userId = userId;
         this.queryParams.createBy = userId;
       }
       this.loading = true;
@@ -239,6 +273,7 @@ export default {
     },
     // 表单重置
     reset() {
+      this.chooseTag = []
       this.form = {
         chatislandId: undefined,
         chatislandName: undefined,
@@ -265,7 +300,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.chatislandId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -282,6 +317,9 @@ export default {
       getChatisland(chatislandId).then(response => {
         this.loading = false;
         this.form = response.data;
+        if(this.form.chatislandLabel !== undefined&& this.form.chatislandLabel !== ''){
+          this.chooseTag = JSON.parse(this.form.chatislandLabel)
+        }
         this.open = true;
         this.title = "修改chatisLand";
       });
@@ -300,6 +338,7 @@ export default {
               this.buttonLoading = false;
             });
           } else {
+            console.log(this.form)
             addChatisland(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -331,6 +370,12 @@ export default {
       this.download('system/chatisland/export', {
         ...this.queryParams
       }, `chatisland_${new Date().getTime()}.xlsx`)
+    },
+    changeLabel() {
+      this.form.chatislandLabel = JSON.stringify(this.chooseTag)
+    },
+    uploadSuccess(response, file, fileList){
+      this.form.chatislandCover = response.data.fileRoute
     }
   }
 };
