@@ -271,7 +271,7 @@ export default {
       getPost(postId).then(response => {
         this.loading = false;
         this.form = response.data;
-        if(this.form.postLabel !== undefined&& this.form.postLabel !== ''){
+        if(this.form.postLabel !== undefined&& this.form.postLabel !== ''&& this.form.postLabel !== null){
           this.chooseTag = JSON.parse(this.form.postLabel)
         }
         this.open = true;

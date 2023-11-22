@@ -317,7 +317,7 @@ export default {
       getChatisland(chatislandId).then(response => {
         this.loading = false;
         this.form = response.data;
-        if(this.form.chatislandLabel !== undefined&& this.form.chatislandLabel !== ''){
+        if(this.form.chatislandLabel !== undefined&& this.form.chatislandLabel !== '' &&this.form.chatislandLabel !== null){
           this.chooseTag = JSON.parse(this.form.chatislandLabel)
         }
         this.open = true;

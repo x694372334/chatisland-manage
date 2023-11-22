@@ -90,7 +90,13 @@
       <el-table-column label="用户ID" align="center" prop="userId" v-if="true"/>
       <el-table-column label="用户账号" align="center" prop="userName"/>
       <el-table-column label="用户昵称" align="center" prop="nickName"/>
-      <el-table-column label="用户性别" align="center" prop="sex"/>
+      <el-table-column label="用户性别" align="center" prop="sex">
+        <template slot-scope="scope">
+          <span v-if="scope.row.sex===0">女</span>
+          <span v-if="scope.row.sex===1">男</span>
+          <span v-if="scope.row.sex===2">其他</span>
+        </template>
+      </el-table-column>
       <el-table-column label="是否会员" align="center" prop="isVip">
         <template slot-scope="scope">
           <span v-if="scope.row.isVip===0">否</span>
@@ -178,7 +184,7 @@
         <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" placeholder="请输入年龄"/>
         </el-form-item>
-        <el-form-item label="性别" prop="age">
+        <el-form-item label="性别" prop="sex">
           <el-select v-model="form.sex" placeholder="请选择">
             <el-option
               v-for="item in options"
@@ -247,10 +253,10 @@ export default {
       }],
       member: [{
         value: '0',
-        label: '是'
+        label: '否'
       }, {
         value: '1',
-        label: '否'
+        label: '是'
       }],
       // 按钮loading
       buttonLoading: false,
@@ -406,6 +412,7 @@ export default {
     },
     // 表单重置
     reset() {
+      this.userLabel = []
       this.form = {
         userId: undefined,
         deptId: undefined,
@@ -480,6 +487,9 @@ export default {
       getUser(userId).then(response => {
         this.loading = false;
         this.form = response.data.user;
+        if(this.form.userLabel !== undefined && this.form.userLabel !== '' && this.form.userLabel !== null){
+          this.userLabel = JSON.parse(this.form.userLabel)
+        }
         this.open = true;
         this.title = "修改用户信息";
       });
