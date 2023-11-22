@@ -122,6 +122,16 @@
                      type="text"
                      @click="showPicture(scope.row,scope.index)">人设图片
           </el-button>
+          <el-button icon="el-icon-position"
+                     size="small"
+                     type="text"
+                     @click="addDiamond(scope.row)">发放钻石
+          </el-button>
+          <el-button icon="el-icon-position"
+                     size="small"
+                     type="text"
+                     @click="addFlashChat(scope.row)">发放闪聊
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -225,12 +235,46 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="添加钻石" :visible.sync="addDiamondDialog" width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="钻石数量">
+          <el-select v-model="addDiamondCount">
+            <el-option v-for="item in diamondList" :value="item" :label="item +'个'" :key="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="添加次数">
+          <el-input-number v-model="addDiamondTime"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addDiamond2User">确 定</el-button>
+        <el-button @click="cancelDiamond">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="添加闪聊" :visible.sync="addFlashChatDialog" width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="闪聊数量">
+          <el-select v-model="addFlashChatCount">
+            <el-option v-for="item in flashChatList" :value="item" :label="item +'个'" :key="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="添加次数">
+          <el-input-number v-model="addFlashChatTime"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addFlashChat2User">确 定</el-button>
+        <el-button @click="cancelFlashChat">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {listUser, getUser, delUser, addUser, updateUser} from "@/api/system/user";
-
+import {addCharacterProp} from "../../api/chatislandApi/chatislandSysUser";
 export default {
   name: "User",
   data() {
@@ -258,6 +302,8 @@ export default {
         value: '1',
         label: '是'
       }],
+      diamondList:[5,30,99],
+      flashChatList:[1,5,10],
       // 按钮loading
       buttonLoading: false,
       checked: false,
@@ -317,6 +363,14 @@ export default {
         beginnerGuidanceTime: undefined,
         systemUserSetting: undefined
       },
+      addDiamondUserId: undefined,
+      addDiamondDialog: false,
+      addDiamondCount: undefined,
+      addDiamondTime: undefined,
+      addFlashChatUserId: undefined,
+      addFlashChatDialog: false,
+      addFlashChatCount: undefined,
+      addFlashChatTime: undefined,
       // 表单参数
       form: {
         avatarName: '',
@@ -559,6 +613,57 @@ export default {
     chooseUserLabel() {
       this.form.userLabel = JSON.stringify(this.userLabel)
       console.log(this.form.userLabel)
+    },
+    addDiamond(row){
+      this.addDiamondCount = undefined
+      this.addDiamondTime = undefined
+      this.addDiamondUserId = row.userId
+      this.addDiamondDialog = true
+    },
+    cancelDiamond(){
+      this.addDiamondCount = undefined
+      this.addDiamondUserId = undefined
+      this.addDiamondDialog = false
+      this.addDiamondTime = undefined
+    },
+    addDiamond2User(){
+      let data = {
+        userId: this.addDiamondUserId,
+        propType: 3,
+        perCount: this.addDiamondCount,
+        count: this.addDiamondTime
+      }
+      this.addProp(data)
+    },
+    addProp(data){
+      addCharacterProp(data).then(response => {
+        if(response.data){
+          this.$message.success("添加"+(data.propType===3?"钻石":"闪聊")+(data.perCount*data.count)+"个成功")
+          this.addDiamondDialog = false
+          this.addFlashChatDialog = false
+        }
+      });
+    },
+    addFlashChat(row){
+      this.addFlashChatCount = undefined
+      this.addFlashChatTime = undefined
+      this.addFlashChatUserId = row.userId
+      this.addFlashChatDialog = true
+    },
+    cancelFlashChat(){
+      this.addFlashChatCount = undefined
+      this.addFlashChatTime = undefined
+      this.addFlashChatUserId = undefined
+      this.addFlashChatDialog = false
+    },
+    addFlashChat2User(){
+      let data = {
+        userId: this.addFlashChatUserId,
+        propType: 2,
+        perCount: this.addFlashChatCount,
+        count: this.addFlashChatTime
+      }
+      this.addProp(data)
     }
   }
 };

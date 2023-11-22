@@ -49,3 +49,11 @@ export function chatisland(userId) {
     method: 'get'
   })
 }
+
+export function addCharacterProp(data) {
+  return request({
+    url: '/system/member/addCharacterProp',
+    method: 'post',
+    data: data
+  })
+}
