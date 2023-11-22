@@ -80,6 +80,12 @@
       <el-table-column label="用户账号" align="center" prop="userName"/>
       <el-table-column label="用户昵称" align="center" prop="nickName"/>
       <el-table-column label="用户性别" align="center" prop="sex"/>
+      <el-table-column label="是否会员" align="center" prop="isVip">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isVip==='0'">否</span>
+          <span v-if="scope.row.isVip==='1'">是</span>
+        </template>
+      </el-table-column>
       <el-table-column label="用户标签" align="center" prop="userLabel"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
