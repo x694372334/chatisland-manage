@@ -117,8 +117,8 @@
         <el-form-item label="状态" prop="isSenior">
           <el-select v-model="form.isSenior" @change="form.chatislandCover=undefined">
             <el-option label="普通" value="0"></el-option>
-            <el-option label="锁定" value="1"></el-option>
-            <el-option label="非锁定" value="2"></el-option>
+            <el-option v-if="isVip==='1'" label="锁定" value="1"></el-option>
+            <el-option v-if="isVip==='1'" label="非锁定" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="封面" prop="chatislandCover">

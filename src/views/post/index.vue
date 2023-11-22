@@ -103,26 +103,21 @@
           <el-input v-model="form.postTitle" placeholder="请输入标题" />
         </el-form-item>
         <el-form-item label="post标签" prop="postLabel">
-          <el-checkbox v-model="checked">Flirt</el-checkbox>
-          <el-checkbox v-model="checked">Texting</el-checkbox>
-          <el-checkbox v-model="checked">Advice</el-checkbox>
-          <el-checkbox v-model="checked">Confession</el-checkbox>
-          <el-checkbox v-model="checked">Lifestyle</el-checkbox>
-          <el-checkbox v-model="checked">Other</el-checkbox>
-          <el-checkbox v-model="checked">Relationship</el-checkbox>
-          <el-checkbox v-model="checked">Cooking</el-checkbox>
-          <el-checkbox v-model="checked">Friendship</el-checkbox>
-          <el-checkbox v-model="checked">Couples</el-checkbox>
-          <el-checkbox v-model="checked">Watching</el-checkbox>
-          <el-checkbox v-model="checked">Dancing</el-checkbox>
-          <el-checkbox v-model="checked">Drawing</el-checkbox>
-          <el-checkbox v-model="checked">Dates</el-checkbox>
-          <el-checkbox v-model="checked">Group</el-checkbox>
-          <el-checkbox v-model="checked">Novelty</el-checkbox>
-          <el-checkbox v-model="checked">Reading</el-checkbox>
-          <el-checkbox v-model="checked">Singing</el-checkbox>
-          <el-checkbox v-model="checked">Singles</el-checkbox>
-          <el-checkbox v-model="checked">Sport</el-checkbox>
+          <el-checkbox-group v-model="chooseTag"  @change="changeLabel">
+            <el-checkbox v-for="item in tagList" :value="item" :label="item"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="post文件" prop="postFiles">
+          <el-upload
+            class="upload-demo"
+            :auto-upload="false"
+            :on-change="handleChange"
+            drag
+            action=""
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="post内容" prop="description">
           <el-input
@@ -144,12 +139,14 @@
 </template>
 
 <script>
-import { listPost, getPost, delPost, addPost, updatePost } from "@/api/chatislandApi/post";
+import { listPost, getPost, delPost, addPost, updatePost, uploadFiles } from "@/api/chatislandApi/post";
 
 export default {
   name: "Post",
   data() {
     return {
+      chooseTag: [],
+      tagList: ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'],
       // 按钮loading
       buttonLoading: false,
       // 遮罩层
@@ -179,6 +176,8 @@ export default {
         postLabel: undefined,
         description: undefined
       },
+      files:[],
+      fileTypes:[],
       // 表单参数
       form: {},
       // 表单校验
@@ -237,6 +236,9 @@ export default {
         updateTime: undefined,
         description: undefined
       };
+      this.chooseTag=[]
+      this.files =[]
+      this.fileTypes=[]
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -269,35 +271,67 @@ export default {
       getPost(postId).then(response => {
         this.loading = false;
         this.form = response.data;
+        if(this.form.postLabel !== undefined&& this.form.postLabel !== ''){
+          this.chooseTag = JSON.parse(this.form.postLabel)
+        }
         this.open = true;
         this.title = "修改post列";
       });
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      /*this.$refs["form"].validate(valid => {
         if (valid) {
           this.buttonLoading = true;
-          if (this.form.postId != null) {
-            updatePost(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            }).finally(() => {
-              this.buttonLoading = false;
-            });
-          } else {
-            console.log(this.form);
-            addPost(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            }).finally(() => {
-              this.buttonLoading = false;
-            });
+          let formData = new FormData();
+          for (const file of this.files) {//多个文件全部都放到files
+            if(file.raw) {
+              formData.append('files', file.raw);
+            }
           }
+          uploadFiles(formData).then(response => {
+            console.log(response.data)
+            let files=[]
+            for (let i = 0; i < response.data.length; i++) {
+              let fileObj = {}
+              let obj = response.data[i]
+              fileObj.fileName = obj.fileName
+              fileObj.fileRoute = obj.fileRoute
+              let fileType = obj.fileName.substring(obj.fileName.lastIndexOf('.')+1)
+              let imagesTypes = ['jpg', 'jpeg', 'png', 'bmp', 'gif']
+              if(imagesTypes.includes(fileType.toLowerCase())){
+                fileObj.fileType = '0'
+              }else {
+                fileObj.fileType = '1'
+              }
+              files.push(fileObj)
+            }
+            if (this.form.postId != null) {
+              if(files.length>0){
+                this.form.postFileList = files
+              }
+              updatePost(this.form).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              }).finally(() => {
+                this.buttonLoading = false;
+              });
+            } else {
+              console.log(this.form);
+              addPost(this.form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              }).finally(() => {
+                this.buttonLoading = false;
+              });
+            }
+          }).finally(() => {
+            this.buttonLoading = false;
+          });
         }
-      });
+      });*/
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -319,6 +353,13 @@ export default {
       this.download('system/post/export', {
         ...this.queryParams
       }, `post_${new Date().getTime()}.xlsx`)
+    },
+    changeLabel(){
+      this.form.postLabel = JSON.stringify(this.chooseTag)
+    },
+    handleChange(file, fileList){
+      //TODO 校验文件类型，视频文件只能上传一个，图片类型不限
+      this.files = fileList;
     }
   }
 };

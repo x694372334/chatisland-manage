@@ -9,6 +9,14 @@ export function listPost(query) {
   })
 }
 
+export function uploadFiles(data) {
+  return request({
+    url: '/system/oss/uploadFiles',
+    method: 'post',
+    data: data
+  })
+}
+
 // 查询post列详细
 export function getPost(postId) {
   return request({

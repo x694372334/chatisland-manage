@@ -115,7 +115,6 @@ export default {
   name: "Post",
   data() {
     return {
-      uploadUrl:'http://localhost:8080/chatisland-api/system/chatislandPost/uploadCharacterPictures/',
       // 按钮loading
       buttonLoading: false,
       // 遮罩层
