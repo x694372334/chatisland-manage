@@ -17,6 +17,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="是否会员" prop="isVip">
+        <el-select
+          v-model="queryParams.isVip"
+          placeholder="请选择是否会员"
+          clearable
+          @keyup.enter.native="handleQuery"
+        >
+          <el-option value="0" label="否" key="0"></el-option>
+          <el-option value="1" label="是" key="1"></el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -82,8 +93,8 @@
       <el-table-column label="用户性别" align="center" prop="sex"/>
       <el-table-column label="是否会员" align="center" prop="isVip">
         <template slot-scope="scope">
-          <span v-if="scope.row.isVip==='0'">否</span>
-          <span v-if="scope.row.isVip==='1'">是</span>
+          <span v-if="scope.row.isVip===0">否</span>
+          <span v-if="scope.row.isVip===1">是</span>
         </template>
       </el-table-column>
       <el-table-column label="用户标签" align="center" prop="userLabel"/>
