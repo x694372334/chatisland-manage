@@ -309,7 +309,8 @@ export default {
         sex: '',
         isVip: '',
         userLabel: '',
-        aboutMe: ''
+        aboutMe: '',
+        isSystem: '1'
       },
       userLabel: [],
       // 表单校验
@@ -431,7 +432,7 @@ export default {
         vipDescribeDate: undefined,
         vipExpireDate: undefined,
         isComplimentary: undefined,
-        isSystem: undefined,
+        isSystem: '1',
         isBeginnerGuidance: undefined,
         beginnerGuidanceTime: undefined,
         systemUserSetting: undefined
