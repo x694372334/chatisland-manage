@@ -232,6 +232,17 @@
           >
           </el-input>
         </el-form-item>
+        <el-form-item label="人设基本信息" prop="systemUserSetting">
+          <el-input
+            type="textarea"
+            placeholder="请输入内容"
+            v-model="form.systemUserSetting"
+            maxlength="3000"
+            :rows="8"
+            show-word-limit
+          >
+          </el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="buttonLoading" type="primary" @click="submitForm">确 定</el-button>
@@ -384,6 +395,7 @@ export default {
         isVip: '',
         userLabel: '',
         aboutMe: '',
+        systemUserSetting: '',
         isSystem: '1'
       },
       userLabel: [],
