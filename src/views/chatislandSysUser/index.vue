@@ -181,7 +181,10 @@
                        :key="item"
                        :label="item"
                        :value="item">
-              <img :src="avatarHost+item+'.png'"/>
+              <el-row type="flex" align="middle">
+                <el-col :span="12">{{ item }}.png</el-col>
+                <el-col :span="12"><img style="width: 50px; height: 50px;" :src="avatarHost+item+'.png'"/></el-col>
+              </el-row>
             </el-option>
           </el-select>
         </el-form-item>
