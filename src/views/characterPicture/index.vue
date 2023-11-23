@@ -93,6 +93,7 @@
             :auto-upload="false"
             :on-change="handleChange"
             drag
+            :file-list="fileList"
             action=""
             multiple>
             <i class="el-icon-upload"></i>
@@ -147,6 +148,7 @@ export default {
         userId: undefined,
         files:[]
       },
+      fileList:[],
       // 表单校验
       rules: {
         userId: [
@@ -195,15 +197,9 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        postId: undefined,
-        postTitle: undefined,
-        postLabel: undefined,
-        createBy: undefined,
-        createTime: undefined,
-        updateBy: undefined,
-        updateTime: undefined,
-        description: undefined
+        files: []
       };
+      this.fileList=[]
       this.resetForm("form");
     },
     /** 搜索按钮操作 */

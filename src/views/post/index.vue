@@ -109,10 +109,12 @@
         </el-form-item>
         <el-form-item label="post文件" prop="postFiles">
           <el-upload
+            ref="uploadFile"
             class="upload-demo"
             :auto-upload="false"
             :on-change="handleChange"
             drag
+            :file-list="fileList"
             action=""
             multiple>
             <i class="el-icon-upload"></i>
@@ -145,6 +147,7 @@ export default {
   name: "Post",
   data() {
     return {
+      userId: undefined,
       chooseTag: [],
       tagList: ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'],
       // 按钮loading
@@ -177,6 +180,7 @@ export default {
         description: undefined
       },
       files:[],
+      fileList:[],
       fileTypes:[],
       // 表单参数
       form: {},
@@ -210,6 +214,7 @@ export default {
       if(null!=this.$route.query.userId){
         const userId = this.$route.query.userId;
         console.log(userId);
+        this.userId = userId
         this.queryParams.createBy = userId;
       }
       this.loading = true;
@@ -239,6 +244,7 @@ export default {
       this.chooseTag=[]
       this.files =[]
       this.fileTypes=[]
+      this.fileList=[]
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -280,36 +286,60 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      /*this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           this.buttonLoading = true;
-          let formData = new FormData();
-          for (const file of this.files) {//多个文件全部都放到files
-            if(file.raw) {
-              formData.append('files', file.raw);
-            }
-          }
-          uploadFiles(formData).then(response => {
-            console.log(response.data)
-            let files=[]
-            for (let i = 0; i < response.data.length; i++) {
-              let fileObj = {}
-              let obj = response.data[i]
-              fileObj.fileName = obj.fileName
-              fileObj.fileRoute = obj.fileRoute
-              let fileType = obj.fileName.substring(obj.fileName.lastIndexOf('.')+1)
-              let imagesTypes = ['jpg', 'jpeg', 'png', 'bmp', 'gif']
-              if(imagesTypes.includes(fileType.toLowerCase())){
-                fileObj.fileType = '0'
-              }else {
-                fileObj.fileType = '1'
+          if(this.files.length>0){
+            let formData = new FormData();
+            for (const file of this.files) {//多个文件全部都放到files
+              if(file.raw) {
+                formData.append('files', file.raw);
               }
-              files.push(fileObj)
             }
-            if (this.form.postId != null) {
+            uploadFiles(formData).then(response => {
+              console.log(response.data)
+              let files=[]
+              for (let i = 0; i < response.data.length; i++) {
+                let fileObj = {}
+                let obj = response.data[i]
+                fileObj.fileName = obj.fileName
+                fileObj.fileRoute = obj.fileRoute
+                let fileType = obj.fileName.substring(obj.fileName.lastIndexOf('.')+1)
+                let imagesTypes = ['jpg', 'jpeg', 'png', 'bmp', 'gif']
+                if(imagesTypes.includes(fileType.toLowerCase())){
+                  fileObj.fileType = '0'
+                }else {
+                  fileObj.fileType = '1'
+                }
+                files.push(fileObj)
+              }
               if(files.length>0){
                 this.form.postFileList = files
               }
+              if (this.form.postId != null) {
+                updatePost(this.form).then(response => {
+                  this.$modal.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                }).finally(() => {
+                  this.buttonLoading = false;
+                });
+              } else {
+                console.log(this.form);
+                this.form.userId = this.userId
+                addPost(this.form).then(response => {
+                  this.$modal.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                }).finally(() => {
+                  this.buttonLoading = false;
+                });
+              }
+            }).finally(() => {
+              this.buttonLoading = false;
+            });
+          }else {
+            if (this.form.postId != null) {
               updatePost(this.form).then(response => {
                 this.$modal.msgSuccess("修改成功");
                 this.open = false;
@@ -319,6 +349,7 @@ export default {
               });
             } else {
               console.log(this.form);
+              this.form.userId = this.userId
               addPost(this.form).then(response => {
                 this.$modal.msgSuccess("新增成功");
                 this.open = false;
@@ -327,11 +358,9 @@ export default {
                 this.buttonLoading = false;
               });
             }
-          }).finally(() => {
-            this.buttonLoading = false;
-          });
+          }
         }
-      });*/
+      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {

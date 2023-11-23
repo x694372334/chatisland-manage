@@ -70,6 +70,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="主键id" align="center" prop="chatislandId"/>
       <el-table-column label="名称" align="center" prop="chatislandName"/>
+      <el-table-column label="搜索Match" align="center" prop="chatislandMatch"/>
       <el-table-column label="chatisland标签" align="center" prop="chatislandLabel"/>
       <el-table-column label="chatisland封面" align="center" prop="chatislandCover"/>
       <el-table-column label="chatisland描述" align="center" prop="description"/>
@@ -339,6 +340,7 @@ export default {
             });
           } else {
             console.log(this.form)
+            this.form.userId = this.userId
             addChatisland(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
