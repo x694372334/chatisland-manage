@@ -100,7 +100,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="post标题" prop="postTitle">
-          <el-input v-model="form.postTitle" placeholder="请输入标题" />
+          <el-input v-model="form.postTitle" placeholder="请输入标题" maxlength="40" />
         </el-form-item>
         <el-form-item label="post标签" prop="postLabel">
           <el-checkbox-group v-model="chooseTag"  @change="changeLabel">
@@ -126,7 +126,7 @@
             type="textarea"
             placeholder="请输入内容"
             v-model="form.description"
-            maxlength="100"
+            maxlength="300"
             show-word-limit
           >
           </el-input>

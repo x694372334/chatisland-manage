@@ -107,8 +107,8 @@
     <!-- 添加或修改chatisLand对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="名称" prop="chatislandName">
-          <el-input v-model="form.chatislandName" placeholder="请输入名称"/>
+        <el-form-item label="标题" prop="chatislandName">
+          <el-input v-model="form.chatislandName" placeholder="请输入标题" maxlength="120"/>
         </el-form-item>
         <el-form-item label="标签" prop="chatislandLabel">
           <el-checkbox-group v-model="chooseTag" @change="changeLabel">
@@ -170,7 +170,7 @@
             placeholder="请输入内容"
             :rows="5"
             v-model="form.description"
-            maxlength="100"
+            maxlength="300"
             show-word-limit
           >
           </el-input>
