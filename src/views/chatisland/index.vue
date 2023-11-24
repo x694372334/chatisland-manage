@@ -326,6 +326,13 @@ export default {
         if (this.form.chatislandLabel !== undefined && this.form.chatislandLabel !== '' && this.form.chatislandLabel !== null) {
           this.chooseTag = JSON.parse(this.form.chatislandLabel)
         }
+        if(this.form.chatislandCover !== undefined && this.form.chatislandCover !== ''){
+          if(this.form.chatislandCover.indexOf("[")>-1){
+            this.covers = JSON.parse(this.form.chatislandCover)
+          }else {
+            this.covers.push(this.form.chatislandCover)
+          }
+        }
         this.open = true;
         this.title = "修改chatisLand";
       });
