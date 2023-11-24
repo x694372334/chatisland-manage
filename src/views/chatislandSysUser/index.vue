@@ -174,7 +174,6 @@
                 <el-col :span="12">{{ item }}.png</el-col>
                 <el-col :span="12"><img style="width: 50px; height: 50px;" :src="avatarHost+item+'.png'"/></el-col>
               </el-row>
-
             </el-option>
             <el-option v-if="form.isVip==='1'"
                        v-for="item in vipAvatarList"
@@ -196,6 +195,9 @@
         </el-form-item>
         <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" placeholder="请输入年龄"/>
+        </el-form-item>
+        <el-form-item label="karma值" prop="karma">
+          <el-input v-model="form.karma" placeholder="请输入karma值" ></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="form.sex" placeholder="请选择">
@@ -391,6 +393,7 @@ export default {
         userName: '',
         nickName: '',
         age: undefined,
+        karma: 0,
         sex: '',
         isVip: '',
         userLabel: '',
@@ -581,6 +584,8 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.buttonLoading = true;
+          console.log(this.form)
+          this.form.isSystem = '1'
           if (this.form.userId != null) {
             updateUser(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
