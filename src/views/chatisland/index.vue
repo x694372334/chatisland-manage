@@ -143,7 +143,7 @@
             <el-option style="text-align:center;height:100px;margin-top: 5px;" value="9" label="cover_9.png"><img
               style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_9.png"/></el-option>
           </el-select>
-          <img style="max-width: 100%;" v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined" :src="form.chatislandCover" />
+          <img v-for="path in covers" style="max-width: 100%;" v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined" :src="path" />
           <el-upload v-if="form.isSenior !==undefined && form.isSenior !== '0'"
                      class="upload-demo"
                      drag
@@ -231,6 +231,7 @@ export default {
         description: undefined
       },
       // 表单参数
+      covers:[],
       form: {
         chatislandName: '',
         chatislandLabel: '',
@@ -377,7 +378,9 @@ export default {
       this.form.chatislandLabel = JSON.stringify(this.chooseTag)
     },
     uploadSuccess(response, file, fileList){
-      this.form.chatislandCover = response.data.fileRoute
+      // this.form.chatislandCover = response.data.fileRoute
+      this.covers.push(response.data.fileRoute)
+      this.form.chatislandCover = JSON.stringify(this.covers)
     }
   }
 };
