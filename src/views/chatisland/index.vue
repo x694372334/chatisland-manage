@@ -143,11 +143,14 @@
             <el-option style="text-align:center;height:100px;margin-top: 5px;" value="9" label="cover_9.png"><img
               style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_9.png"/></el-option>
           </el-select>
-          <img v-for="path in covers" style="max-width: 100%;" v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined" :src="path" />
+          <img v-for="path in covers" style="max-width: 100%;"
+               v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined"
+               :src="path"/>
           <el-upload v-if="form.isSenior !==undefined && form.isSenior !== '0'"
                      class="upload-demo"
                      drag
                      :on-success="uploadSuccess"
+                     :file-list="covers"
                      :action="uploadUrl">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -231,7 +234,7 @@ export default {
         description: undefined
       },
       // 表单参数
-      covers:[],
+      covers: [],
       form: {
         chatislandName: '',
         chatislandLabel: '',
@@ -276,6 +279,7 @@ export default {
     // 表单重置
     reset() {
       this.chooseTag = []
+      this.covers = []
       this.form = {
         chatislandId: undefined,
         chatislandName: undefined,
@@ -319,7 +323,7 @@ export default {
       getChatisland(chatislandId).then(response => {
         this.loading = false;
         this.form = response.data;
-        if(this.form.chatislandLabel !== undefined&& this.form.chatislandLabel !== '' &&this.form.chatislandLabel !== null){
+        if (this.form.chatislandLabel !== undefined && this.form.chatislandLabel !== '' && this.form.chatislandLabel !== null) {
           this.chooseTag = JSON.parse(this.form.chatislandLabel)
         }
         this.open = true;
@@ -377,10 +381,14 @@ export default {
     changeLabel() {
       this.form.chatislandLabel = JSON.stringify(this.chooseTag)
     },
-    uploadSuccess(response, file, fileList){
+    uploadSuccess(response, file, fileList) {
       // this.form.chatislandCover = response.data.fileRoute
       this.covers.push(response.data.fileRoute)
-      this.form.chatislandCover = JSON.stringify(this.covers)
+      if (this.covers.length > 1) {
+        this.form.chatislandCover = JSON.stringify(this.covers)
+      } else {
+        this.form.chatislandCover = response.data.fileRoute
+      }
     }
   }
 };
