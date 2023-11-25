@@ -28,7 +28,6 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:characterPicture:add']"
         >新增
         </el-button>
       </el-col>
@@ -40,7 +39,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:member:deletePicture']"
         >删除
         </el-button>
       </el-col>
@@ -64,7 +62,6 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:member:deletePicture']"
           >删除
           </el-button>
         </template>
