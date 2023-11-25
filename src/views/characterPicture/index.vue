@@ -164,7 +164,6 @@ export default {
   },
   created() {
     this.firstUserList();
-    this.getList();
   },
   methods: {
     firstUserList() {
@@ -172,6 +171,7 @@ export default {
         this.userList = response.data
         if(this.userList.length>0){
           this.queryParams.userId = new Number(this.$route.query.userId).valueOf()
+          this.getList()
         }
       })
     },
