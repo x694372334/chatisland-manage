@@ -48,7 +48,7 @@
       <el-row>
         <draggable v-model="sortList" @end="onEnd">
           <el-col v-for="item in pictureList" :span="6" style="margin: 5px 0;">
-            <el-card style="height: 280px;">
+            <el-card style="height: 600px;">
               <div slot="header" class="clearfix">
                 <el-col :span="18">
                   <span style="font-size: 12px;">{{item.pictureFileName}}</span>
