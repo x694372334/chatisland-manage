@@ -68,7 +68,20 @@
       <el-table-column label="名称" align="center" prop="chatislandName"/>
       <el-table-column label="搜索Match" align="center" prop="chatislandMatch"/>
       <el-table-column label="chatisland标签" align="center" prop="chatislandLabel"/>
-      <el-table-column label="chatisland封面" align="center" prop="chatislandCover"/>
+      <el-table-column label="chatisland封面" align="center" prop="chatislandCover">
+        <template slot-scope="scope">
+          <img v-if="scope.row.isSenior !== '0'" style="width: 120px;height: 180px;" v-for="cover in JSON.parse(scope.row.chatislandCover)" :src="cover" />
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='1'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_1.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='2'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_2.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='3'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_3.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='4'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_4.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='5'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_5.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='6'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_6.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='7'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_7.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='8'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_8.png">
+          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='9'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_9.png">
+        </template>
+      </el-table-column>
       <el-table-column label="chatisland描述" align="center" prop="description"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -186,8 +199,9 @@ import {
   listChatisland,
   updateChatisland
 } from "@/api/chatislandApi/chatisland";
-
+import draggable from 'vuedraggable'
 export default {
+  components:{draggable},
   name: "Chatisland",
   data() {
     return {

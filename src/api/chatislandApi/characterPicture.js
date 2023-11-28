@@ -35,3 +35,14 @@ export function delPicture(id) {
     method: 'delete'
   })
 }
+
+// 保存图片排序
+export function savePictureSort(data) {
+  return request({
+    url: '/system/member/sortCharacterPictures',
+    method: 'post',
+    data: {
+      list: data
+    }
+  })
+}

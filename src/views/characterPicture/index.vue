@@ -33,19 +33,39 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
+          type="primary"
           plain
-          icon="el-icon-delete"
+          icon="el-icon-plus"
           size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-        >删除
+          @click="handleSort"
+        >保存顺序
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
+    <div>
+      <el-row>
+        <draggable v-model="sortList" @end="onEnd">
+          <el-col v-for="item in pictureList" :span="6" style="margin: 5px 0;">
+            <el-card style="height: 280px;">
+              <div slot="header" class="clearfix">
+                <el-col :span="18">
+                  <span style="font-size: 12px;">{{item.pictureFileName}}</span>
+                </el-col>
+                <el-col :span="6" style="text-align: right;">
+                  <el-button type="danger" size="mini" @click="handleDelete(item.id, item.pictureFileName)">删除</el-button>
+                </el-col>
+              </div>
+              <el-image style="max-width: 100%;" :src="item.pictureFilePath"></el-image>
+            </el-card>
+          </el-col>
+        </draggable>
+
+      </el-row>
+    </div>
+
+<!--    <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="主键Id" align="center" prop="id"/>
       <el-table-column label="用户编号" align="center" prop="userId"/>
@@ -66,15 +86,17 @@
           </el-button>
         </template>
       </el-table-column>
-    </el-table>
+    </el-table>-->
 
-    <pagination
+
+
+<!--    <pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
-    />
+    />-->
 
     <!-- 添加对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -107,12 +129,14 @@
 </template>
 
 <script>
-import {selectAllSystemUserList, listPicture, uploadPictures, delPicture} from "@/api/chatislandApi/characterPicture";
-
+import {selectAllSystemUserList, listPicture, uploadPictures, delPicture, savePictureSort} from "@/api/chatislandApi/characterPicture";
+import draggable from 'vuedraggable'
 export default {
+  components:{draggable},
   name: "Post",
   data() {
     return {
+      sortList:[],
       // 按钮loading
       buttonLoading: false,
       // 遮罩层
@@ -127,16 +151,14 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // post列表格数据
-      postList: [],
+      // 图片数据
+      pictureList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
         userId: undefined,
         fileName: undefined
       },
@@ -179,11 +201,22 @@ export default {
     },
     /** 查询图片列表 */
     getList() {
-      this.loading = true;
+      // this.loading = true;
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       listPicture(this.queryParams).then(response => {
-        this.postList = response.rows;
+        this.pictureList = response.rows;
+        for (let i = 0; i < response.rows.length; i++) {
+          let obj = response.rows[i]
+          obj.index = i
+          this.sortList.push(obj)
+        }
         this.total = response.total;
-        this.loading = false;
+        loading.close()
       });
     },
     // 取消按钮
@@ -224,6 +257,32 @@ export default {
       this.open = true;
       this.title = "上传图片";
     },
+    handleSort(){
+      let list = []
+      for (let i = 0; i < this.sortList.length; i++) {
+        let obj = this.sortList[i]
+        let item = {
+          id: obj.id,
+          fileName: obj.pictureFileName,
+          sort: obj.index
+        }
+        list.push(item)
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      savePictureSort(list).then(response => {
+        if(response.data){
+          this.$modal.msgSuccess("保存排序成功");
+          loading.close()
+        }
+      }).finally(() => {
+        this.buttonLoading = false;
+      });
+    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -249,9 +308,11 @@ export default {
       });
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除编号为"' + ids + '"的数据项？').then(() => {
+    handleDelete(id, fileName) {
+      console.log(id)
+      console.log(fileName)
+      const ids = id;
+      this.$modal.confirm('是否确认删除"' +fileName + '"？').then(() => {
         this.loading = true;
         return delPicture(ids);
       }).then(() => {
@@ -271,6 +332,16 @@ export default {
     },
     handleChange(file, fileList){
       this.form.files = fileList;
+    },
+    onEnd(e){
+      console.log(e)
+      console.log(this.sortList)
+      for (let i = 0; i < this.sortList.length; i++) {
+        let obj = this.sortList[i]
+        obj.index = i
+      }
+      console.log(this.sortList)
+      this.pictureList = this.sortList
     }
   }
 };
