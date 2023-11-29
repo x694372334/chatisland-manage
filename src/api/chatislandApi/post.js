@@ -25,6 +25,23 @@ export function getPost(postId) {
   })
 }
 
+// 查询post列详细
+export function getPostFile(postId) {
+  return request({
+    url: '/system/chatislandPost/files/' + postId,
+    method: 'get'
+  })
+}
+
+// 新增post列
+export function updatePostFileSort(data) {
+  return request({
+    url: '/system/chatislandPost/updatePostFileSort',
+    method: 'post',
+    data: {list: data}
+  })
+}
+
 // 新增post列
 export function addPost(data) {
   return request({

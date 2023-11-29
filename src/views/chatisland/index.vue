@@ -150,9 +150,11 @@
             <el-option style="text-align:center;height:100px;margin-top: 5px;" value="9" label="cover_9.png"><img
               style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_9.png"/></el-option>
           </el-select>
-          <img v-for="path in covers" style="max-width: 100%;"
+          <draggable v-model="covers">
+          <img v-for="path in covers" style="max-width: 50%;"
                v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined"
                :src="path"/>
+          </draggable>
           <el-upload v-if="form.isSenior !==undefined && form.isSenior !== '0'"
                      class="upload-demo"
                      drag
@@ -351,6 +353,9 @@ export default {
         if (valid) {
           this.buttonLoading = true;
           if (this.form.chatislandId != null) {
+            if(this.covers.length>0&&this.form.isSenior !==undefined && this.form.isSenior !== '0'){
+              this.form.chatislandCover = JSON.stringify(this.covers)
+            }
             updateChatisland(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;

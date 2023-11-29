@@ -24,7 +24,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -34,7 +35,8 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,7 +46,8 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -53,17 +56,18 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键Id" align="center" prop="postId" />
-      <el-table-column label="post标题" align="center" prop="postTitle" />
-      <el-table-column label="post标签" align="center" prop="postLabel" />
-      <el-table-column label="备注" align="center" prop="description" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="主键Id" align="center" prop="postId"/>
+      <el-table-column label="post标题" align="center" prop="postTitle"/>
+      <el-table-column label="post标签" align="center" prop="postLabel"/>
+      <el-table-column label="备注" align="center" prop="description"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -71,13 +75,22 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-          >删除</el-button>
+          >删除
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleFileUpdate(scope.row)"
+          >修改文件位置
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,14 +107,28 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="post标题" prop="postTitle">
-          <el-input v-model="form.postTitle" placeholder="请输入标题" maxlength="40" />
+          <el-input v-model="form.postTitle" placeholder="请输入标题" maxlength="40"/>
         </el-form-item>
         <el-form-item label="post标签" prop="postLabel">
-          <el-checkbox-group v-model="chooseTag"  @change="changeLabel">
+          <el-checkbox-group v-model="chooseTag" @change="changeLabel">
             <el-checkbox v-for="item in tagList" :value="item" :label="item"></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="post文件" prop="postFiles">
+        <el-form-item label="文件类型">
+          <el-select v-model="fileType">
+            <el-option :key="'0'" :value="'0'" label="图片"></el-option>
+            <el-option :key="'1'" :value="'1'" label="视频"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="fileType !==''" label="post文件" prop="postFiles">
+          <el-row>
+            <el-col :span="12" v-if="fileType==='0'" v-for="item in postFiles">
+              <img style="max-width: 100%;" :src="item.fileRoute">
+            </el-col>
+            <el-col v-if="fileType==='1'" v-for="item in postFiles">
+              <video style="max-width: 100%;" :src="item.fileRoute"></video>
+            </el-col>
+          </el-row>
           <el-upload
             ref="uploadFile"
             class="upload-demo"
@@ -131,18 +158,44 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="修改文件顺序" :visible.sync="fileUpdate" width="500px" append-to-body>
+      <el-row>
+        <draggable v-model="postFiles" @end="onEnd">
+          <el-col :span="12" v-if="fileType==='0'" v-for="item in postFiles">
+            <el-row>
+              <img style="max-width: 100%;" :src="item.fileRoute">
+            </el-row>
+            <el-row>
+              <span>{{ item.fileName }}</span>
+            </el-row>
+          </el-col>
+          <el-col v-if="fileType==='1'" v-for="item in postFiles">
+            <video style="max-width: 100%;" :src="item.fileRoute"></video>
+          </el-col>
+        </draggable>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button :loading="buttonLoading" type="primary" @click="updateFileSort">确 定</el-button>
+        <el-button @click="fileUpdate=false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listPost, getPost, delPost, addPost, updatePost, uploadFiles } from "@/api/chatislandApi/post";
+import {listPost, getPost, delPost, addPost, updatePost, uploadFiles, updatePostFileSort} from "@/api/chatislandApi/post";
+import draggable from 'vuedraggable'
 
 export default {
+  components: {draggable},
   name: "Post",
   data() {
     return {
+      fileUpdate: false,
       userId: undefined,
       chooseTag: [],
+      fileType: '',
       tagList: ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'],
       // 按钮loading
       buttonLoading: false,
@@ -173,24 +226,25 @@ export default {
         postLabel: undefined,
         description: undefined
       },
-      files:[],
-      fileList:[],
-      fileTypes:[],
+      files: [],
+      fileList: [],
+      postId: undefined,
+      postFiles: [],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         postId: [
-          { required: true, message: "主键Id不能为空", trigger: "blur" }
+          {required: true, message: "主键Id不能为空", trigger: "blur"}
         ],
         postTitle: [
-          { required: true, message: "post标题不能为空", trigger: "blur" }
+          {required: true, message: "post标题不能为空", trigger: "blur"}
         ],
         postLabel: [
-          { required: true, message: "post标签不能为空", trigger: "blur" }
+          {required: true, message: "post标签不能为空", trigger: "blur"}
         ],
         description: [
-          { required: true, message: "备注不能为空", trigger: "blur" }
+          {required: true, message: "备注不能为空", trigger: "blur"}
         ]
       }
     };
@@ -201,11 +255,11 @@ export default {
   methods: {
     /** 查询post列列表 */
     getList() {
-      if ( this.$route.query.form) {
+      if (this.$route.query.form) {
         this.areaObj = JSON.parse(this.$route.query.form);
-        console.log(this.areaObj,"areaObj-------------")
+        console.log(this.areaObj, "areaObj-------------")
       }
-      if(null!=this.$route.query.userId){
+      if (null != this.$route.query.userId) {
         const userId = this.$route.query.userId;
         console.log(userId);
         this.userId = userId
@@ -235,10 +289,12 @@ export default {
         updateTime: undefined,
         description: undefined
       };
-      this.chooseTag=[]
-      this.files =[]
-      this.fileTypes=[]
-      this.fileList=[]
+      this.chooseTag = []
+      this.files = []
+      this.fileList = []
+      this.postFiles = []
+      this.fileType = ''
+      this.postId = undefined
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -254,7 +310,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.postId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -271,11 +327,28 @@ export default {
       getPost(postId).then(response => {
         this.loading = false;
         this.form = response.data;
-        if(this.form.postLabel !== undefined&& this.form.postLabel !== ''&& this.form.postLabel !== null){
+        if (this.form.postLabel !== undefined && this.form.postLabel !== '' && this.form.postLabel !== null) {
           this.chooseTag = JSON.parse(this.form.postLabel)
+        }
+        if (this.form.postFiles) {
+          this.postFiles = this.form.postFiles
+          this.fileType = this.postFiles[0].fileType
         }
         this.open = true;
         this.title = "修改post列";
+      });
+    },
+    handleFileUpdate(row) {
+      const postId = row.postId
+      getPost(postId).then(response => {
+        if (response.data.postFiles) {
+          this.postId = postId
+          this.postFiles = response.data.postFiles
+          if (this.postFiles) {
+            this.fileType = this.postFiles[0].fileType
+          }
+        }
+        this.fileUpdate = true;
       });
     },
     /** 提交按钮 */
@@ -283,31 +356,53 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.buttonLoading = true;
-          if(this.files.length>0){
+          if (this.files.length > 0) {
             let formData = new FormData();
+            let images = []
+            let videos = []
+            let imagesTypes = ['jpg', 'jpeg', 'png', 'bmp', 'gif']
+            let videosTypes = ['mp4', 'avi', 'wmv', 'mov']
             for (const file of this.files) {//多个文件全部都放到files
-              if(file.raw) {
-                formData.append('files', file.raw);
+              if (file.raw) {
+                let fileType = file.raw.name.substr(file.raw.name.lastIndexOf('.') + 1)
+                if (this.fileType === '0') {
+                  if (imagesTypes.includes(fileType.toLowerCase())) {
+                    if (images.length <= 8) {
+                      images.push(file.raw.name)
+                      formData.append('files', file.raw)
+                    } else {
+                      this.$modal.msgError("图片文件最多只能上传9个")
+                      this.buttonLoading = false
+                      return false
+                    }
+                  }
+                } else if (this.fileType === '1') {
+                  if (videosTypes.includes(fileType.toLowerCase())) {
+                    if (videos.length === 0) {
+                      videos.push(file.raw.name)
+                      formData.append('files', file.raw)
+                    } else {
+                      this.$modal.msgError("视频文件最多只能上传1个")
+                      this.buttonLoading = false
+                      return false
+                    }
+                  }
+                }
               }
             }
             uploadFiles(formData).then(response => {
               console.log(response.data)
-              let files=[]
+              let files = []
               for (let i = 0; i < response.data.length; i++) {
                 let fileObj = {}
                 let obj = response.data[i]
                 fileObj.fileName = obj.fileName
                 fileObj.fileRoute = obj.fileRoute
-                let fileType = obj.fileName.substring(obj.fileName.lastIndexOf('.')+1)
-                let imagesTypes = ['jpg', 'jpeg', 'png', 'bmp', 'gif']
-                if(imagesTypes.includes(fileType.toLowerCase())){
-                  fileObj.fileType = '0'
-                }else {
-                  fileObj.fileType = '1'
-                }
+                fileObj.sort = i
+                fileObj.fileType = this.fileType
                 files.push(fileObj)
               }
-              if(files.length>0){
+              if (files.length > 0) {
                 this.form.postFileList = files
               }
               if (this.form.postId != null) {
@@ -332,8 +427,11 @@ export default {
             }).finally(() => {
               this.buttonLoading = false;
             });
-          }else {
+          } else {
             if (this.form.postId != null) {
+              if (this.postFiles.length > 0) {
+                this.form.postFileList = this.postFiles
+              }
               updatePost(this.form).then(response => {
                 this.$modal.msgSuccess("修改成功");
                 this.open = false;
@@ -363,8 +461,8 @@ export default {
         this.loading = true;
         return delPost(postIds);
       }).then(() => {
-        this.loading = false;
         this.getList();
+        this.loading = false;
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {
       }).finally(() => {
@@ -377,12 +475,33 @@ export default {
         ...this.queryParams
       }, `post_${new Date().getTime()}.xlsx`)
     },
-    changeLabel(){
+    changeLabel() {
       this.form.postLabel = JSON.stringify(this.chooseTag)
     },
-    handleChange(file, fileList){
+    handleChange(file, fileList) {
       //TODO 校验文件类型，视频文件只能上传一个，图片类型不限
       this.files = fileList;
+    },
+    onEnd(e) {
+      console.log(e)
+      console.log(this.postFiles)
+      for (let i = 0; i < this.postFiles.length; i++) {
+        let obj = this.postFiles[i]
+        obj.sort = i
+      }
+      console.log(this.postFiles)
+    },
+    updateFileSort() {
+      console.log(this.postFiles)
+      updatePostFileSort(this.postFiles).then(response => {
+        if(response.data){
+          this.$modal.msgSuccess("修改文件顺序成功");
+          this.fileUpdate = false;
+          this.getList()
+        }
+      }).finally(() => {
+        this.buttonLoading = false;
+      });
     }
   }
 };
