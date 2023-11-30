@@ -58,32 +58,34 @@
           @click="handleExport"
         >导出
         </el-button>
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-sort"
+          size="mini"
+          @click="sortTable"
+        >保存顺序
+        </el-button>
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-top"
+          size="mini"
+          @click="setTopChatisland"
+        >置顶
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="chatislandList" @selection-change="handleSelectionChange">
+    <el-table row-key="chatislandId" v-loading="loading" :data="chatislandList" @selection-change="handleSelectionChange" style="overflow-y: auto;">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="主键id" align="center" prop="chatislandId"/>
       <el-table-column label="名称" align="center" prop="chatislandName"/>
       <el-table-column label="搜索Match" align="center" prop="chatislandMatch"/>
       <el-table-column label="chatisland标签" align="center" prop="chatislandLabel"/>
-      <el-table-column label="chatisland封面" align="center" prop="chatislandCover">
-        <template slot-scope="scope">
-          <img v-if="scope.row.isSenior !== '0'" style="width: 120px;height: 180px;" v-for="cover in JSON.parse(scope.row.chatislandCover)" :src="cover" />
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='1'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_1.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='2'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_2.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='3'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_3.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='4'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_4.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='5'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_5.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='6'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_6.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='7'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_7.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='8'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_8.png">
-          <img v-if="scope.row.isSenior === '0' && scope.row.chatislandCover==='9'" style="width: 120px;height: 180px;" src="../../assets/images/normal_cover/cover_9.png">
-        </template>
-      </el-table-column>
-      <el-table-column label="chatisland描述" align="center" prop="description"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="chatisland封面" align="center" prop="chatislandCover"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -151,9 +153,9 @@
               style="width: 50px; height: 100px;" src="../../assets/images/normal_cover/cover_9.png"/></el-option>
           </el-select>
           <draggable v-model="covers">
-          <img v-for="path in covers" style="max-width: 50%;"
-               v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined"
-               :src="path"/>
+            <img v-for="path in covers" style="max-width: 50%;"
+                 v-if="form.isSenior !==undefined && form.isSenior !== '0' && form.chatislandCover!==undefined"
+                 :src="path"/>
           </draggable>
           <el-upload v-if="form.isSenior !==undefined && form.isSenior !== '0'"
                      class="upload-demo"
@@ -199,12 +201,19 @@ import {
   delChatisland,
   getChatisland,
   listChatisland,
-  updateChatisland
+  updateChatisland,
+  sortChatisland,
+  setTopChatisland
 } from "@/api/chatislandApi/chatisland";
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable';
+import Sortable from 'sortablejs';
+
 export default {
-  components:{draggable},
+  components: {draggable, Sortable},
   name: "Chatisland",
+  mounted() {
+    this.rowDrop()
+  },
   data() {
     return {
       uploadUrl: process.env.VUE_APP_BASE_API + "/system/oss/upload", // 上传的图片服务器地址
@@ -264,6 +273,43 @@ export default {
     this.getList();
   },
   methods: {
+    //行拖拽
+    rowDrop() {
+      const tbody = document.querySelector('.el-table__body-wrapper tbody')
+      const _this = this
+      Sortable.create(tbody, {
+        onEnd({newIndex, oldIndex}) {
+          const currRow = _this.chatislandList.splice(oldIndex, 1)[0]
+          _this.chatislandList.splice(newIndex, 0, currRow)
+          for (let i = 0; i < _this.chatislandList.length; i++) {
+            let obj = _this.chatislandList[i]
+            obj.sort = _this.total - ((_this.queryParams.pageNum - 1) * _this.queryParams.pageSize + i)
+          }
+          console.log(_this.chatislandList)
+        }
+      })
+    },
+    sortTable(){
+      sortChatisland(this.chatislandList).then(response=>{
+        if(response.data){
+          this.$modal.msgSuccess("保存排序成功");
+          this.getList()
+        }
+      })
+    },
+    setTopChatisland(){
+      if(this.ids.length===0){
+        this.$modal.msgError("请选择需要置顶的列");
+        return false
+      }
+      setTopChatisland(this.ids).then(response=>{
+        if(response.data){
+          this.$modal.msgSuccess("置顶成功");
+          this.queryParams.pageNum=1
+          this.getList()
+        }
+      })
+    },
     /** 查询chatisLand列表 */
     getList() {
       if (this.$route.query.isVip) {
@@ -336,10 +382,10 @@ export default {
         if (this.form.chatislandLabel !== undefined && this.form.chatislandLabel !== '' && this.form.chatislandLabel !== null) {
           this.chooseTag = JSON.parse(this.form.chatislandLabel)
         }
-        if(this.form.chatislandCover !== undefined && this.form.chatislandCover !== ''){
-          if(this.form.chatislandCover.indexOf("[")>-1){
+        if (this.form.chatislandCover !== undefined && this.form.chatislandCover !== '') {
+          if (this.form.chatislandCover.indexOf("[") > -1) {
             this.covers = JSON.parse(this.form.chatislandCover)
-          }else {
+          } else {
             this.covers.push(this.form.chatislandCover)
           }
         }
@@ -353,7 +399,7 @@ export default {
         if (valid) {
           this.buttonLoading = true;
           if (this.form.chatislandId != null) {
-            if(this.covers.length>0&&this.form.isSenior !==undefined && this.form.isSenior !== '0'){
+            if (this.covers.length > 0 && this.form.isSenior !== undefined && this.form.isSenior !== '0') {
               this.form.chatislandCover = JSON.stringify(this.covers)
             }
             updateChatisland(this.form).then(response => {

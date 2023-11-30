@@ -35,6 +35,22 @@ export function updateChatisland(data) {
   })
 }
 
+export function sortChatisland(list){
+  return request({
+    url: '/chatisland/sortChatisland',
+    method: 'post',
+    data: {list: list}
+  })
+}
+
+export function setTopChatisland(ids){
+  return request({
+    url: '/chatisland/setTopChatisland',
+    method: 'post',
+    data: {ids: ids}
+  })
+}
+
 // 删除chatisLand
 export function delChatisland(chatislandId) {
   return request({
