@@ -34,6 +34,8 @@
 
 <script>
 
+import {userGenderReport,userAgeReport,userLabelReport} from "@/api/system/graphical";
+
 export default {
   mounted() {
     // 初始化 echarts
@@ -45,7 +47,29 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
+      queryParam:{
+        startDate:undefined,
+        endDate:undefined
+      },
+      gender:{"boy":0,"girl":0,"other":0},
+      age:{"<22":0,"22-28":0,"28-32":0,"32-38":0,"38-42":0,"42-48":0,">48":0},
+      label:{"flirt":0,"submissive":0,"dominate":0,"foreplay":0,"dates":0,"friendship":0,"sensual":0,"watching":0,"texting":0,"bdsm":0,"couples":0,"singles":0,"kink":0,"poly":0,"group":0,"threeway":0,"relationship":0,"advice":0,"confession":0,"novelty":0,"lifestyle":0,"cooking":0,"sports":0,"singing":0,"reading":0,"dancing":0,"drawing":0,"other":0}
     };
+  },
+  created() {
+    // 在此处编写需要在页面进入时执行的代码
+    userGenderReport().then(response =>{
+      this.gender = response.data
+      this.initBarChart();
+    })
+    userAgeReport().then(response =>{
+      this.age = response.data
+      this.initBarChart();
+    })
+    userLabelReport().then(response =>{
+      this.label = response.data
+      this.initBarChart();
+    })
   },
   methods: {
     goTarget(href) {
@@ -77,9 +101,9 @@ export default {
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 5, name: '男' },
-              { value: 24, name: '女' },
-              { value: 2, name: '其他' }
+              { value: this.gender.boy, name: '男' },
+              { value: this.gender.girl, name: '女' },
+              { value: this.gender.other, name: '其他' }
             ],
             emphasis: {
               itemStyle: {
@@ -112,13 +136,13 @@ export default {
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 5, name: '<22' },
-              { value: 24, name: '22-28' },
-              { value: 2, name: '28-32' },
-              { value: 21, name: '32-38' },
-              { value: 23, name: '38-42' },
-              { value: 5, name: '42-48' },
-              { value: 2, name: '>48' }
+              { value: this.age["<22"], name: '<22' },
+              { value: this.age["22-28"], name: '22-28' },
+              { value: this.age["28-32"], name: '28-32' },
+              { value: this.age["32-38"], name: '32-38' },
+              { value: this.age["38-42"], name: '38-42' },
+              { value: this.age["42-48"], name: '42-48' },
+              { value: this.age[">48"], name: '>48' }
             ],
             emphasis: {
               itemStyle: {
@@ -151,34 +175,34 @@ export default {
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 5, name: 'flirt' },
-              { value: 4, name: 'submissive' },
-              { value: 6, name: 'dominate' },
-              { value: 9, name: 'foreplay' },
-              { value: 7, name: 'dates' },
-              { value: 3, name: 'friendship' },
-              { value: 8, name: 'sensual' },
-              { value: 6, name: 'watching' },
-              { value: 5, name: 'texting' },
-              { value: 2, name: 'bdsm' },
-              { value: 5, name: 'couples' },
-              { value: 2, name: 'singles' },
-              { value: 1, name: 'kink' },
-              { value: 5, name: 'poly' },
-              { value: 10, name: 'group' },
-              { value: 6, name: 'threeway' },
-              { value: 15, name: 'relationship' },
-              { value: 12, name: 'advice' },
-              { value: 13, name: 'confession' },
-              { value: 0, name: 'novelty' },
-              { value: 0, name: 'lifestyle' },
-              { value: 7, name: 'cooking' },
-              { value: 8, name: 'sports' },
-              { value: 9, name: 'singing' },
-              { value: 6, name: 'reading' },
-              { value: 4, name: 'dancing' },
-              { value: 5, name: 'drawing' },
-              { value: 24, name: 'other' }
+              { value: this.label.flirt, name: 'flirt' },
+              { value: this.label.submissive, name: 'submissive' },
+              { value: this.label.dominate, name: 'dominate' },
+              { value: this.label.foreplay, name: 'foreplay' },
+              { value: this.label.dates, name: 'dates' },
+              { value: this.label.friendship, name: 'friendship' },
+              { value: this.label.sensual, name: 'sensual' },
+              { value: this.label.watching, name: 'watching' },
+              { value: this.label.texting, name: 'texting' },
+              { value: this.label.bdsm, name: 'bdsm' },
+              { value: this.label.couples, name: 'couples' },
+              { value: this.label.singles, name: 'singles' },
+              { value: this.label.kink, name: 'kink' },
+              { value: this.label.poly, name: 'poly' },
+              { value: this.label.group, name: 'group' },
+              { value: this.label.threeway, name: 'threeway' },
+              { value: this.label.relationship, name: 'relationship' },
+              { value: this.label.advice, name: 'advice' },
+              { value: this.label.confession, name: 'confession' },
+              { value: this.label.novelty, name: 'novelty' },
+              { value: this.label.lifestyle, name: 'lifestyle' },
+              { value: this.label.cooking, name: 'cooking' },
+              { value: this.label.sports, name: 'sports' },
+              { value: this.label.singing, name: 'singing' },
+              { value: this.label.reading, name: 'reading' },
+              { value: this.label.dancing, name: 'dancing' },
+              { value: this.label.drawing, name: 'drawing' },
+              { value: this.label.other, name: 'other' }
             ],
             emphasis: {
               itemStyle: {
@@ -222,7 +246,7 @@ export default {
           { type: 'bar', xAxisIndex: 1, yAxisIndex: 1 }
         ]
       };
-      myChart3.setOption(option3);
+      // myChart3.setOption(option3);
     },
   },
 };

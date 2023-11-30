@@ -1,7 +1,23 @@
 <template>
   <div>
-    <div class="home">
-      <div class="barChart" ref="barChart"></div>
+    <hr>
+    <h3 style="color: black;text-align: center">基础App数据</h3>
+    <hr>
+    <el-row style="margin-top:30px">
+      <el-col :span="12" style="text-align: center">
+        <el-date-picker
+          v-model="dataRange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @blur=""
+          @change="handleChange">
+        </el-date-picker>
+      </el-col>
+    </el-row>
+    <div class="home" style="margin-top:30px">
+      <div class="barChart" ref="barChart" ></div>
     </div>
   </div>
 </template>
@@ -18,24 +34,42 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
+      dataRange:[],
+      reportRange:[1, 6, 12, 18, 34, 57, 64],
+      legendRange:['DNU', 'WNU', 'MNU', 'DAU', 'WAU','MAU','次留','3留','7留','14留','30留'],
+      xAxisRange:['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     };
   },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
     },
+    handleChange() {
+      console.log(this.dataRange)
+      console.log(this.dataRange[0])
+      console.log(this.dataRange[1])
+      this.reportRange[0]=123;
+      this.reportRange[1]=244;
+      console.log(this.reportRange[0])
+      console.log(this.reportRange)
+      console.log(this.legendRange)
+      this.legendRange[0]="aaa";
+      this.xAxisRange[0]="data";
+      console.log(this.legendRange)
+      this.initBarChart();
+    },
     initBarChart() {
       // 通过 $ref 进行挂载
       let myChart = this.$echarts.init(this.$refs.barChart);
       let option = {
         title: {
-          text: '基础APP数据'
+          text: ''
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['DNU', 'WNU', 'MNU', 'DAU', 'WAU','MAU','次留','3留','7留','14留','30留']
+          data: this.legendRange
         },
         grid: {
           left: '3%',
@@ -51,7 +85,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data: this.xAxisRange
         },
         yAxis: {
           type: 'value'
@@ -61,7 +95,7 @@ export default {
             name: 'DNU',
             type: 'line',
             stack: 'Total',
-            data: [120, 121, 122, 125, 130, 135, 140]
+            data: this.reportRange
           },
           {
             name: 'WNU',
