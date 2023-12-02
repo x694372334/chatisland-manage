@@ -1,5 +1,54 @@
 <template>
   <div>
+
+    <h3 style="color: black;text-align: left">Chatter维度</h3>
+
+    <el-row>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <el-row style="text-align: center;font-size:24px; font-weight: bold;">赠礼消耗深度</el-row>
+          <el-row style="text-align: center;margin: 30px 0;">
+            <el-date-picker
+              v-model="consumeDateRange"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              @blur="">
+            </el-date-picker>
+
+            <el-button @click="searchConsumeData">查询</el-button>
+          </el-row>
+        </div>
+        <div class="home">
+          <div class="barChart" ref="consumeBarChart"></div>
+        </div>
+      </el-card>
+    </el-row>
+
+    <el-row>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <el-row style="text-align: center;font-size:24px; font-weight: bold;">平均付费转化</el-row>
+          <el-row style="text-align: center;margin: 30px 0;">
+            <el-date-picker
+              v-model="avgConsumeDateRange"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              @blur="">
+            </el-date-picker>
+
+            <el-button @click="searchAvgConsumeData">查询</el-button>
+          </el-row>
+        </div>
+        <div class="home">
+          <div class="barChart" ref="avgConsumeBarChart"></div>
+        </div>
+      </el-card>
+    </el-row>
+
     <hr>
     <h3 style="color: black;text-align: center">基础指标 - 在线时长</h3>
     <hr>
@@ -12,13 +61,13 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          @change="handleChange">
+          >
         </el-date-picker>
       </el-col>
     </el-row>
-  <div class="home">
-    <div class="barChart" ref="barChart"></div>
-  </div>
+    <div class="home">
+      <div class="barChart" ref="barChart"></div>
+    </div>
 
     <hr>
     <h3 style="color: black;text-align: center">服务效率 - 所有消息平均响应时间</h3>
@@ -32,7 +81,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          @change="handleChange">
+          >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -52,7 +101,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          @change="handleChange">
+          >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -72,7 +121,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          @change="handleChange">
+          >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -99,7 +148,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          @change="handleChange">
+          >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -108,18 +157,20 @@
     </div>
 
 
-
   </div>
 
 
 </template>
 
 <script>
+import {chatterConsume, avgChatterConsume} from "@/api/system/graphical";
 
 export default {
   mounted() {
     // 初始化 echarts
     this.initBarChart();
+    this.initConsumeChart();
+    this.initAvgConsumeChart()
   },
 
   name: "Index",
@@ -127,9 +178,15 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
-      chatterUser:['chatter1','chatter2','chatter3','chatter4','chatter5','chatter6'],
-      onlineLongTime:[10,20,10,15,65,50]
-
+      dataRange:[],
+      chatterUser: ['chatter1', 'chatter2', 'chatter3', 'chatter4', 'chatter5', 'chatter6'],
+      onlineLongTime: [10, 20, 10, 15, 65, 50],
+      consumeDateRange: [],
+      consumeChatterIdList: [],
+      consumeGiftCountList: [],
+      avgConsumeDateRange:[],
+      avgConsumeChatterIdList:[],
+      avgConsumeRateList:[]
     };
   },
   methods: {
@@ -238,10 +295,10 @@ export default {
         },
         toolbox: {
           feature: {
-            dataView: { show: true, readOnly: false },
-            magicType: { show: true, type: ['line', 'bar'] },
-            restore: { show: true },
-            saveAsImage: { show: true }
+            dataView: {show: true, readOnly: false},
+            magicType: {show: true, type: ['line', 'bar']},
+            restore: {show: true},
+            saveAsImage: {show: true}
           }
         },
         legend: {
@@ -319,12 +376,204 @@ export default {
       myChart5.setOption(option5);
 
     },
-  },
+    searchConsumeData() {
+      let startDate = this.consumeDateRange[0]
+      let endDate = this.consumeDateRange[1]
+      let data = {
+        startDate: startDate,
+        endDate: endDate
+      }
+      this.chatterConsume(data)
+    },
+    chatterConsume(data) {
+      this.consumeGiftCountList = []
+      chatterConsume(data).then(response => {
+        if (response.data) {
+          this.consumeChatterIdList = Object.keys(response.data)
+          for (let i = 0; i < this.consumeChatterIdList.length; i++) {
+            let chatterId = this.consumeChatterIdList[i]
+            this.consumeGiftCountList.push(response.data[chatterId])
+          }
+          let myChart = this.$echarts.init(this.$refs.barChart);
+          myChart.setOption({
+            xAxis: [
+              {
+                type: 'category',
+                data: this.consumeChatterIdList
+              }
+            ],
+            series: [
+              {
+                name: '消耗钻石总计',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: this.consumeGiftCountList
+              }
+            ]
+          }, false);
+        }
+      })
+    },
+    initConsumeChart() {
+      chatterConsume({}).then(response => {
+        if (response.data) {
+          this.consumeChatterIdList = Object.keys(response.data)
+          for (let i = 0; i < this.consumeChatterIdList.length; i++) {
+            let chatterId = this.consumeChatterIdList[i]
+            this.consumeGiftCountList.push(response.data[chatterId])
+          }
+          let myChart = this.$echarts.init(this.$refs.consumeBarChart);
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.consumeChatterIdList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value.split('').join('\n')
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '消耗钻石总计',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: this.consumeGiftCountList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
+    },
+    searchAvgConsumeData(){
+      let startDate = this.avgConsumeDateRange[0]
+      let endDate = this.avgConsumeDateRange[1]
+      let data = {
+        startDate: startDate,
+        endDate: endDate
+      }
+      this.avgChatterConsume(data)
+    },
+    avgChatterConsume(data){
+      this.avgConsumeRateList=[]
+      avgChatterConsume(data).then(response => {
+        if (response.data) {
+          this.avgConsumeChatterIdList = Object.keys(response.data)
+          for (let i = 0; i < this.avgConsumeRateList.length; i++) {
+            let chatterId = this.avgConsumeChatterIdList[i]
+            this.avgConsumeRateList.push(response.data[chatterId])
+          }
+          let myChart = this.$echarts.init(this.$refs.avgConsumeBarChart);
+          myChart.setOption({
+            xAxis: [
+              {
+                type: 'category',
+                data: this.avgConsumeChatterIdList
+              }
+            ],
+            series: [
+              {
+                name: '平均付费转化',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: this.avgConsumeRateList
+              }
+            ]
+          }, false);
+        }
+      })
+    },
+    initAvgConsumeChart() {
+      avgChatterConsume({}).then(response => {
+        if (response.data) {
+          this.avgConsumeChatterIdList = Object.keys(response.data)
+          console.log(this.avgConsumeChatterIdList)
+          for (let i = 0; i < this.avgConsumeChatterIdList.length; i++) {
+            let chatterId = this.avgConsumeChatterIdList[i]
+            this.avgConsumeRateList.push(response.data[chatterId])
+          }
+          console.log(this.avgConsumeRateList)
+          let myChart = this.$echarts.init(this.$refs.avgConsumeBarChart);
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.avgConsumeChatterIdList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value.split('').join('\n')
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '平均付费转化',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: this.avgConsumeRateList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
+    }
+
+  }
 };
 </script>
 
 <style scoped lang="scss">
-
 
 
 .home {
@@ -392,8 +641,8 @@ export default {
 }
 
 .home {
-  width: 500px;
-  height: 400px;
+  width: 90%;
+  height: 800px;
   margin: auto;
   border: 0px solid lightcoral;
   background-color: #FCFCFC;
@@ -403,6 +652,7 @@ export default {
     width: 100%;
     height: 100%;
   }
+
   //  宽高是必须给的，可以给百分比、具体的像素等....
   .barChart1 {
     width: 100%;
