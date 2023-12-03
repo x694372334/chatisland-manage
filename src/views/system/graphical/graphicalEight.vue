@@ -61,7 +61,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          >
+        >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -81,7 +81,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          >
+        >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -101,7 +101,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          >
+        >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -121,7 +121,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          >
+        >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -148,7 +148,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @blur=""
-          >
+        >
         </el-date-picker>
       </el-col>
     </el-row>
@@ -163,7 +163,7 @@
 </template>
 
 <script>
-import {chatterConsume, avgChatterConsume} from "@/api/system/graphical";
+import {chatterConsume, avgChatterConsume, diamondPaidConversion} from "@/api/system/graphical";
 
 export default {
   mounted() {
@@ -178,15 +178,15 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
-      dataRange:[],
+      dataRange: [],
       chatterUser: ['chatter1', 'chatter2', 'chatter3', 'chatter4', 'chatter5', 'chatter6'],
       onlineLongTime: [10, 20, 10, 15, 65, 50],
       consumeDateRange: [],
       consumeChatterIdList: [],
       consumeGiftCountList: [],
-      avgConsumeDateRange:[],
-      avgConsumeChatterIdList:[],
-      avgConsumeRateList:[]
+      avgConsumeDateRange: [],
+      avgConsumeChatterIdList: [],
+      avgConsumeRateList: []
     };
   },
   methods: {
@@ -283,97 +283,127 @@ export default {
         ]
       };
       myChart4.setOption(option4);
-      let option5 = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            crossStyle: {
-              color: '#999'
-            }
+
+      diamondPaidConversion({}).then(response => {
+        if (response.data.chatterMap) {
+          let chatterIds = Object.keys(response.data.chatterMap)
+
+          let giftConsumeList = []
+          let giftConsumeRate = []
+
+          let chatislandConsumeList = []
+          let chatislandConsumeRate = []
+          for (let i = 0; i < chatterIds.length; i++) {
+            let key = chatterIds[i]
+            let obj = response.data.chatterMap[key]
+            giftConsumeList.push(obj.gift.consumeDiamondSum)
+            giftConsumeRate.push(obj.gift.chatRecordSum > 0 ? obj.gift.consumeDiamondSum / obj.gift.chatRecordSum : 0)
+
+            chatislandConsumeList.push(obj.chatisland.consumeDiamondSum)
+            chatislandConsumeRate.push(obj.chatisland.chatRecordSum > 0 ? obj.chatisland.consumeDiamondSum / obj.chatisland.chatRecordSum : 0)
           }
-        },
-        toolbox: {
-          feature: {
-            dataView: {show: true, readOnly: false},
-            magicType: {show: true, type: ['line', 'bar']},
-            restore: {show: true},
-            saveAsImage: {show: true}
-          }
-        },
-        legend: {
-          data: ['Evaporation', 'Precipitation', 'Temperature']
-        },
-        xAxis: [
-          {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            axisPointer: {
-              type: 'shadow'
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            name: 'Precipitation',
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-              formatter: '{value} ml'
-            }
-          },
-          {
-            type: 'value',
-            name: 'Temperature',
-            min: 0,
-            max: 25,
-            interval: 5,
-            axisLabel: {
-              formatter: '{value} °C'
-            }
-          }
-        ],
-        series: [
-          {
-            name: 'Evaporation',
-            type: 'bar',
+
+          let option5 = {
             tooltip: {
-              valueFormatter: function (value) {
-                return value + ' ml';
+              trigger: 'axis',
+              axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                  color: '#999'
+                }
               }
             },
-            data: [
-              2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
+            toolbox: {
+              feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+              }
+            },
+            legend: {
+              data: ['礼物消耗', '内容解锁消耗']
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: chatterIds,
+                axisPointer: {
+                  type: 'shadow'
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: '钻石消耗',
+                min: 0,
+                max: 250,
+                interval: 50,
+                axisLabel: {
+                  formatter: '{value} 个'
+                }
+              },
+              {
+                type: 'value',
+                name: '钻石消耗率',
+                min: 0,
+                max: 25,
+                interval: 5,
+                axisLabel: {
+                  formatter: '{value} %'
+                }
+              }
+            ],
+            series: [
+              {
+                name: '礼物消耗',
+                type: 'bar',
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个';
+                  }
+                },
+                data: giftConsumeList
+              },
+              {
+                name: '内容解锁消耗',
+                type: 'bar',
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个';
+                  }
+                },
+                data: chatislandConsumeList
+              },
+              {
+                name: '礼物消耗转化率',
+                type: 'line',
+                yAxisIndex: 1,
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个/条';
+                  }
+                },
+                data: giftConsumeRate
+              },
+              {
+                name: '内容解锁消耗转化率',
+                type: 'line',
+                yAxisIndex: 1,
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个/条';
+                  }
+                },
+                data: chatislandConsumeRate
+              }
             ]
-          },
-          {
-            name: 'Precipitation',
-            type: 'bar',
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' ml';
-              }
-            },
-            data: [
-              2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
-            ]
-          },
-          {
-            name: 'Temperature',
-            type: 'line',
-            yAxisIndex: 1,
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' °C';
-              }
-            },
-            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-          }
-        ]
-      };
-      myChart5.setOption(option5);
+          };
+          myChart5.setOption(option5);
+        }
+      })
+
 
     },
     searchConsumeData() {
@@ -471,7 +501,7 @@ export default {
         }
       })
     },
-    searchAvgConsumeData(){
+    searchAvgConsumeData() {
       let startDate = this.avgConsumeDateRange[0]
       let endDate = this.avgConsumeDateRange[1]
       let data = {
@@ -480,8 +510,8 @@ export default {
       }
       this.avgChatterConsume(data)
     },
-    avgChatterConsume(data){
-      this.avgConsumeRateList=[]
+    avgChatterConsume(data) {
+      this.avgConsumeRateList = []
       avgChatterConsume(data).then(response => {
         if (response.data) {
           this.avgConsumeChatterIdList = Object.keys(response.data)
