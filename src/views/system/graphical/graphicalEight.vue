@@ -380,8 +380,8 @@ export default {
       let startDate = this.consumeDateRange[0]
       let endDate = this.consumeDateRange[1]
       let data = {
-        startDate: startDate,
-        endDate: endDate
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime()
       }
       this.chatterConsume(data)
     },
@@ -475,8 +475,8 @@ export default {
       let startDate = this.avgConsumeDateRange[0]
       let endDate = this.avgConsumeDateRange[1]
       let data = {
-        startDate: startDate,
-        endDate: endDate
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime()
       }
       this.avgChatterConsume(data)
     },

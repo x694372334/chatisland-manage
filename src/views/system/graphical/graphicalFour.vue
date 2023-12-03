@@ -80,8 +80,8 @@ export default {
       let startDate = this.dataRange[0]
       let endDate = this.dataRange[1]
       let data = {
-        startDate: startDate,
-        endDate: endDate
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime()
       }
       this.consumeDepth(data)
     },
@@ -219,8 +219,8 @@ export default {
       let startDate = this.contentDataRange[0]
       let endDate = this.contentDataRange[1]
       let data = {
-        startDate: startDate,
-        endDate: endDate
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime()
       }
       this.contentConsume(data)
     },
