@@ -24,6 +24,108 @@ export function userLabelReport() {
   })
 }
 
+export function basicsAppData(data) {
+  return request({
+    url: '/report/basicsAppData',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function profileSelectTransform(data) {
+  return request({
+    url: '/report/profileSelectTransform',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function swipeSelectTransform(data) {
+  return request({
+    url: '/report/swipeSelectTransform',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondConstructionUnionTransformOne(data) {
+  return request({
+    url: '/report/diamondConstructionUnionTransformOne',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondConstructionUnionTransformTwo(data) {
+  return request({
+    url: '/report/diamondConstructionUnionTransformTwo',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondUnlockTransform(data) {
+  return request({
+    url: '/report/diamondUnlockTransform',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondGiftTransform(data) {
+  return request({
+    url: '/report/diamondGiftTransform',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondFlashTransformOne(data) {
+  return request({
+    url: '/report/diamondFlashTransformOne',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondFlashTransformTwo(data) {
+  return request({
+    url: '/report/diamondFlashTransformTwo',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondFunctionTransformOne(data) {
+  return request({
+    url: '/report/diamondFunctionTransformOne',
+    method: 'POST',
+    data: data
+  })
+}
+
+
+export function diamondFunctionTransformTwo(data) {
+  return request({
+    url: '/report/diamondFunctionTransformTwo',
+    method: 'POST',
+    data: data
+  })
+}
+
+export function diamondFunctionTransformThree(data) {
+  return request({
+    url: '/report/diamondFunctionTransformThree',
+    method: 'POST',
+    data: data
+  })
+}
+
+
+
+
+
+
 // 消耗深度
 export function consumeDepth(data) {
   return request({
