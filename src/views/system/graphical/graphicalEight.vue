@@ -69,6 +69,9 @@
         <div class="home">
           <div class="barChart" ref="fireImageOrderBarChart"></div>
         </div>
+        <div class="home">
+          <div class="barChart" ref="fireImageOrderBarChart1"></div>
+        </div>
       </el-card>
     </el-row>
 
@@ -502,7 +505,7 @@ export default {
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value.split('').join('\n')
+                    return value
                   }
                 }
               }
@@ -599,7 +602,7 @@ export default {
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value.split('').join('\n')
+                    return value
                   }
                 }
               }
@@ -665,7 +668,7 @@ export default {
               }
             },
             legend: {
-              data: ['开通会员UV', '开通会员价格总计']
+              data: ['开通会员UV']
             },
             xAxis: [
               {
@@ -681,16 +684,9 @@ export default {
                 type: 'value',
                 name: '开通会员UV',
                 min: 0,
+                interval: 1,
                 axisLabel: {
                   formatter: '{value} 人'
-                }
-              },
-              {
-                type: 'value',
-                name: '开通会员价格总计',
-                min: 0,
-                axisLabel: {
-                  formatter: '{value}'
                 }
               }
             ],
@@ -704,7 +700,54 @@ export default {
                   }
                 },
                 data: memberSumList
-              },
+              }
+            ]
+          };
+          myChart.clear();
+          myChart.setOption(option);
+
+          let myChart1 = this.$echarts.init(this.$refs.fireImageOrderBarChart1);
+          let option1 = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                  color: '#999'
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+              }
+            },
+            legend: {
+              data: ['开通会员价格总计']
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.fireImageOrderChatterList,
+                axisPointer: {
+                  type: 'shadow'
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: '开通会员价格总计',
+                min: 0,
+                axisLabel: {
+                  formatter: '${value}'
+                }
+              }
+            ],
+            series: [
               {
                 name: '开通会员价格总计',
                 type: 'bar',
@@ -717,8 +760,8 @@ export default {
               }
             ]
           };
-          myChart.clear();
-          myChart.setOption(option);
+          myChart1.clear();
+          myChart1.setOption(option1);
         }
       })
     },

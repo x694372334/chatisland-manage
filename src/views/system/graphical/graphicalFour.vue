@@ -65,12 +65,12 @@ export default {
       // 版本号
       version: "4.8.0",
       dataRange: [],
-      userIdList: [],
+      userList: [],
       contactCountList: [],
       unLockCountList: [],
       giftCountList: [],
       contentDataRange: [],
-      contentUserIdList: [],
+      contentUserList: [],
       contentUnLockCountList: [],
       chatislandConversionRateList: [],
     };
@@ -86,7 +86,7 @@ export default {
       this.consumeDepth(data)
     },
     consumeDepth(data) {
-      this.userIdList = []
+      this.userList = []
       this.contactCountList = []
       this.unLockCountList = []
       this.giftCountList = []
@@ -94,7 +94,7 @@ export default {
         if (response.data.list) {
           for (let i = 0; i < response.data.list.length; i++) {
             let obj = response.data.list[i]
-            this.userIdList.push(obj.userId)
+            this.userList.push(obj.nickName)
             this.contactCountList.push(obj.contactCount)
             this.unLockCountList.push(obj.unLockCount)
             this.giftCountList.push(obj.giftCount)
@@ -104,7 +104,7 @@ export default {
             xAxis: [
               {
                 type: 'category',
-                data: this.userIdList
+                data: this.userList
               }
             ],
             series: [
@@ -144,7 +144,7 @@ export default {
         if (response.data.list) {
           for (let i = 0; i < response.data.list.length; i++) {
             let obj = response.data.list[i]
-            this.userIdList.push(obj.userId)
+            this.userList.push(obj.nickName)
             this.contactCountList.push(obj.contactCount)
             this.unLockCountList.push(obj.unLockCount)
             this.giftCountList.push(obj.giftCount)
@@ -168,11 +168,11 @@ export default {
             xAxis: [
               {
                 type: 'category',
-                data: this.userIdList,
+                data: this.userList,
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value.split('').join('\n')
+                    return value
                   }
                 }
               }
@@ -225,14 +225,14 @@ export default {
       this.contentConsume(data)
     },
     contentConsume(data) {
-      this.contentUserIdList = []
+      this.contentUserList = []
       this.contentUnLockCountList = []
       this.chatislandConversionRateList = []
       contentConsume(data).then(response => {
         if (response.data.list) {
           for (let i = 0; i < response.data.list.length; i++) {
             let obj = response.data.list[i]
-            this.userIdList.push(obj.userId)
+            this.userList.push(obj.nickName)
             this.contentUnLockCountList.push(obj.unLockCount)
             this.chatislandConversionRateList.push(obj.chatislandConversionRate)
           }
@@ -241,14 +241,14 @@ export default {
             xAxis: [
               {
                 type: 'category',
-                data: this.contentUserIdList,
+                data: this.contentUserList,
                 axisPointer: {
                   type: 'shadow'
                 },
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value.split('').join('\n')
+                    return value
                   }
                 }
               }
@@ -286,7 +286,7 @@ export default {
           console.log(response.data.list)
           for (let i = 0; i < response.data.list.length; i++) {
             let obj = response.data.list[i]
-            this.contentUserIdList.push(obj.userId)
+            this.contentUserList.push(obj.nickName)
             this.contentUnLockCountList.push(obj.unLockCount)
             this.chatislandConversionRateList.push(obj.chatislandConversionRate)
           }
@@ -304,24 +304,24 @@ export default {
             },
             toolbox: {
               feature: {
-                dataView: { show: true, readOnly: false },
-                magicType: { show: true, type: ['line', 'bar'] },
-                restore: { show: true },
-                saveAsImage: { show: true }
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
               }
             },
             legend: {},
             xAxis: [
               {
                 type: 'category',
-                data: this.contentUserIdList,
+                data: this.contentUserList,
                 axisPointer: {
                   type: 'shadow'
                 },
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value.split('').join('\n')
+                    return value
                   }
                 }
               }
