@@ -221,8 +221,8 @@ export default {
       myChartDataValue: {"subscriber":0,"checkProfileUserLimit":0,"checkProfileUser":0},
       myChartDataKey1:['最终付费用户', '付费卡点用户UV','主页曝光UV'],
       myChartDataValue1: {"subscriber":0,"subscriberSwipe":0,"homepageExposure":0},
-      myChartDataKey2:['最终付费用户', '有点击客态profile查看的用户到上限的UV', '有点击客态profile查看的用户UV'],
-      myChartDataValue2: {"subscriber":0,"checkProfileUserLimit":0,"checkProfileUser":0},
+      myChartDataKey2:['最终付费用户', '钻石不足情况', '点击钻石进行建联','主页曝光UV'],
+      myChartDataValue2: {"subscriber":0,"notEnoughDiamonds":0,"checkDiamondChat":0,"homepageExposure":0},
       myChartDataKey3:['最终进行付费','钻石不足情况', '点击钻石进行建联', '点击对方chatisland','客态profile页面曝光'],
       myChartDataValue3: {"subscriber":0,"notEnoughDiamonds":0,"checkDiamonds":0,"checkChatisland":0,"checkChatislandProfile":0},
       myChartDataKey4:['最终进行付费', '钻石不足情况','点击钻石解锁', '锁定的高级chatisland曝光'],
@@ -502,8 +502,9 @@ export default {
               }
             },
             data: [
-              { value: this.myChartDataValue2.checkProfileUser, name: '有点击客态profile查看的用户UV' },
-              { value: this.myChartDataValue2.checkProfileUserLimit, name: '有点击客态profile查看的用户到上限的UV' },
+              { value: this.myChartDataValue2.homepageExposure, name: '主页曝光UV' },
+              { value: this.myChartDataValue2.checkDiamondChat, name: '钻石进行建联' },
+              { value: this.myChartDataValue2.notEnoughDiamonds, name: '钻石不足情况' },
               { value: this.myChartDataValue2.subscriber, name: '最终付费用户' }
             ]
           }
