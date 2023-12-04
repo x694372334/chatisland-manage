@@ -122,3 +122,12 @@ export function revenueData(data) {
     data: data
   })
 }
+
+// 人设阅后即焚归因
+export function chatterFireImageOrder(data) {
+  return request({
+    url: '/report/chatterFireImageOrder',
+    method: 'post',
+    data: data
+  })
+}

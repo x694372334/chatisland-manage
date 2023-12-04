@@ -49,6 +49,29 @@
       </el-card>
     </el-row>
 
+    <el-row>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <el-row style="text-align: center;font-size:24px; font-weight: bold;">阅后即焚chatter归因</el-row>
+          <el-row style="text-align: center;margin: 30px 0;">
+            <el-date-picker
+              v-model="fireImageOrderDateRange"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              @blur="">
+            </el-date-picker>
+
+            <el-button @click="searchFireImageOrderData">查询</el-button>
+          </el-row>
+        </div>
+        <div class="home">
+          <div class="barChart" ref="fireImageOrderBarChart"></div>
+        </div>
+      </el-card>
+    </el-row>
+
     <hr>
     <h3 style="color: black;text-align: center">基础指标 - 在线时长</h3>
     <hr>
@@ -163,14 +186,15 @@
 </template>
 
 <script>
-import {chatterConsume, avgChatterConsume, diamondPaidConversion} from "@/api/system/graphical";
+import {chatterConsume, avgChatterConsume, diamondPaidConversion, chatterFireImageOrder} from "@/api/system/graphical";
 
 export default {
   mounted() {
     // 初始化 echarts
     this.initBarChart();
     this.initConsumeChart();
-    this.initAvgConsumeChart()
+    this.initAvgConsumeChart();
+    this.initChatterFireImageOrderChart();
   },
 
   name: "Index",
@@ -186,7 +210,9 @@ export default {
       consumeGiftCountList: [],
       avgConsumeDateRange: [],
       avgConsumeChatterIdList: [],
-      avgConsumeRateList: []
+      avgConsumeRateList: [],
+      fireImageOrderDateRange: [],
+      fireImageOrderChatterList: []
     };
   },
   methods: {
@@ -597,6 +623,107 @@ export default {
           myChart.setOption(option);
         }
       })
+    },
+    searchFireImageOrderData() {
+      let startDate = this.fireImageOrderDateRange[0]
+      let endDate = this.fireImageOrderDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime()
+      }
+      this.fireImageOrder(data)
+    },
+    fireImageOrder(data) {
+      chatterFireImageOrder(data).then(response => {
+        if (response.data.chatterMap) {
+          this.fireImageOrderChatterList = Object.keys(response.data.chatterMap)
+          let memberSumList = []
+          let memberPriceSumList = []
+          for (let i = 0; i < this.fireImageOrderChatterList.length; i++) {
+            let key = this.fireImageOrderChatterList[i]
+            let obj = response.data.chatterMap[key]
+            memberSumList.push(obj.memberSum)
+            memberPriceSumList.push(obj.memberPriceSum)
+          }
+          let myChart = this.$echarts.init(this.$refs.fireImageOrderBarChart);
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                  color: '#999'
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+              }
+            },
+            legend: {
+              data: ['开通会员UV', '开通会员价格总计']
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.fireImageOrderChatterList,
+                axisPointer: {
+                  type: 'shadow'
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: '开通会员UV',
+                min: 0,
+                axisLabel: {
+                  formatter: '{value} 人'
+                }
+              },
+              {
+                type: 'value',
+                name: '开通会员价格总计',
+                min: 0,
+                axisLabel: {
+                  formatter: '{value}'
+                }
+              }
+            ],
+            series: [
+              {
+                name: '开通会员UV',
+                type: 'bar',
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value;
+                  }
+                },
+                data: memberSumList
+              },
+              {
+                name: '开通会员价格总计',
+                type: 'bar',
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value;
+                  }
+                },
+                data: memberPriceSumList
+              }
+            ]
+          };
+          myChart.clear();
+          myChart.setOption(option);
+        }
+      })
+    },
+    initChatterFireImageOrderChart() {
+      this.fireImageOrder({})
     }
 
   }
