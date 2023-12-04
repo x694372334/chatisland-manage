@@ -1,8 +1,19 @@
 <template>
   <div>
     <hr>
-    <h3 style="color: black;text-align: left">人设维度 - 建联转化</h3>
+    <h3 style="color: black;text-align: center">人设维度 - 建联转化</h3>
     <hr>
+    <el-row style="text-align: center">
+      <el-date-picker
+        v-model="dataRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+        @change="handleChange(1)">
+      </el-date-picker>
+    </el-row>
   <div class="home">
     <div class="barChart" ref="barChart"></div>
   </div>
@@ -22,9 +33,13 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
+      dataRange:[],
     };
   },
   methods: {
+    handleChange() {
+
+    },
     goTarget(href) {
       window.open(href, "_blank");
 
@@ -56,7 +71,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7'],
             axisPointer: {
               type: 'shadow'
             }
@@ -90,11 +105,11 @@ export default {
             type: 'bar',
             tooltip: {
               valueFormatter: function (value) {
-                return value + ' ml';
+                return value + '';
               }
             },
             data: [
-              2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
+              0, 0, 0, 0, 0, 0, 0
             ]
           },
           {
@@ -103,10 +118,10 @@ export default {
             yAxisIndex: 1,
             tooltip: {
               valueFormatter: function (value) {
-                return value + ' °C';
+                return value + '%';
               }
             },
-            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+            data: [0, 0, 0, 0, 0, 0, 0]
           }
         ]
       };
