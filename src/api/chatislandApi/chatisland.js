@@ -58,3 +58,11 @@ export function delChatisland(chatislandId) {
     method: 'delete'
   })
 }
+
+export function setProdChatisland(ids){
+  return request({
+    url: '/chatisland/setProdChatisland',
+    method: 'post',
+    data: {ids: ids}
+  })
+}
