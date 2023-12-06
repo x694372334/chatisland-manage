@@ -74,6 +74,14 @@
           @click="setTopChatisland"
         >置顶
         </el-button>
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-top"
+          size="mini"
+          @click="setProdChatisland"
+        >发布
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -203,7 +211,7 @@ import {
   listChatisland,
   updateChatisland,
   sortChatisland,
-  setTopChatisland
+  setTopChatisland, setProdChatisland
 } from "@/api/chatislandApi/chatisland";
 import draggable from 'vuedraggable';
 import Sortable from 'sortablejs';
@@ -259,7 +267,8 @@ export default {
         chatislandLabel: '',
         isSenior: undefined,
         chatislandCover: '',
-        diamondCount: undefined
+        diamondCount: undefined,
+        isPreRelease: '1'
       },
       // 表单校验
       rules: {
@@ -305,6 +314,19 @@ export default {
       setTopChatisland(this.ids).then(response=>{
         if(response.data){
           this.$modal.msgSuccess("置顶成功");
+          this.queryParams.pageNum=1
+          this.getList()
+        }
+      })
+    },
+    setProdChatisland(){
+      if(this.ids.length===0){
+        this.$modal.msgError("请选择需要发布的列");
+        return false
+      }
+      setProdChatisland(this.ids).then(response=>{
+        if(response.data){
+          this.$modal.msgSuccess("发布成功");
           this.queryParams.pageNum=1
           this.getList()
         }
