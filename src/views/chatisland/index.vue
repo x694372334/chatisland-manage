@@ -93,6 +93,7 @@
       <el-table-column label="搜索Match" align="center" prop="chatislandMatch"/>
       <el-table-column label="chatisland标签" align="center" prop="chatislandLabel"/>
       <el-table-column label="chatisland封面" align="center" prop="chatislandCover"/>
+      <el-table-column label="是否已发布" align="center" prop="isPreRelease" :formatter="formatFreeShippingInfo"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -282,6 +283,9 @@ export default {
     this.getList();
   },
   methods: {
+    formatFreeShippingInfo(row, column){
+      return row.isPreRelease == '1' ? "已发布" : row.isPreRelease == 	'0' ? "未发布" : "未发布";
+    },
     //行拖拽
     rowDrop() {
       const tbody = document.querySelector('.el-table__body-wrapper tbody')
