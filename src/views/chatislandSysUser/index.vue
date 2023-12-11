@@ -81,6 +81,14 @@
           v-hasPermi="['system:user:export']"
         >导出
         </el-button>
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-top"
+          size="mini"
+          @click="createFirstChatisland"
+        >生成
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -290,7 +298,8 @@
 
 <script>
 import {listUser, getUser, delUser, addUser, updateUser} from "@/api/system/user";
-import {addCharacterProp} from "../../api/chatislandApi/chatislandSysUser";
+import {addCharacterProp,createFirstChatisland} from "../../api/chatislandApi/chatislandSysUser";
+import {setProdChatisland} from "@/api/chatislandApi/chatisland";
 export default {
   name: "User",
   data() {
@@ -439,6 +448,20 @@ export default {
   },
 
   methods: {
+
+    createFirstChatisland(){
+      if(this.ids.length===0){
+        this.$modal.msgError("请选择需要生成的列");
+        return false
+      }
+      createFirstChatisland(this.ids).then(response=>{
+        if(response.data){
+          this.$modal.msgSuccess("生成首条chatisland成功");
+          this.queryParams.pageNum=1
+          this.getList()
+        }
+      })
+    },
 
     showChatisland(row, index, done) {
       const userId = row.userId;
