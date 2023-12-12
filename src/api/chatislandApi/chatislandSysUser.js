@@ -57,3 +57,12 @@ export function addCharacterProp(data) {
     data: data
   })
 }
+
+export function createFirstChatisland(ids){
+  return request({
+    url: '/chatisland/createFirstChatisland',
+    method: 'post',
+    data: {ids: ids}
+  })
+}
+
