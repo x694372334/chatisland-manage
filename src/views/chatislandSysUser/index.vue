@@ -559,6 +559,8 @@ export default {
       getUser(userId).then(response => {
         this.loading = false;
         this.form = response.data.user;
+        this.form.isVip = ''+this.form.isVip
+        this.form.sex = ''+this.form.sex
         if(this.form.userLabel !== undefined && this.form.userLabel !== '' && this.form.userLabel !== null){
           this.userLabel = JSON.parse(this.form.userLabel)
         }

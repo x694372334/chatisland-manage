@@ -344,8 +344,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      getChatter(row.userId).then(response => {
-        this.form = response.data.chatter;
+      getChatter(row.chatterId).then(response => {
+        this.form = response.data;
         this.open = true;
         this.title = "修改用户";
         this.form.password = "";
@@ -361,7 +361,7 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.userId != undefined) {
+          if (this.form.userId !== undefined) {
             updateChatter(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
