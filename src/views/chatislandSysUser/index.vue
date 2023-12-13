@@ -100,8 +100,8 @@
       <el-table-column label="用户昵称" align="center" prop="nickName"/>
       <el-table-column label="用户性别" align="center" prop="sex">
         <template slot-scope="scope">
-          <span v-if="scope.row.sex===0">女</span>
-          <span v-if="scope.row.sex===1">男</span>
+          <span v-if="scope.row.sex===0">男</span>
+          <span v-if="scope.row.sex===1">女</span>
           <span v-if="scope.row.sex===2">其他</span>
         </template>
       </el-table-column>
@@ -312,10 +312,10 @@ export default {
         'vip_1', 'vip_2', 'vip_3', 'vip_4', 'vip_5', 'vip_6', 'vip_7', 'vip_8', 'vip_9', 'vip_10', 'vip_11', 'vip_12', 'vip_13', 'vip_14', 'vip_15'],
       options: [{
         value: '0',
-        label: '女'
+        label: '男'
       }, {
         value: '1',
-        label: '男'
+        label: '女'
       }, {
         value: '2',
         label: '其他'
