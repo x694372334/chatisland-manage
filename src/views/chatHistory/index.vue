@@ -36,29 +36,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:user:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:user:edit']"
-        >修改
-        </el-button>
-      </el-col>
+
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -68,7 +46,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:user:remove']"
-        >删除
+        >导出
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,84 +59,30 @@
           v-hasPermi="['system:user:export']"
         >导出
         </el-button>
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-top"
-          size="mini"
-          @click="createFirstChatisland"
-        >生成
-        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="用户ID" align="center" prop="userId" v-if="true"/>
-      <el-table-column label="用户账号" align="center" prop="userName"/>
-      <el-table-column label="用户昵称" align="center" prop="nickName"/>
-      <el-table-column label="用户性别" align="center" prop="sex">
-        <template slot-scope="scope">
-          <span v-if="scope.row.sex===0">女</span>
-          <span v-if="scope.row.sex===1">男</span>
-          <span v-if="scope.row.sex===2">其他</span>
-        </template>
+      <el-table-column label="人设ID" align="center" prop="userId" v-if="true"/>
+      <el-table-column label="人设账号" align="center" prop="userName"/>
+      <el-table-column label="人设昵称" align="center" prop="nickName"/>
+      <el-table-column label="人设聊天总数" align="center" prop="chatCount"/>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
 
-      </el-table-column>
-      <el-table-column label="是否会员" align="center" prop="isVip">
-        <template slot-scope="scope">
-          <span v-if="scope.row.isVip===0">否</span>
-          <span v-if="scope.row.isVip===1">是</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户标签" align="center" prop="userLabel"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+<!--&lt;!&ndash;          <el-button&ndash;&gt;-->
+<!--&lt;!&ndash;            size="mini"&ndash;&gt;-->
+<!--&lt;!&ndash;            type="text"&ndash;&gt;-->
+<!--&lt;!&ndash;            icon="el-icon-edit"&ndash;&gt;-->
+<!--&lt;!&ndash;            @click="handleUpdate(scope.row)"&ndash;&gt;-->
+<!--&lt;!&ndash;            v-hasPermi="['system:user:edit']"&ndash;&gt;-->
+<!--&lt;!&ndash;          >修改&ndash;&gt;-->
+<!--&lt;!&ndash;          </el-button>&ndash;&gt;-->
 
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="showChatisland(scope.row,scope.index)">chatisland
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="showPost(scope.row,scope.index)">post
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="showPicture(scope.row,scope.index)">人设图片
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="addDiamond(scope.row)">发放钻石
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="addFlashChat(scope.row)">发放闪聊
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:user:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -299,7 +223,7 @@
 
 <script>
 import {listUser, getUser, delUser, addUser, updateUser} from "@/api/system/user";
-import {addCharacterProp,createFirstChatisland} from "../../api/chatislandApi/chatislandSysUser";
+import {addCharacterProp,selectChatHistory} from "../../api/chatislandApi/chatislandSysUser";
 import {setProdChatisland} from "@/api/chatislandApi/chatisland";
 export default {
   name: "User",
@@ -450,19 +374,6 @@ export default {
 
   methods: {
 
-    createFirstChatisland(){
-      if(this.ids.length===0){
-        this.$modal.msgError("请选择需要生成的列");
-        return false
-      }
-      createFirstChatisland(this.ids).then(response=>{
-        if(response.data){
-          this.$modal.msgSuccess("生成首条chatisland成功");
-          this.queryParams.pageNum=1
-          this.getList()
-        }
-      })
-    },
 
     showChatisland(row, index, done) {
       const userId = row.userId;
@@ -495,7 +406,7 @@ export default {
     /** 查询用户信息列表 */
     getList() {
       this.loading = true;
-      listUser(this.queryParams).then(response => {
+      selectChatHistory(this.queryParams).then(response => {
         this.userList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -648,7 +559,11 @@ export default {
       });
     },
     /** 导出按钮操作 */
-    handleExport() {
+    handleExport(row) {
+      const userIds = row.userId || this.ids;
+      if(null == userIds){
+
+      }
       this.download('system/user/export', {
         ...this.queryParams
       }, `user_${new Date().getTime()}.xlsx`)

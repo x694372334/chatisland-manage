@@ -66,3 +66,11 @@ export function createFirstChatisland(ids){
   })
 }
 
+export function selectChatHistory(query){
+  return request({
+    url: '/system/user/selectChatHistory',
+    method: 'get',
+    params: query
+  })
+}
+
