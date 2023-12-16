@@ -1,33 +1,33 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户账号" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickName">
-        <el-input
-          v-model="queryParams.nickName"
-          placeholder="请输入用户昵称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否会员" prop="isVip">
-        <el-select
-          v-model="queryParams.isVip"
-          placeholder="请选择是否会员"
-          clearable
-          @keyup.enter.native="handleQuery"
-        >
-          <el-option value="0" label="否" key="0"></el-option>
-          <el-option value="1" label="是" key="1"></el-option>
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="用户账号" prop="userName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.userName"-->
+<!--          placeholder="请输入用户账号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="用户昵称" prop="nickName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.nickName"-->
+<!--          placeholder="请输入用户昵称"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="是否会员" prop="isVip">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.isVip"-->
+<!--          placeholder="请选择是否会员"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        >-->
+<!--          <el-option value="0" label="否" key="0"></el-option>-->
+<!--          <el-option value="1" label="是" key="1"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -36,127 +36,47 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:user:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:user:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:user:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:user:export']"
-        >导出
-        </el-button>
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-top"
-          size="mini"
-          @click="createFirstChatisland"
-        >生成
-        </el-button>
-      </el-col>
+
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleExport"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['system:user:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="用户ID" align="center" prop="userId" v-if="true"/>
-      <el-table-column label="用户账号" align="center" prop="userName"/>
-      <el-table-column label="用户昵称" align="center" prop="nickName"/>
-      <el-table-column label="用户性别" align="center" prop="sex">
-        <template slot-scope="scope">
-          <span v-if="scope.row.sex===0">男</span>
-          <span v-if="scope.row.sex===1">女</span>
-          <span v-if="scope.row.sex===2">其他</span>
-        </template>
-
-      </el-table-column>
-      <el-table-column label="是否会员" align="center" prop="isVip">
-        <template slot-scope="scope">
-          <span v-if="scope.row.isVip===0">否</span>
-          <span v-if="scope.row.isVip===1">是</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户标签" align="center" prop="userLabel"/>
+      <el-table-column label="人设ID" align="center" prop="userId" v-if="true"/>
+      <el-table-column label="人设账号" align="center" prop="userName"/>
+      <el-table-column label="人设昵称" align="center" prop="nickName"/>
+      <el-table-column label="人设聊天总数" align="center" prop="chatCount"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 
           <el-button icon="el-icon-position"
                      size="small"
                      type="text"
-                     @click="showChatisland(scope.row,scope.index)">chatisland
+                     @click="showChatisland(scope.row,scope.index)">选择用户
           </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="showPost(scope.row,scope.index)">post
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="showPicture(scope.row,scope.index)">人设图片
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="addDiamond(scope.row)">发放钻石
-          </el-button>
-          <el-button icon="el-icon-position"
-                     size="small"
-                     type="text"
-                     @click="addFlashChat(scope.row)">发放闪聊
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:user:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
-          >删除
-          </el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -299,7 +219,7 @@
 
 <script>
 import {listUser, getUser, delUser, addUser, updateUser} from "@/api/system/user";
-import {addCharacterProp,createFirstChatisland} from "../../api/chatislandApi/chatislandSysUser";
+import {addCharacterProp,selectChatHistory} from "../../api/chatislandApi/chatislandSysUser";
 import {setProdChatisland} from "@/api/chatislandApi/chatisland";
 export default {
   name: "User",
@@ -313,10 +233,10 @@ export default {
         'vip_1', 'vip_2', 'vip_3', 'vip_4', 'vip_5', 'vip_6', 'vip_7', 'vip_8', 'vip_9', 'vip_10', 'vip_11', 'vip_12', 'vip_13', 'vip_14', 'vip_15'],
       options: [{
         value: '0',
-        label: '男'
+        label: '女'
       }, {
         value: '1',
-        label: '女'
+        label: '男'
       }, {
         value: '2',
         label: '其他'
@@ -420,27 +340,6 @@ export default {
         userName: [
           {required: true, message: "用户账号不能为空", trigger: "blur"}
         ],
-        // nickName: [
-        //   { required: true, message: "用户昵称不能为空", trigger: "blur" }
-        // ],
-        // sex: [
-        //   { required: true, message: "用户性别不能为空", trigger: "change" }
-        // ],
-        // avatar: [
-        //   { required: true, message: "头像地址不能为空", trigger: "blur" }
-        // ],
-        // aboutMe: [
-        //   { required: true, message: "个人简介不能为空", trigger: "blur" }
-        // ],
-        // userLabel: [
-        //   { required: true, message: "用户标签不能为空", trigger: "blur" }
-        // ],
-        // avatarName: [
-        //   { required: true, message: "头像名称不能为空", trigger: "blur" }
-        // ],
-        // age: [
-        //   { required: true, message: "年龄不能为空", trigger: "blur" }
-        // ],
       }
     };
   },
@@ -450,28 +349,14 @@ export default {
 
   methods: {
 
-    createFirstChatisland(){
-      if(this.ids.length===0){
-        this.$modal.msgError("请选择需要生成的列");
-        return false
-      }
-      createFirstChatisland(this.ids).then(response=>{
-        if(response.data){
-          this.$modal.msgSuccess("生成首条chatisland成功");
-          this.queryParams.pageNum=1
-          this.getList()
-        }
-      })
-    },
 
     showChatisland(row, index, done) {
       const userId = row.userId;
       console.log(userId)
       this.$router.push({
-        path: "/chatisland/index",
+        path: "/chatHistory/chatUser",
         query: {
           userId: userId,
-          isVip: row.isVip
         }
       });
     },
@@ -495,7 +380,7 @@ export default {
     /** 查询用户信息列表 */
     getList() {
       this.loading = true;
-      listUser(this.queryParams).then(response => {
+      selectChatHistory(this.queryParams).then(response => {
         this.userList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -648,7 +533,11 @@ export default {
       });
     },
     /** 导出按钮操作 */
-    handleExport() {
+    handleExport(row) {
+      const userIds = row.userId || this.ids;
+      if(null == userIds){
+
+      }
       this.download('system/user/export', {
         ...this.queryParams
       }, `user_${new Date().getTime()}.xlsx`)
