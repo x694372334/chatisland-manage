@@ -37,6 +37,7 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: `https://mapi.chatisland.com/chatisland-api`,
         target: `http://localhost:8082/chatisland-api`,
+        // target: `https://mapi.chatisland.com/chatisland-test-api`,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

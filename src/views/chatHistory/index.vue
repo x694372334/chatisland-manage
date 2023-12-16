@@ -1,33 +1,33 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户账号" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickName">
-        <el-input
-          v-model="queryParams.nickName"
-          placeholder="请输入用户昵称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否会员" prop="isVip">
-        <el-select
-          v-model="queryParams.isVip"
-          placeholder="请选择是否会员"
-          clearable
-          @keyup.enter.native="handleQuery"
-        >
-          <el-option value="0" label="否" key="0"></el-option>
-          <el-option value="1" label="是" key="1"></el-option>
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="用户账号" prop="userName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.userName"-->
+<!--          placeholder="请输入用户账号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="用户昵称" prop="nickName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.nickName"-->
+<!--          placeholder="请输入用户昵称"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="是否会员" prop="isVip">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.isVip"-->
+<!--          placeholder="请选择是否会员"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        >-->
+<!--          <el-option value="0" label="否" key="0"></el-option>-->
+<!--          <el-option value="1" label="是" key="1"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -37,29 +37,28 @@
 
     <el-row :gutter="10" class="mb8">
 
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:user:remove']"
-        >导出
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:user:export']"
-        >导出
-        </el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleExport"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['system:user:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -69,20 +68,17 @@
       <el-table-column label="人设账号" align="center" prop="userName"/>
       <el-table-column label="人设昵称" align="center" prop="nickName"/>
       <el-table-column label="人设聊天总数" align="center" prop="chatCount"/>
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
-<!--        <template slot-scope="scope">-->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
 
-<!--&lt;!&ndash;          <el-button&ndash;&gt;-->
-<!--&lt;!&ndash;            size="mini"&ndash;&gt;-->
-<!--&lt;!&ndash;            type="text"&ndash;&gt;-->
-<!--&lt;!&ndash;            icon="el-icon-edit"&ndash;&gt;-->
-<!--&lt;!&ndash;            @click="handleUpdate(scope.row)"&ndash;&gt;-->
-<!--&lt;!&ndash;            v-hasPermi="['system:user:edit']"&ndash;&gt;-->
-<!--&lt;!&ndash;          >修改&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-button>&ndash;&gt;-->
+          <el-button icon="el-icon-position"
+                     size="small"
+                     type="text"
+                     @click="showChatisland(scope.row,scope.index)">选择用户
+          </el-button>
 
-<!--        </template>-->
-<!--      </el-table-column>-->
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -344,27 +340,6 @@ export default {
         userName: [
           {required: true, message: "用户账号不能为空", trigger: "blur"}
         ],
-        // nickName: [
-        //   { required: true, message: "用户昵称不能为空", trigger: "blur" }
-        // ],
-        // sex: [
-        //   { required: true, message: "用户性别不能为空", trigger: "change" }
-        // ],
-        // avatar: [
-        //   { required: true, message: "头像地址不能为空", trigger: "blur" }
-        // ],
-        // aboutMe: [
-        //   { required: true, message: "个人简介不能为空", trigger: "blur" }
-        // ],
-        // userLabel: [
-        //   { required: true, message: "用户标签不能为空", trigger: "blur" }
-        // ],
-        // avatarName: [
-        //   { required: true, message: "头像名称不能为空", trigger: "blur" }
-        // ],
-        // age: [
-        //   { required: true, message: "年龄不能为空", trigger: "blur" }
-        // ],
       }
     };
   },
@@ -379,10 +354,9 @@ export default {
       const userId = row.userId;
       console.log(userId)
       this.$router.push({
-        path: "/chatisland/index",
+        path: "/chatHistory/chatUser",
         query: {
           userId: userId,
-          isVip: row.isVip
         }
       });
     },
