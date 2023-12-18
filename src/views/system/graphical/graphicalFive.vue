@@ -71,7 +71,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7'],
+            data: ['WineConnoisseur30', 'satterlee', 'brnca', 'CreativeSoul22', 'FilmBuffAmy', 'lauramaire', 'NatureExplorer27'],
             axisPointer: {
               type: 'shadow'
             }
@@ -109,7 +109,7 @@ export default {
               }
             },
             data: [
-              0, 0, 0, 0, 0, 0, 0
+              3, 6, 5, 4, 3, 6, 5
             ]
           },
           {
@@ -121,7 +121,7 @@ export default {
                 return value + '%';
               }
             },
-            data: [0, 0, 0, 0, 0, 0, 0]
+            data: [2, 4, 3, 4, 2, 4, 4]
           }
         ]
       };
