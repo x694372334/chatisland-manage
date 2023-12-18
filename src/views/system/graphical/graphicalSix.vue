@@ -626,8 +626,8 @@ export default {
       let startDate = this.paymentDepthRange[0]
       let endDate = this.paymentDepthRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.paymentDepth(data)
     },
@@ -812,8 +812,8 @@ export default {
       let startDate = this.paymentOrderRange[0]
       let endDate = this.paymentOrderRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.paymentOrder(data)
     },
@@ -1039,8 +1039,8 @@ export default {
       let startDate = this.diamondConsumeRange[0]
       let endDate = this.diamondConsumeRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.diamondConsume(data)
     },
@@ -1211,8 +1211,8 @@ export default {
       let startDate = this.characterConsumeRange[0]
       let endDate = this.characterConsumeRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.characterConsume(data)
     },

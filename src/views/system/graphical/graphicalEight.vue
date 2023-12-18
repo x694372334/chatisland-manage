@@ -439,8 +439,8 @@ export default {
       let startDate = this.consumeDateRange[0]
       let endDate = this.consumeDateRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.chatterConsume(data)
     },
@@ -534,8 +534,8 @@ export default {
       let startDate = this.avgConsumeDateRange[0]
       let endDate = this.avgConsumeDateRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.avgChatterConsume(data)
     },
@@ -631,8 +631,8 @@ export default {
       let startDate = this.fireImageOrderDateRange[0]
       let endDate = this.fireImageOrderDateRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.fireImageOrder(data)
     },
