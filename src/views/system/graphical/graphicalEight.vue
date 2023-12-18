@@ -117,68 +117,77 @@
     <hr>
     <h3 style="color: black;text-align: center">服务效率 - 有效接单率</h3>
     <hr>
-    <el-row style="margin-top:30px">
-      <el-col :span="12" style="text-align: center">
-        <el-date-picker
-          v-model="dataRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @blur=""
-        >
-        </el-date-picker>
-      </el-col>
+    <el-row style="margin-top:30px;text-align: center">
+      <el-date-picker
+        v-model="effectiveOrderDateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+      >
+      </el-date-picker>
+      <el-button @click="searchEffectiveOrderData">查询</el-button>
     </el-row>
     <div class="home">
-      <div class="barChart" ref="barChart2"></div>
+      <div class="barChart" ref="effectiveOrderBarChart"></div>
     </div>
 
     <hr>
     <h3 style="color: black;text-align: center">服务效率 - 深度会话率</h3>
     <hr>
-    <el-row style="margin-top:30px">
-      <el-col :span="12" style="text-align: center">
-        <el-date-picker
-          v-model="dataRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @blur=""
-        >
-        </el-date-picker>
-      </el-col>
+    <el-row style="margin-top:30px;text-align: center">
+      <el-date-picker
+        v-model="deepSessionDateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+      >
+      </el-date-picker>
+      <el-button @click="searchDeepSession">查询</el-button>
     </el-row>
     <div class="home">
-      <div class="barChart" ref="barChart3"></div>
+      <div class="barChart" ref="deepSessionBarChart"></div>
     </div>
 
     <hr>
     <h3 style="color: black;text-align: center">付费转化情况 - 钻石消耗</h3>
     <hr>
+    <el-row style="margin-top:30px;text-align: center">
+      <el-date-picker
+        v-model="diamondConsumeDateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+      >
+      </el-date-picker>
+      <el-button @click="searchDiamondConsume">查询</el-button>
+    </el-row>
     <div class="home">
-      <div class="barChart" ref="barChart5"></div>
+      <div class="barChart" ref="diamondConsumeBarChart"></div>
     </div>
 
     <hr>
     <h3 style="color: black;text-align: center">付费转化情况 - 绑定用户</h3>
     <hr>
-    <el-row style="margin-top:30px">
-      <el-col :span="12" style="text-align: center">
-        <el-date-picker
-          v-model="dataRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @blur=""
-        >
-        </el-date-picker>
-      </el-col>
+    <el-row style="margin-top:30px;text-align: center">
+      <el-date-picker
+        v-model="bindUserDateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+      >
+      </el-date-picker>
+      <el-button @click="searchBindUser">查询</el-button>
     </el-row>
     <div class="home">
-      <div class="barChart" ref="barChart4"></div>
+      <div class="barChart" ref="bindUserBarChart"></div>
     </div>
 
 
@@ -193,7 +202,11 @@ import {
   avgChatterConsume,
   diamondPaidConversion,
   chatterFireImageOrder,
-  chatterOnlineDuration
+  chatterOnlineDuration,
+  chatterEffectiveOrder,
+  chatterAvgRespTime,
+  deepSession,
+  chatterBindUser
 } from "@/api/system/graphical";
 
 export default {
@@ -204,6 +217,10 @@ export default {
     this.initAvgConsumeChart();
     this.initChatterFireImageOrderChart();
     this.initChatterOnlineDuration();
+    this.initChatterEffectiveOrder();
+    this.initChatterDeepSession();
+    this.initDiamondConsume();
+    this.initBindUser();
   },
 
   name: "Index",
@@ -221,7 +238,15 @@ export default {
       fireImageOrderDateRange: [],
       fireImageOrderChatterList: [],
       onlineDateRange: [],
-      onlineChatterList: []
+      onlineChatterList: [],
+      effectiveOrderDateRange: [],
+      effectiveOrderChatterList: [],
+      deepSessionDateRange: [],
+      deepSessionChatterList: [],
+      diamondConsumeDateRange: [],
+      diamondConsumeDateChatterList: [],
+      bindUserDateRange: [],
+      bindUserChatterList: []
     };
   },
   methods: {
@@ -232,10 +257,6 @@ export default {
     initBarChart() {
       // 通过 $ref 进行挂载
       let myChart1 = this.$echarts.init(this.$refs.barChart1);
-      let myChart2 = this.$echarts.init(this.$refs.barChart2);
-      let myChart3 = this.$echarts.init(this.$refs.barChart3);
-      let myChart4 = this.$echarts.init(this.$refs.barChart4);
-      let myChart5 = this.$echarts.init(this.$refs.barChart5);
 
       let option1 = {
         xAxis: {
@@ -253,175 +274,6 @@ export default {
         ]
       };
       myChart1.setOption(option1);
-      let option2 = {
-        xAxis: {
-          type: 'category',
-          data: this.chatterUser
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: this.onlineLongTime,
-            type: 'bar'
-          }
-        ]
-      };
-      myChart2.setOption(option2);
-      let option3 = {
-        xAxis: {
-          type: 'category',
-          data: this.chatterUser
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: this.onlineLongTime,
-            type: 'bar'
-          }
-        ]
-      };
-      myChart3.setOption(option3);
-      let option4 = {
-        xAxis: {
-          type: 'category',
-          data: this.chatterUser
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: this.onlineLongTime,
-            type: 'bar'
-          }
-        ]
-      };
-      myChart4.setOption(option4);
-
-      diamondPaidConversion({}).then(response => {
-        if (response.data.chatterMap) {
-          let chatterIds = Object.keys(response.data.chatterMap)
-
-          let giftConsumeList = []
-          let giftConsumeRate = []
-
-          let chatislandConsumeList = []
-          let chatislandConsumeRate = []
-          for (let i = 0; i < chatterIds.length; i++) {
-            let key = chatterIds[i]
-            let obj = response.data.chatterMap[key]
-            giftConsumeList.push(obj.gift.consumeDiamondSum)
-            giftConsumeRate.push(obj.gift.chatRecordSum > 0 ? obj.gift.consumeDiamondSum / obj.gift.chatRecordSum : 0)
-
-            chatislandConsumeList.push(obj.chatisland.consumeDiamondSum)
-            chatislandConsumeRate.push(obj.chatisland.chatRecordSum > 0 ? obj.chatisland.consumeDiamondSum / obj.chatisland.chatRecordSum : 0)
-          }
-
-          let option5 = {
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross',
-                crossStyle: {
-                  color: '#999'
-                }
-              }
-            },
-            toolbox: {
-              feature: {
-                dataView: {show: true, readOnly: false},
-                magicType: {show: true, type: ['line', 'bar']},
-                restore: {show: true},
-                saveAsImage: {show: true}
-              }
-            },
-            legend: {
-              data: ['礼物消耗', '内容解锁消耗']
-            },
-            xAxis: [
-              {
-                type: 'category',
-                data: chatterIds,
-                axisPointer: {
-                  type: 'shadow'
-                }
-              }
-            ],
-            yAxis: [
-              {
-                type: 'value',
-                name: '钻石消耗',
-                min: 0,
-                max: 250,
-                interval: 50,
-                axisLabel: {
-                  formatter: '{value} 个'
-                }
-              },
-              {
-                type: 'value',
-                name: '钻石消耗率',
-                min: 0,
-                max: 25,
-                interval: 5,
-                axisLabel: {
-                  formatter: '{value} %'
-                }
-              }
-            ],
-            series: [
-              {
-                name: '礼物消耗',
-                type: 'bar',
-                tooltip: {
-                  valueFormatter: function (value) {
-                    return value + ' 个';
-                  }
-                },
-                data: giftConsumeList
-              },
-              {
-                name: '内容解锁消耗',
-                type: 'bar',
-                tooltip: {
-                  valueFormatter: function (value) {
-                    return value + ' 个';
-                  }
-                },
-                data: chatislandConsumeList
-              },
-              {
-                name: '礼物消耗转化率',
-                type: 'line',
-                yAxisIndex: 1,
-                tooltip: {
-                  valueFormatter: function (value) {
-                    return value + ' 个/条';
-                  }
-                },
-                data: giftConsumeRate
-              },
-              {
-                name: '内容解锁消耗转化率',
-                type: 'line',
-                yAxisIndex: 1,
-                tooltip: {
-                  valueFormatter: function (value) {
-                    return value + ' 个/条';
-                  }
-                },
-                data: chatislandConsumeRate
-              }
-            ]
-          };
-          myChart5.setOption(option5);
-        }
-      })
-
 
     },
     searchConsumeData() {
@@ -563,12 +415,10 @@ export default {
       avgChatterConsume({}).then(response => {
         if (response.data) {
           this.avgConsumeChatterIdList = Object.keys(response.data)
-          console.log(this.avgConsumeChatterIdList)
           for (let i = 0; i < this.avgConsumeChatterIdList.length; i++) {
             let chatterId = this.avgConsumeChatterIdList[i]
             this.avgConsumeRateList.push(response.data[chatterId])
           }
-          console.log(this.avgConsumeRateList)
           let myChart = this.$echarts.init(this.$refs.avgConsumeBarChart);
           let option = {
             tooltip: {
@@ -757,7 +607,7 @@ export default {
     initChatterFireImageOrderChart() {
       this.fireImageOrder({})
     },
-    searchOnlineData(){
+    searchOnlineData() {
       let startDate = this.onlineDateRange[0]
       let endDate = this.onlineDateRange[1]
       let data = {
@@ -772,10 +622,10 @@ export default {
     chatterOnlineDuration(data) {
       let myChart = this.$echarts.init(this.$refs.onlineBarChart);
       chatterOnlineDuration(data).then(response => {
-        if(response.data.chatterMap){
+        if (response.data.chatterMap) {
           this.onlineChatterList = Object.keys(response.data.chatterMap)
           console.log(this.onlineChatterList)
-          let dataList =[]
+          let dataList = []
           for (let i = 0; i < this.onlineChatterList.length; i++) {
             let key = this.onlineChatterList[i]
             dataList.push(response.data.chatterMap[key].onlineDuration)
@@ -814,6 +664,343 @@ export default {
             series: [
               {
                 name: '在线时长/分钟',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: dataList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
+    },
+    initChatterEffectiveOrder() {
+      this.chatterEffectiveOrder({})
+    },
+    searchEffectiveOrderData() {
+      let startDate = this.effectiveOrderDateRange[0]
+      let endDate = this.effectiveOrderDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
+      }
+      this.chatterEffectiveOrder(data)
+    },
+    chatterEffectiveOrder(data) {
+      let myChart = this.$echarts.init(this.$refs.effectiveOrderBarChart);
+      chatterEffectiveOrder(data).then(response => {
+        if (response.data.chatterMap) {
+          this.effectiveOrderChatterList = Object.keys(response.data.chatterMap)
+          let dataList = []
+          for (let i = 0; i < this.effectiveOrderChatterList.length; i++) {
+            let key = this.effectiveOrderChatterList[i]
+            dataList.push(response.data.chatterMap[key].effectiveOrder)
+          }
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.effectiveOrderChatterList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '有效接单率（%）',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: dataList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
+    },
+    initChatterDeepSession() {
+      this.deepSession({})
+    },
+    searchDeepSession() {
+      let startDate = this.deepSessionDateRange[0]
+      let endDate = this.deepSessionDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
+      }
+      this.deepSession(data)
+    },
+    deepSession(data) {
+      let myChart = this.$echarts.init(this.$refs.deepSessionBarChart);
+      deepSession(data).then(response => {
+        if (response.data.chatterMap) {
+          this.deepSessionChatterList = Object.keys(response.data.chatterMap)
+          let dataList = []
+          for (let i = 0; i < this.deepSessionChatterList.length; i++) {
+            let key = this.deepSessionChatterList[i]
+            dataList.push(response.data.chatterMap[key])
+          }
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.deepSessionChatterList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '深度会话率（%）',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: dataList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
+    },
+    initDiamondConsume() {
+      this.diamondConsume({})
+    },
+    searchDiamondConsume() {
+      let startDate = this.diamondConsumeDateRange[0]
+      let endDate = this.diamondConsumeDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
+      }
+      this.diamondConsume(data)
+    },
+    diamondConsume(data) {
+      let myChart2 = this.$echarts.init(this.$refs.diamondConsumeBarChart);
+      diamondPaidConversion(data).then(response => {
+        if (response.data.chatterMap) {
+          let chatterIds = Object.keys(response.data.chatterMap)
+
+          let giftConsumeList = []
+          let giftConsumeRate = []
+
+          let chatislandConsumeList = []
+          let chatislandConsumeRate = []
+          for (let i = 0; i < chatterIds.length; i++) {
+            let key = chatterIds[i]
+            let obj = response.data.chatterMap[key]
+            giftConsumeList.push(obj.gift.consumeDiamondSum)
+            giftConsumeRate.push(obj.gift.chatRecordSum > 0 ? obj.gift.consumeDiamondSum / obj.gift.chatRecordSum : 0)
+
+            chatislandConsumeList.push(obj.chatisland.consumeDiamondSum)
+            chatislandConsumeRate.push(obj.chatisland.chatRecordSum > 0 ? obj.chatisland.consumeDiamondSum / obj.chatisland.chatRecordSum : 0)
+          }
+
+          let option2 = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                  color: '#999'
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+              }
+            },
+            legend: {
+              data: ['礼物消耗', '内容解锁消耗']
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: chatterIds,
+                axisPointer: {
+                  type: 'shadow'
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: '钻石消耗',
+                min: 0,
+                interval: 1,
+                axisLabel: {
+                  formatter: '{value} 个'
+                }
+              },
+              {
+                type: 'value',
+                name: '钻石消耗率',
+                min: 0,
+                max: 100,
+                interval: 10,
+                axisLabel: {
+                  formatter: '{value} %'
+                }
+              }
+            ],
+            series: [
+              {
+                name: '礼物消耗',
+                type: 'bar',
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个';
+                  }
+                },
+                data: giftConsumeList
+              },
+              {
+                name: '内容解锁消耗',
+                type: 'bar',
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个';
+                  }
+                },
+                data: chatislandConsumeList
+              },
+              {
+                name: '礼物消耗转化率',
+                type: 'line',
+                yAxisIndex: 1,
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个/条';
+                  }
+                },
+                data: giftConsumeRate
+              },
+              {
+                name: '内容解锁消耗转化率',
+                type: 'line',
+                yAxisIndex: 1,
+                tooltip: {
+                  valueFormatter: function (value) {
+                    return value + ' 个/条';
+                  }
+                },
+                data: chatislandConsumeRate
+              }
+            ]
+          };
+          myChart2.setOption(option2);
+        }
+      })
+    },
+    initBindUser(){
+      this.bindUser({})
+    },
+    searchBindUser() {
+      let startDate = this.bindUserDateRange[0]
+      let endDate = this.bindUserDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
+      }
+      this.bindUser(data)
+    },
+    bindUser(data) {
+      let myChart = this.$echarts.init(this.$refs.bindUserBarChart);
+      chatterBindUser(data).then(response => {
+        if (response.data.chatterMap) {
+          this.bindUserChatterList = Object.keys(response.data.chatterMap)
+          let dataList = []
+          for (let i = 0; i < this.bindUserChatterList.length; i++) {
+            let key = this.bindUserChatterList[i]
+            dataList.push(response.data.chatterMap[key])
+          }
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.bindUserChatterList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '绑定用户',
                 type: 'bar',
                 emphasis: {
                   focus: 'series'

@@ -242,3 +242,39 @@ export function chatterOnlineDuration(data) {
     data: data
   })
 }
+
+// 有效接单率
+export function chatterEffectiveOrder(data) {
+  return request({
+    url: '/report/chatterEffectiveOrder',
+    method: 'post',
+    data: data
+  })
+}
+
+// 所有消息平均响应时间
+export function chatterAvgRespTime(data) {
+  return request({
+    url: '/report/chatterAvgRespTime',
+    method: 'post',
+    data: data
+  })
+}
+
+// 深度会话率
+export function deepSession(data) {
+  return request({
+    url: '/report/deepSession',
+    method: 'post',
+    data: data
+  })
+}
+
+// 绑定用户
+export function chatterBindUser(data) {
+  return request({
+    url: '/report/chatterBindUser',
+    method: 'post',
+    data: data
+  })
+}
