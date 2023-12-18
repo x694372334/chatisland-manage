@@ -101,6 +101,8 @@ export default {
       this.handleChange(data)
     },
     handleChange() {
+      this.xAxisRange = [];
+      this.xAxisRangeTest = [];
 
       let startDate = this.dataRange[0]
       let endDate = this.dataRange[1]
@@ -110,7 +112,6 @@ export default {
       }
 
       basicsAppData(data).then(response =>{
-        this.xAxisRange = [];
 
           if(response.data.length > 7){
             this.$message.error("不可超过七天,否则无法展示！")
@@ -132,6 +133,7 @@ export default {
           this.reportRangeFourteenLeaveTest.push(this.systemDate[Object.keys(this.systemDate)].fourteenLeave)
           this.reportRangeThirtyLeaveLeaveTest.push(this.systemDate[Object.keys(this.systemDate)].thirtyLeave)
         }
+        console.log(this.xAxisRangeTest)
         this.xAxisRange = this.xAxisRangeTest;
         this.reportRangeDNU = this.reportRangeDNUTest;
         this.reportRangeWNU = this.reportRangeWNUTest;
