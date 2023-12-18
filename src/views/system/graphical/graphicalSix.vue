@@ -428,8 +428,8 @@ export default {
       let startDate = this.revenueDataRange[0]
       let endDate = this.revenueDataRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.revenueData(data)
     },
