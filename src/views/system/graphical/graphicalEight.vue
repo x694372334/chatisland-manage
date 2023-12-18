@@ -78,21 +78,20 @@
     <hr>
     <h3 style="color: black;text-align: center">基础指标 - 在线时长</h3>
     <hr>
-    <el-row style="margin-top:30px">
-      <el-col :span="12" style="text-align: center">
-        <el-date-picker
-          v-model="dataRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @blur=""
-        >
-        </el-date-picker>
-      </el-col>
+    <el-row style="margin-top:30px;text-align: center;">
+      <el-date-picker
+        v-model="onlineDateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+      >
+      </el-date-picker>
+      <el-button @click="searchOnlineData">查询</el-button>
     </el-row>
-    <div class="home">
-      <div class="barChart" ref="barChart"></div>
+    <div class="home" style="height: 1000px;">
+      <div class="barChart" ref="onlineBarChart"></div>
     </div>
 
     <hr>
@@ -189,7 +188,13 @@
 </template>
 
 <script>
-import {chatterConsume, avgChatterConsume, diamondPaidConversion, chatterFireImageOrder} from "@/api/system/graphical";
+import {
+  chatterConsume,
+  avgChatterConsume,
+  diamondPaidConversion,
+  chatterFireImageOrder,
+  chatterOnlineDuration
+} from "@/api/system/graphical";
 
 export default {
   mounted() {
@@ -198,6 +203,7 @@ export default {
     this.initConsumeChart();
     this.initAvgConsumeChart();
     this.initChatterFireImageOrderChart();
+    this.initChatterOnlineDuration();
   },
 
   name: "Index",
@@ -206,8 +212,6 @@ export default {
       // 版本号
       version: "4.8.0",
       dataRange: [],
-      chatterUser: ['chatter1', 'chatter2', 'chatter3', 'chatter4', 'chatter5', 'chatter6'],
-      onlineLongTime: [10, 20, 10, 15, 65, 50],
       consumeDateRange: [],
       consumeChatterIdList: [],
       consumeGiftCountList: [],
@@ -215,7 +219,9 @@ export default {
       avgConsumeChatterIdList: [],
       avgConsumeRateList: [],
       fireImageOrderDateRange: [],
-      fireImageOrderChatterList: []
+      fireImageOrderChatterList: [],
+      onlineDateRange: [],
+      onlineChatterList: []
     };
   },
   methods: {
@@ -225,29 +231,12 @@ export default {
     },
     initBarChart() {
       // 通过 $ref 进行挂载
-      let myChart = this.$echarts.init(this.$refs.barChart);
       let myChart1 = this.$echarts.init(this.$refs.barChart1);
       let myChart2 = this.$echarts.init(this.$refs.barChart2);
       let myChart3 = this.$echarts.init(this.$refs.barChart3);
       let myChart4 = this.$echarts.init(this.$refs.barChart4);
       let myChart5 = this.$echarts.init(this.$refs.barChart5);
 
-      let option = {
-        xAxis: {
-          type: 'category',
-          data: this.chatterUser
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: this.onlineLongTime,
-            type: 'bar'
-          }
-        ]
-      };
-      myChart.setOption(option);
       let option1 = {
         xAxis: {
           type: 'category',
@@ -439,8 +428,8 @@ export default {
       let startDate = this.consumeDateRange[0]
       let endDate = this.consumeDateRange[1]
       let data = {
-        startDate: new Date(startDate).getTime()+8*3600000,
-        endDate: new Date(endDate).getTime()+8*3600000
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
       }
       this.chatterConsume(data)
     },
@@ -453,7 +442,7 @@ export default {
             let chatterId = this.consumeChatterIdList[i]
             this.consumeGiftCountList.push(response.data[chatterId])
           }
-          let myChart = this.$echarts.init(this.$refs.barChart);
+          let myChart = this.$echarts.init(this.$refs.consumeBarChart);
           myChart.setOption({
             xAxis: [
               {
@@ -534,8 +523,8 @@ export default {
       let startDate = this.avgConsumeDateRange[0]
       let endDate = this.avgConsumeDateRange[1]
       let data = {
-        startDate: new Date(startDate).getTime()+8*3600000,
-        endDate: new Date(endDate).getTime()+8*3600000
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
       }
       this.avgChatterConsume(data)
     },
@@ -631,8 +620,8 @@ export default {
       let startDate = this.fireImageOrderDateRange[0]
       let endDate = this.fireImageOrderDateRange[1]
       let data = {
-        startDate: new Date(startDate).getTime()+8*3600000,
-        endDate: new Date(endDate).getTime()+8*3600000
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
       }
       this.fireImageOrder(data)
     },
@@ -767,8 +756,76 @@ export default {
     },
     initChatterFireImageOrderChart() {
       this.fireImageOrder({})
+    },
+    searchOnlineData(){
+      let startDate = this.onlineDateRange[0]
+      let endDate = this.onlineDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
+      }
+      this.chatterOnlineDuration(data)
+    },
+    initChatterOnlineDuration() {
+      this.chatterOnlineDuration({})
+    },
+    chatterOnlineDuration(data) {
+      let myChart = this.$echarts.init(this.$refs.onlineBarChart);
+      chatterOnlineDuration(data).then(response => {
+        if(response.data.chatterMap){
+          this.onlineChatterList = Object.keys(response.data.chatterMap)
+          console.log(this.onlineChatterList)
+          let dataList =[]
+          for (let i = 0; i < this.onlineChatterList.length; i++) {
+            let key = this.onlineChatterList[i]
+            dataList.push(response.data.chatterMap[key].onlineDuration)
+          }
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.onlineChatterList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '在线时长/分钟',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: dataList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
     }
-
   }
 };
 </script>

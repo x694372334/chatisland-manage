@@ -233,3 +233,12 @@ export function chatterFireImageOrder(data) {
     data: data
   })
 }
+
+// chatter在线时长
+export function chatterOnlineDuration(data) {
+  return request({
+    url: '/report/chatterOnlineDuration',
+    method: 'post',
+    data: data
+  })
+}
