@@ -110,9 +110,34 @@ export default {
         startDate: startDate,
         endDate: endDate
       }
+      console.log(this.dataRange[0])
+      console.log(this.dataRange[1])
+
 
       basicsAppData(data).then(response =>{
-
+        this.reportRangeDNU =[];
+        this.reportRangeWNU =[];
+        this.reportRangeMNU =[];
+        this.reportRangeDAU =[];
+        this.reportRangeWAU =[];
+        this.reportRangeMAU =[];
+        this.reportRangeNextLeave=[]
+        this.reportRangeThreeLeave =[]
+        this.reportRangeSevenLeave =[]
+        this.reportRangeFourteenLeave = []
+        this.reportRangeThirtyLeave = []
+        this.xAxisRangeTest=[]
+        this.reportRangeDNUTest=[]
+        this.reportRangeWNUTest=[]
+        this.reportRangeMNUTest=[]
+        this.reportRangeDAUTest=[]
+        this.reportRangeWAUTest=[]
+        this.reportRangeMAUTest=[]
+        this.reportRangeNextLeaveTest=[]
+        this.reportRangeThreeLeaveTest=[]
+        this.reportRangeSevenLeaveTest=[]
+        this.reportRangeFourteenLeaveTest=[]
+        this.reportRangeThirtyLeaveLeaveTest = []
           if(response.data.length > 7){
             this.$message.error("不可超过七天,否则无法展示！")
             return;
