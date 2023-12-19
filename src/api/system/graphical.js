@@ -242,3 +242,11 @@ export function chatterOnlineDuration(data) {
     data: data
   })
 }
+
+export function constructionUnionChangeRate(data) {
+  return request({
+    url: '/report/constructionUnionChangeRate',
+    method: 'POST',
+    data: data
+  })
+}

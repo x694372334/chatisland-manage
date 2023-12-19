@@ -14,13 +14,15 @@
         @change="handleChange(1)">
       </el-date-picker>
     </el-row>
-  <div class="home">
-    <div class="barChart" ref="barChart"></div>
-  </div>
+    <div class="home">
+      <div class="barChart" ref="barChart"></div>
+    </div>
   </div>
 </template>
 
 <script>
+
+import {constructionUnionChangeRate} from "@/api/system/graphical";
 
 export default {
   mounted() {
@@ -33,12 +35,30 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
-      dataRange:[],
+      dataRange: [],
+      countAbs: [],
+      countRatio: [],
+      countUserName: []
+
     };
   },
   methods: {
     handleChange() {
-
+      this.countAbs= []
+      this.countRatio= []
+      this.countUserName=[]
+      let startDate = this.dataRange[0]
+      let endDate = this.dataRange[1]
+      let data = {
+        startDate: startDate,
+        endDate: endDate
+      }
+      constructionUnionChangeRate(data).then(response => {
+        this.countAbs = response.data.countAbs;
+        this.countRatio = response.data.countRatio;
+        this.countUserName = response.data.countUserName;
+        this.initBarChart();
+      })
     },
     goTarget(href) {
       window.open(href, "_blank");
@@ -59,19 +79,20 @@ export default {
         },
         toolbox: {
           feature: {
-            dataView: { show: true, readOnly: false },
-            magicType: { show: true, type: ['line', 'bar'] },
-            restore: { show: true },
-            saveAsImage: { show: true }
+            dataView: {show: true, readOnly: false},
+            magicType: {show: true, type: ['line', 'bar']},
+            restore: {show: true},
+            saveAsImage: {show: true}
           }
         },
         legend: {
-          data: ['建联消耗绝对值',  '健联率']
+          data: ['建联消耗绝对值', '健联率']
         },
         xAxis: [
           {
             type: 'category',
-            data: ['WineConnoisseur30', 'satterlee', 'brnca', 'CreativeSoul22', 'FilmBuffAmy', 'lauramaire', 'NatureExplorer27'],
+            data: this.countUserName,
+            // data: ['WineConnoisseur30', 'satterlee', 'brnca', 'CreativeSoul22', 'FilmBuffAmy', 'lauramaire', 'NatureExplorer27'],
             axisPointer: {
               type: 'shadow'
             }
@@ -108,9 +129,10 @@ export default {
                 return value + '';
               }
             },
-            data: [
-              3, 6, 5, 4, 3, 6, 5
-            ]
+            data: this.countAbs
+            // data: [
+            //   3, 6, 5, 4, 3, 6, 5
+            // ]
           },
           {
             name: '健联率',
@@ -121,7 +143,7 @@ export default {
                 return value + '%';
               }
             },
-            data: [2, 4, 3, 4, 2, 4, 4]
+            data: this.countRatio
           }
         ]
       };
@@ -132,7 +154,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 
 
 .home {
@@ -200,7 +221,7 @@ export default {
 }
 
 .home {
-  width: 500px;
+  width: 1000px;
   height: 400px;
   margin: auto;
   border: 0px solid lightcoral;
@@ -211,6 +232,7 @@ export default {
     width: 100%;
     height: 100%;
   }
+
   //  宽高是必须给的，可以给百分比、具体的像素等....
   .barChart1 {
     width: 100%;
