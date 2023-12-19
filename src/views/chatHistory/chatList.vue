@@ -15,7 +15,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="发送方昵称" align="center" prop="fromUserNickName"/>
       <el-table-column label="接收方昵称" align="center" prop="toUserNickName"/>
-      <el-table-column label="聊天内容" width="1000" align="center" prop="msgContent"/>
+      <el-table-column label="聊天内容" width="800" align="center" prop="msgContent"/>
       <el-table-column label="chatter昵称" align="center" prop="cnickName"/>
       <el-table-column label="消息发送时间" align="center" prop="createTime"/>
 <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
