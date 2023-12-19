@@ -97,21 +97,20 @@
     <hr>
     <h3 style="color: black;text-align: center">服务效率 - 所有消息平均响应时间</h3>
     <hr>
-    <el-row style="margin-top:30px">
-      <el-col :span="12" style="text-align: center">
-        <el-date-picker
-          v-model="dataRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @blur=""
-        >
-        </el-date-picker>
-      </el-col>
+    <el-row style="margin-top:30px;text-align: center">
+      <el-date-picker
+        v-model="dataRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @blur=""
+      >
+      </el-date-picker>
+      <el-button @click="searchAvgRespTime">查询</el-button>
     </el-row>
     <div class="home">
-      <div class="barChart" ref="barChart1"></div>
+      <div class="barChart" ref="avgRespBarChart"></div>
     </div>
 
     <hr>
@@ -212,7 +211,6 @@ import {
 export default {
   mounted() {
     // 初始化 echarts
-    this.initBarChart();
     this.initConsumeChart();
     this.initAvgConsumeChart();
     this.initChatterFireImageOrderChart();
@@ -220,6 +218,7 @@ export default {
     this.initChatterEffectiveOrder();
     this.initChatterDeepSession();
     this.initDiamondConsume();
+    this.initAvgRespTime();
     this.initBindUser();
   },
 
@@ -246,7 +245,9 @@ export default {
       diamondConsumeDateRange: [],
       diamondConsumeDateChatterList: [],
       bindUserDateRange: [],
-      bindUserChatterList: []
+      bindUserChatterList: [],
+      avgRespTimeDateRange: [],
+      avgRespTimeChatterList: []
     };
   },
   methods: {
@@ -254,27 +255,75 @@ export default {
       window.open(href, "_blank");
 
     },
-    initBarChart() {
+    initAvgRespTime(){
+      this.avgRespTime({})
+    },
+    searchAvgRespTime(){
+      let startDate = this.avgRespTimeDateRange[0]
+      let endDate = this.avgRespTimeDateRange[1]
+      let data = {
+        startDate: new Date(startDate).getTime() + 8 * 3600000,
+        endDate: new Date(endDate).getTime() + 8 * 3600000
+      }
+      this.avgRespTime(data)
+    },
+    avgRespTime(data) {
       // 通过 $ref 进行挂载
-      let myChart1 = this.$echarts.init(this.$refs.barChart1);
+      let myChart = this.$echarts.init(this.$refs.avgRespBarChart);
 
-      let option1 = {
-        xAxis: {
-          type: 'category',
-          data: this.chatterUser
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: this.onlineLongTime,
-            type: 'bar'
+      chatterAvgRespTime(data).then(response =>{
+        if (response.data.chatterMap) {
+          this.avgRespTimeChatterList = Object.keys(response.data.chatterMap)
+          let dataList = []
+          for (let i = 0; i < this.avgRespTimeChatterList.length; i++) {
+            let key = this.avgRespTimeChatterList[i]
+            dataList.push(response.data.chatterMap[key])
           }
-        ]
-      };
-      myChart1.setOption(option1);
-
+          let option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {},
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: this.avgRespTimeChatterList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    return value
+                  }
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: '平均响应时间(秒)',
+                type: 'bar',
+                emphasis: {
+                  focus: 'series'
+                },
+                data: dataList
+              }
+            ]
+          };
+          myChart.setOption(option);
+        }
+      })
     },
     searchConsumeData() {
       let startDate = this.consumeDateRange[0]
@@ -945,7 +994,7 @@ export default {
         }
       })
     },
-    initBindUser(){
+    initBindUser() {
       this.bindUser({})
     },
     searchBindUser() {
