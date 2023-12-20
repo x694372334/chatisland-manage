@@ -99,7 +99,7 @@
     <hr>
     <el-row style="margin-top:30px;text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="avgRespTimeDateRange"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
