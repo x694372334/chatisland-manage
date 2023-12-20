@@ -90,3 +90,11 @@ export function selectChatHistoryExport(data){
   })
 }
 
+export function selectChatHistoryList(data){
+  return request({
+    url: '/system/user/selectChatHistoryList',
+    method: 'post',
+    data: data
+  })
+}
+

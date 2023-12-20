@@ -18,7 +18,7 @@
             <el-button @click="searchRevenueData">查询</el-button>
           </el-row>
         </div>
-        <div class="home" style="height: 1100px;">
+        <div class="home" style="height: 1100px;width: 100%;">
           <div class="barChart" ref="revenueDataChart"></div>
         </div>
       </el-card>
@@ -428,8 +428,8 @@ export default {
       let startDate = this.revenueDataRange[0]
       let endDate = this.revenueDataRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.revenueData(data)
     },
@@ -455,8 +455,9 @@ export default {
           let diamondUnblockConsumeList = []
           let diamondGiftConsumeList = []
           for (let i = 0; i < this.revenueDateList.length; i++) {
-            let key = this.revenueDateList[0]
+            let key = this.revenueDateList[i]
             let data = response.data.dateMap[key]
+            console.log(data)
             memberList.push(data.member)
             payList.push(data.pay)
             arPuList.push(data.arPu)
@@ -626,8 +627,8 @@ export default {
       let startDate = this.paymentDepthRange[0]
       let endDate = this.paymentDepthRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.paymentDepth(data)
     },
@@ -812,8 +813,8 @@ export default {
       let startDate = this.paymentOrderRange[0]
       let endDate = this.paymentOrderRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.paymentOrder(data)
     },
@@ -1039,8 +1040,8 @@ export default {
       let startDate = this.diamondConsumeRange[0]
       let endDate = this.diamondConsumeRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.diamondConsume(data)
     },
@@ -1092,7 +1093,7 @@ export default {
             let contactList = []
             let contactedList = []
             for (let i = 0; i < this.diamondConsumeDateList.length; i++) {
-              let key = this.diamondConsumeDateList[0]
+              let key = this.diamondConsumeDateList[i]
               let data = response.data.dateMap[key]
               giftList.push(data.gift)
               contactList.push(data.contact)
@@ -1211,8 +1212,8 @@ export default {
       let startDate = this.characterConsumeRange[0]
       let endDate = this.characterConsumeRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.characterConsume(data)
     },

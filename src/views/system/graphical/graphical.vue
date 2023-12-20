@@ -101,6 +101,8 @@ export default {
       this.handleChange(data)
     },
     handleChange() {
+      this.xAxisRange = [];
+      this.xAxisRangeTest = [];
 
       let startDate = this.dataRange[0]
       let endDate = this.dataRange[1]
@@ -108,10 +110,34 @@ export default {
         startDate: startDate,
         endDate: endDate
       }
+      console.log(this.dataRange[0])
+      console.log(this.dataRange[1])
+
 
       basicsAppData(data).then(response =>{
-        this.xAxisRange = [];
-
+        this.reportRangeDNU =[];
+        this.reportRangeWNU =[];
+        this.reportRangeMNU =[];
+        this.reportRangeDAU =[];
+        this.reportRangeWAU =[];
+        this.reportRangeMAU =[];
+        this.reportRangeNextLeave=[]
+        this.reportRangeThreeLeave =[]
+        this.reportRangeSevenLeave =[]
+        this.reportRangeFourteenLeave = []
+        this.reportRangeThirtyLeave = []
+        this.xAxisRangeTest=[]
+        this.reportRangeDNUTest=[]
+        this.reportRangeWNUTest=[]
+        this.reportRangeMNUTest=[]
+        this.reportRangeDAUTest=[]
+        this.reportRangeWAUTest=[]
+        this.reportRangeMAUTest=[]
+        this.reportRangeNextLeaveTest=[]
+        this.reportRangeThreeLeaveTest=[]
+        this.reportRangeSevenLeaveTest=[]
+        this.reportRangeFourteenLeaveTest=[]
+        this.reportRangeThirtyLeaveLeaveTest = []
           if(response.data.length > 7){
             this.$message.error("不可超过七天,否则无法展示！")
             return;
@@ -132,6 +158,7 @@ export default {
           this.reportRangeFourteenLeaveTest.push(this.systemDate[Object.keys(this.systemDate)].fourteenLeave)
           this.reportRangeThirtyLeaveLeaveTest.push(this.systemDate[Object.keys(this.systemDate)].thirtyLeave)
         }
+        console.log(this.xAxisRangeTest)
         this.xAxisRange = this.xAxisRangeTest;
         this.reportRangeDNU = this.reportRangeDNUTest;
         this.reportRangeWNU = this.reportRangeWNUTest;

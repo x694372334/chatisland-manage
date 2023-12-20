@@ -1,34 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="用户账号" prop="userName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userName"-->
-<!--          placeholder="请输入用户账号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="用户昵称" prop="nickName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.nickName"-->
-<!--          placeholder="请输入用户昵称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="是否会员" prop="isVip">-->
-<!--        <el-select-->
-<!--          v-model="queryParams.isVip"-->
-<!--          placeholder="请选择是否会员"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        >-->
-<!--          <el-option value="0" label="否" key="0"></el-option>-->
-<!--          <el-option value="1" label="是" key="1"></el-option>-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -36,59 +8,23 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleExport()"-->
-<!--        >导出-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['system:user:export']"-->
-<!--        >导出-->
-<!--        </el-button>-->
-<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="发送方ID" align="center" prop="fromUserId" v-if="true"/>
-      <el-table-column label="接收方ID" align="center" prop="toUserId"/>
       <el-table-column label="发送方昵称" align="center" prop="fromUserNickName"/>
       <el-table-column label="接收方昵称" align="center" prop="toUserNickName"/>
-      <el-table-column label="聊天总数" align="center" prop="chatCount"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+      <el-table-column label="聊天内容" width="800" align="center" prop="msgContent"/>
+      <el-table-column label="chatter昵称" align="center" prop="cnickName"/>
+      <el-table-column label="消息发送时间" align="center" prop="createTime"/>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
 
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleExport(scope.row)"
-          >导出
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="showChatislandList(scope.row)"
-          >列表查看
-          </el-button>
+<!--        -->
 
-        </template>
-      </el-table-column>
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -229,7 +165,7 @@
 
 <script>
 import {listUser, getUser, delUser, addUser, updateUser} from "@/api/system/user";
-import {addCharacterProp,selectChatHistoryToUser,selectChatHistoryExport} from "../../api/chatislandApi/chatislandSysUser";
+import {addCharacterProp,selectChatHistoryList} from "../../api/chatislandApi/chatislandSysUser";
 import {setProdChatisland} from "@/api/chatislandApi/chatisland";
 export default {
   name: "User",
@@ -367,17 +303,17 @@ export default {
   methods: {
 
 
-    // showChatisland(row, index, done) {
-    //   const userId = row.userId;
-    //   console.log(userId)
-    //   this.$router.push({
-    //     path: "/chatisland/index",
-    //     query: {
-    //       userId: userId,
-    //       isVip: row.isVip
-    //     }
-    //   });
-    // },
+    showChatisland(row, index, done) {
+      const userId = row.userId;
+      console.log(userId)
+      this.$router.push({
+        path: "/chatisland/index",
+        query: {
+          userId: userId,
+          isVip: row.isVip
+        }
+      });
+    },
 
     showPost(row, index, done) {
       const userId = row.userId;
@@ -397,15 +333,16 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
-      if (null != this.$route.query.userId) {
-        this.queryParams.userId = this.$route.query.userId;
-        this.historyUserId = this.$route.query.userId;
+      if (null != this.$route.query.fromUserId) {
+        this.queryParams.userId = this.$route.query.fromUserId;
+        this.queryParams.toUserId = this.$route.query.toUserId;
+        this.historyUserId = this.$route.query.fromUserId;
       }
       console.log(this.historyUserId)
       this.loading = true;
-      selectChatHistoryToUser(this.queryParams).then(response => {
-        this.userList = response.rows;
-        this.total = response.total;
+      selectChatHistoryList(this.queryParams).then(response => {
+        this.userList = response;
+        // this.total = response.total;
         this.loading = false;
       });
     },
@@ -555,31 +492,6 @@ export default {
         this.loading = false;
       });
     },
-
-    showChatisland(row, index, done) {
-      const userId = row.userId;
-      console.log(userId)
-      this.$router.push({
-        path: "/chatHistory/chatUser",
-        query: {
-          userId: userId,
-          isVip: row.isVip
-        }
-      });
-    },
-
-    showChatislandList(row, index, done) {
-      const userId = row.userId;
-      console.log(userId)
-      this.$router.push({
-        path: "/chatHistory/chatList",
-        query: {
-          fromUserId: row.fromUserId,
-          toUserId: row.toUserId,
-        }
-      });
-    },
-
     /** 导出按钮操作 */
     handleExport(row) {
       // const userIds = row.userId || this.ids;

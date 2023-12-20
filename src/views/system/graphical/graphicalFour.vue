@@ -80,8 +80,8 @@ export default {
       let startDate = this.dataRange[0]
       let endDate = this.dataRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.consumeDepth(data)
     },
@@ -104,7 +104,15 @@ export default {
             xAxis: [
               {
                 type: 'category',
-                data: this.userList
+                data: this.userList,
+                axisLabel: {
+                  interval: 0,
+                  formatter: function (value) {
+                    //x轴的文字改为竖版显示
+                    let str = value.split("");
+                    return str.join("\n");
+                  }
+                }
               }
             ],
             series: [
@@ -172,7 +180,9 @@ export default {
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value
+                    //x轴的文字改为竖版显示
+                    let str = value.split("");
+                    return str.join("\n");
                   }
                 }
               }
@@ -219,8 +229,8 @@ export default {
       let startDate = this.contentDataRange[0]
       let endDate = this.contentDataRange[1]
       let data = {
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime()
+        startDate: new Date(startDate).getTime()+8*3600000,
+        endDate: new Date(endDate).getTime()+8*3600000
       }
       this.contentConsume(data)
     },
@@ -232,7 +242,7 @@ export default {
         if (response.data.list) {
           for (let i = 0; i < response.data.list.length; i++) {
             let obj = response.data.list[i]
-            this.userList.push(obj.nickName)
+            this.contentUserList.push(obj.nickName)
             this.contentUnLockCountList.push(obj.unLockCount)
             this.chatislandConversionRateList.push(obj.chatislandConversionRate)
           }
@@ -248,7 +258,9 @@ export default {
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value
+                    //x轴的文字改为竖版显示
+                    let str = value.split("");
+                    return str.join("\n");
                   }
                 }
               }
@@ -321,7 +333,9 @@ export default {
                 axisLabel: {
                   interval: 0,
                   formatter: function (value) {
-                    return value
+                    //x轴的文字改为竖版显示
+                    let str = value.split("");
+                    return str.join("\n");
                   }
                 }
               }
