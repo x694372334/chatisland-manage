@@ -74,9 +74,32 @@ export function selectChatHistory(query){
   })
 }
 
+export function selectChatHistoryFromUser(query){
+  return request({
+    url: '/system/user/selectChatHistoryFromUser',
+    method: 'get',
+    params: query
+  })
+}
+
+export function selectChatHistoryFromChatter(query){
+  return request({
+    url: '/system/user/selectChatHistoryFromChatter',
+    method: 'get',
+    params: query
+  })
+}
 export function selectChatHistoryToUser(query){
   return request({
     url: '/system/user/selectChatHistoryToUser',
+    method: 'get',
+    params: query
+  })
+}
+
+export function selectChatHistoryToCharacter(query){
+  return request({
+    url: '/system/user/selectChatHistoryToCharacter',
     method: 'get',
     params: query
   })
