@@ -358,7 +358,7 @@ export default {
       const userId = row.userId;
       console.log(userId)
       this.$router.push({
-        path: "/chatHistory/chatCharater",
+        path: "/chatHistory/chatUser",
         query: {
           userId: userId,
         }
