@@ -28,6 +28,17 @@
 <!--          <el-option value="1" label="是" key="1"></el-option>-->
 <!--        </el-select>-->
 <!--      </el-form-item>-->
+      <el-row style="text-align: center">
+        <el-date-picker
+          v-model="dataRange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @blur=""
+          @change="getList()">
+        </el-date-picker>
+      </el-row>
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -241,6 +252,7 @@ export default {
   name: "User",
   data() {
     return {
+      dataRange:[],
       historyUserId:undefined,
       dataJson:{
         userId:undefined,
@@ -302,6 +314,8 @@ export default {
         nickName: undefined,
         userType: undefined,
         email: undefined,
+        startDate: undefined,
+        endDate: undefined,
         phonenumber: undefined,
         sex: undefined,
         avatar: undefined,
@@ -403,6 +417,19 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
+      console.log(this.dataRange[0])
+      console.log(this.dataRange[1])
+      if(undefined === this.dataRange[0]){
+        this.queryParams.startDate = '2023-01-01'
+      }else{
+        this.queryParams.startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        this.queryParams.endDate = '2023-01-01'
+      }else{
+        this.queryParams.endDate = this.dataRange[1] + ''
+      }
+
       if (null != this.$route.query.userId) {
         this.queryParams.userId = this.$route.query.userId;
         this.historyUserId = this.$route.query.userId;
