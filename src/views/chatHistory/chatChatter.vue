@@ -603,12 +603,26 @@ export default {
 
     showChatislandList(row, index, done) {
       const userId = row.userId;
+      let startDate = '2023-01-01';
+      let endDate = '2023-01-01';
       console.log(userId)
+      if(undefined === this.dataRange[0]){
+        startDate = '2023-01-01'
+      }else{
+        startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        endDate = '2023-01-01'
+      }else{
+        endDate = this.dataRange[1] + ''
+      }
       this.$router.push({
         path: "/chatHistory/chatList",
         query: {
           fromUserId: row.fromUserId,
           toUserId: row.toUserId,
+          startDate: startDate,
+          endDate: endDate,
         }
       });
     },

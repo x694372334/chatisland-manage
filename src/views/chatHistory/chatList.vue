@@ -246,6 +246,8 @@ export default {
         isReply: undefined,
         userLabel: undefined,
         avatarName: undefined,
+        startDate: undefined,
+        endDate: undefined,
         karma: undefined,
         age: undefined,
         accid: undefined,
@@ -337,6 +339,10 @@ export default {
         this.queryParams.userId = this.$route.query.fromUserId;
         this.queryParams.toUserId = this.$route.query.toUserId;
         this.historyUserId = this.$route.query.fromUserId;
+
+        this.queryParams.startDate = this.$route.query.startDate;
+        this.queryParams.endDate = this.$route.query.endDate;
+
       }
       console.log(this.historyUserId)
       this.loading = true;
