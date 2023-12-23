@@ -442,7 +442,7 @@ export default {
             data: [
               { value: this.myChartDataValue1.homepageExposure, name: '主页曝光UV' },
               { value: this.myChartDataValue1.subscriberSwipe, name: '付费卡点用户UV' },
-              { value: this.myChartDataValue1.subscriberSwipe, name: '最终付费用户' }
+              { value: this.myChartDataValue1.subscriber, name: '最终付费用户' }
             ]
           }
         ]
