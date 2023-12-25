@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="发送账号" prop="toUserNickName">
+      <el-form-item label="发送账号" prop="fromUserNickName">
         <el-input
-          v-model="queryParams.toUserNickName"
+          v-model="queryParams.fromUserNickName"
           placeholder="请输入发送方账号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="接收账号" prop="fromUserNickName">
+      <el-form-item label="接收账号" prop="toUserNickName">
         <el-input
-          v-model="queryParams.fromUserNickName"
+          v-model="queryParams.toUserNickName"
           placeholder="请输入接收方账号"
           clearable
           @keyup.enter.native="handleQuery"
