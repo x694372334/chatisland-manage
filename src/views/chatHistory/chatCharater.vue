@@ -638,6 +638,23 @@ export default {
     /** 导出按钮操作 */
     handleExport(row) {
       // const userIds = row.userId || this.ids;
+      let startDate = '2023-01-01';
+      let endDate = '2023-01-01';
+      if(undefined === this.dataRange[0]){
+        startDate = '2023-01-01'
+      }else{
+        startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        endDate = '2023-01-01'
+      }else{
+        endDate = this.dataRange[1] + ''
+      }
+      if(null != row.fromUserId){
+        this.dataJson.toUserId = row.fromUserId
+      }
+      this.dataJson.startDate = startDate;
+      this.dataJson.endDate = endDate;
       if(null != row.fromUserId){
         this.dataJson.toUserId = row.fromUserId
       }
