@@ -1,7 +1,36 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="用户账号" prop="userName">-->
+      <el-form-item label="发送账号" prop="toUserNickName">
+        <el-input
+          v-model="queryParams.toUserNickName"
+          placeholder="请输入发送方账号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="接收账号" prop="fromUserNickName">
+        <el-input
+          v-model="queryParams.fromUserNickName"
+          placeholder="请输入接收方账号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-row style="text-align: center">
+          <el-date-picker
+            v-model="dataRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            @blur=""
+            @change="getList()">
+          </el-date-picker>
+        </el-row>
+      </el-form-item>
+      <!--      <el-form-item label="用户账号" prop="userName">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.userName"-->
 <!--          placeholder="请输入用户账号"-->
@@ -28,21 +57,21 @@
 <!--          <el-option value="1" label="是" key="1"></el-option>-->
 <!--        </el-select>-->
 <!--      </el-form-item>-->
-      <el-row style="text-align: center">
-        <el-date-picker
-          v-model="dataRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @blur=""
-          @change="getList()">
-        </el-date-picker>
-      </el-row>
+<!--      <el-row style="text-align: center">-->
+<!--        <el-date-picker-->
+<!--          v-model="dataRange"-->
+<!--          type="daterange"-->
+<!--          range-separator="至"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--          @blur=""-->
+<!--          @change="getList()">-->
+<!--        </el-date-picker>-->
+<!--      </el-row>-->
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
       </el-form-item>
     </el-form>
 
@@ -450,9 +479,11 @@ export default {
     // 表单重置
     reset() {
       this.userLabel = []
+      this.dataRange = []
       this.form = {
         userId: undefined,
         deptId: undefined,
+        dataRange : undefined,
         userName: undefined,
         nickName: undefined,
         userType: undefined,
@@ -497,6 +528,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.dataRange = ['',''];
       this.getList();
     },
     /** 重置按钮操作 */
@@ -603,9 +635,9 @@ export default {
 
     showChatislandList(row, index, done) {
       const userId = row.userId;
+      console.log(userId)
       let startDate = '2023-01-01';
       let endDate = '2023-01-01';
-      console.log(userId)
       if(undefined === this.dataRange[0]){
         startDate = '2023-01-01'
       }else{

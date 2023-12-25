@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="用户账号" prop="userName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userName"-->
-<!--          placeholder="请输入用户账号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <el-form-item label="昵称" prop="nickName">
+        <el-input
+          v-model="queryParams.nickName"
+          placeholder="请输入chatter昵称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
 <!--      <el-form-item label="用户昵称" prop="nickName">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.nickName"-->

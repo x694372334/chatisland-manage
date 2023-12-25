@@ -1,7 +1,28 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="用户账号" prop="userName">-->
+      <el-form-item label="用户昵称" prop="toUserNickName">
+        <el-inputn
+          v-model="queryParams.toUserNickName"
+          placeholder="请输入用户账号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-row style="text-align: center">
+          <el-date-picker
+            v-model="dataRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            @blur=""
+            @change="getList()">
+          </el-date-picker>
+        </el-row>
+      </el-form-item>
+      <!--      <el-form-item label="用户账号" prop="userName">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.userName"-->
 <!--          placeholder="请输入用户账号"-->
@@ -240,6 +261,7 @@ export default {
   name: "User",
   data() {
     return {
+      dataRange:[],
       historyUserId:undefined,
       dataJson:{
         userId:undefined,
@@ -298,6 +320,7 @@ export default {
         userId: undefined,
         deptId: undefined,
         userName: undefined,
+        toUserNickName: undefined,
         nickName: undefined,
         userType: undefined,
         email: undefined,
@@ -402,6 +425,18 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
+      console.log(this.dataRange[0])
+      console.log(this.dataRange[1])
+      if(undefined === this.dataRange[0]){
+        this.queryParams.startDate = '2023-01-01'
+      }else{
+        this.queryParams.startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        this.queryParams.endDate = '2023-01-01'
+      }else{
+        this.queryParams.endDate = this.dataRange[1] + ''
+      }
       if (null != this.$route.query.userId) {
         this.queryParams.userId = this.$route.query.userId;
         this.historyUserId = this.$route.query.userId;
@@ -469,6 +504,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.dataRange = ['',''];
       this.getList();
     },
     /** 重置按钮操作 */
@@ -576,11 +612,25 @@ export default {
     showChatislandList(row, index, done) {
       const userId = row.userId;
       console.log(userId)
+      let startDate = '2023-01-01';
+      let endDate = '2023-01-01';
+      if(undefined === this.dataRange[0]){
+        startDate = '2023-01-01'
+      }else{
+        startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        endDate = '2023-01-01'
+      }else{
+        endDate = this.dataRange[1] + ''
+      }
       this.$router.push({
         path: "/chatHistory/chatList",
         query: {
           fromUserId: row.fromUserId,
           toUserId: row.toUserId,
+          startDate: startDate,
+          endDate: endDate,
         }
       });
     },
