@@ -5,15 +5,6 @@
       <el-col :span="24" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
                  label-width="68px">
-          <el-form-item label="用户名" prop="userName">
-            <el-input
-              v-model="queryParams.chatterName"
-              placeholder="请输入用户名"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
           <el-form-item label="昵称" prop="nickName">
             <el-input
               v-model="queryParams.nickName"
@@ -32,6 +23,16 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+          <el-form-item label="时间间隔" prop="name">
+            <el-date-picker
+              v-model="dateRange"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              @blur="">
+            </el-date-picker>
+          </el-form-item>
 
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -45,7 +46,6 @@
 
         <el-table v-loading="loading" :data="chatterSalaryList">
           <el-table-column label="chatter编号" align="center" key="chatterId" prop="chatterId"/>
-          <el-table-column label="chatter用户名" align="center" key="chatterName" prop="chatterName"/>
           <el-table-column label="chatter昵称" align="center" key="nickName" prop="nickName"/>
           <el-table-column label="真实名称" align="center" key="name" prop="name"/>
           <el-table-column label="在线时长(分钟)" align="center" key="onlineDuration" prop="onlineDuration"/>
@@ -144,6 +144,10 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      if(this.dateRange.length>0){
+        this.queryParams.startDate = new Date(this.dateRange[0]).getTime()
+        this.queryParams.endDate = new Date(this.dateRange[1]).getTime()
+      }
       this.getList();
     },
     /** 重置按钮操作 */
