@@ -1,14 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="用户账号" prop="userName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userName"-->
-<!--          placeholder="请输入用户账号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <el-form-item label="发送账号" prop="fromUserNickName">
+        <el-input
+          v-model="queryParams.fromUserNickName"
+          placeholder="请输入发送方账号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
 <!--      <el-form-item label="用户昵称" prop="nickName">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.nickName"-->
@@ -28,7 +29,19 @@
 <!--          <el-option value="1" label="是" key="1"></el-option>-->
 <!--        </el-select>-->
 <!--      </el-form-item>-->
-
+      <el-form-item>
+      <el-row style="text-align: center">
+        <el-date-picker
+          v-model="dataRange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @blur=""
+          @change="getList()">
+        </el-date-picker>
+      </el-row>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -78,6 +91,13 @@
             icon="el-icon-edit"
             @click="handleExport(scope.row)"
           >导出
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="showChatislandList(scope.row)"
+          >列表查看
           </el-button>
 
         </template>
@@ -228,6 +248,7 @@ export default {
   name: "User",
   data() {
     return {
+      dataRange:[],
       historyUserId:undefined,
       dataJson:{
         userId:undefined,
@@ -281,6 +302,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
+        fromUserNickName:undefined,
         pageNum: 1,
         pageSize: 10,
         userId: undefined,
@@ -360,17 +382,17 @@ export default {
   methods: {
 
 
-    showChatisland(row, index, done) {
-      const userId = row.userId;
-      console.log(userId)
-      this.$router.push({
-        path: "/chatisland/index",
-        query: {
-          userId: userId,
-          isVip: row.isVip
-        }
-      });
-    },
+    // showChatisland(row, index, done) {
+    //   const userId = row.userId;
+    //   console.log(userId)
+    //   this.$router.push({
+    //     path: "/chatisland/index",
+    //     query: {
+    //       userId: userId,
+    //       isVip: row.isVip
+    //     }
+    //   });
+    // },
 
     showPost(row, index, done) {
       const userId = row.userId;
@@ -390,6 +412,20 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
+      console.log(this.dataRange)
+      if(null === this.dataRange){
+        console.log(this.dataRange[0])
+        this.queryParams.startDate = '2023-01-01'
+      }else{
+        this.queryParams.startDate = this.dataRange[0]+ ''
+      }
+      if(null === this.dataRange){
+        console.log(this.dataRange[1])
+        this.queryParams.endDate = '2023-01-01'
+      }else{
+        this.queryParams.endDate = this.dataRange[1] + ''
+      }
+
       if (null != this.$route.query.userId) {
         this.queryParams.userId = this.$route.query.userId;
         this.historyUserId = this.$route.query.userId;
@@ -457,6 +493,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.dataRange = ['',''];
       this.getList();
     },
     /** 重置按钮操作 */
@@ -548,15 +585,69 @@ export default {
         this.loading = false;
       });
     },
+
+    showChatisland(row, index, done) {
+      const userId = row.userId;
+      console.log(userId)
+      this.$router.push({
+        path: "/chatHistory/chatUser",
+        query: {
+          userId: userId,
+          isVip: row.isVip
+        }
+      });
+    },
+
+    showChatislandList(row, index, done) {
+      const userId = row.userId;
+      console.log(userId)
+      let startDate = '2023-01-01';
+      let endDate = '2023-01-01';
+      if(undefined === this.dataRange[0]){
+        startDate = '2023-01-01'
+      }else{
+        startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        endDate = '2023-01-01'
+      }else{
+        endDate = this.dataRange[1] + ''
+      }
+      this.$router.push({
+        path: "/chatHistory/chatList",
+        query: {
+          fromUserId: row.fromUserId,
+          toUserId: row.toUserId,
+          startDate: startDate,
+          endDate: endDate,
+        }
+      });
+    },
+
     /** 导出按钮操作 */
     handleExport(row) {
       // const userIds = row.userId || this.ids;
+      let startDate = '2023-01-01';
+      let endDate = '2023-01-01';
+      if(undefined === this.dataRange[0]){
+        startDate = '2023-01-01'
+      }else{
+        startDate = this.dataRange[0]+ ''
+      }
+      if(undefined === this.dataRange[1]){
+        endDate = '2023-01-01'
+      }else{
+        endDate = this.dataRange[1] + ''
+      }
       if(null != row.fromUserId){
         this.dataJson.toUserId = row.fromUserId
       }
-      console.log(this.dataJson.toUserId)
-      this.dataJson.userId = this.$route.query.userId;
-      console.log(this.dataJson.userId)
+      this.dataJson.startDate = startDate;
+      this.dataJson.endDate = endDate;
+      if(null != row.toUserId){
+        this.dataJson.toUserId = row.toUserId
+      }
+      this.dataJson.userId = row.fromUserId;
       this.download('system/user/selectChatHistoryExport', {
         ...this.dataJson
       }, `history_${new Date().getTime()}.xlsx`)

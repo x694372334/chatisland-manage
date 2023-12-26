@@ -23,7 +23,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange1"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -41,7 +41,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange2"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -59,7 +59,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange3"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -77,7 +77,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange4"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -95,7 +95,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange5"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -113,7 +113,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange6"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -131,7 +131,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange7"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -149,7 +149,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange8"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -167,7 +167,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange9"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -185,7 +185,7 @@
     <hr>
     <el-row style="text-align: center">
       <el-date-picker
-        v-model="dataRange"
+        v-model="dataRange10"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -217,6 +217,16 @@ export default {
       // 版本号
       version: "4.8.0",
       dataRange:[],
+      dataRange1:[],
+      dataRange2:[],
+      dataRange3:[],
+      dataRange4:[],
+      dataRange5:[],
+      dataRange6:[],
+      dataRange7:[],
+      dataRange8:[],
+      dataRange9:[],
+      dataRange10:[],
       myChartDataKey:['最终付费用户', '有点击客态profile查看的用户到上限的UV', '有点击客态profile查看的用户UV'],
       myChartDataValue: {"subscriber":0,"checkProfileUserLimit":2,"checkProfileUser":6},
       myChartDataKey1:['最终付费用户', '付费卡点用户UV','主页曝光UV'],
@@ -243,64 +253,136 @@ export default {
   },
   methods: {
     handleChange(type) {
-      let startDate = this.dataRange[0]
-      let endDate = this.dataRange[1]
-      let data = {
-        startDate: startDate,
-        endDate: endDate
-      }
       if(type === 1){
+
+        let startDate = this.dataRange[0]
+        let endDate = this.dataRange[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
+
         profileSelectTransform(data).then(response =>{
           this.myChartDataValue = response.data;
           this.initBarChart();
         })
       }else if(type === 2){
+
+        let startDate = this.dataRange1[0]
+        let endDate = this.dataRange1[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
+
         swipeSelectTransform(data).then(response =>{
           this.myChartDataValue1 = response.data;
           console.log(this.myChartDataValue1)
           this.initBarChart();
         })
       }else if(type === 3){
+
+        let startDate = this.dataRange2[0]
+        let endDate = this.dataRange2[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
+
         diamondConstructionUnionTransformOne(data).then(response =>{
           this.myChartDataValue2 = response.data;
           this.initBarChart();
         })
       }else if(type === 4){
+
+        let startDate = this.dataRange3[0]
+        let endDate = this.dataRange3[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
+
         diamondConstructionUnionTransformTwo(data).then(response =>{
           this.myChartDataValue3 = response.data;
           this.initBarChart();
         })
       }else if(type === 5){
+
+        let startDate = this.dataRange4[0]
+        let endDate = this.dataRange4[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
+
+
         diamondUnlockTransform(data).then(response =>{
           this.myChartDataValue4 = response.data;
           this.initBarChart();
         })
       }else if(type === 6){
+
+        let startDate = this.dataRange5[0]
+        let endDate = this.dataRange5[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
         diamondGiftTransform(data).then(response =>{
           this.myChartDataValue5 = response.data;
           this.initBarChart();
         })
       }else if(type === 7){
+        let startDate = this.dataRange6[0]
+        let endDate = this.dataRange6[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
         diamondFlashTransformOne(data).then(response =>{
           this.myChartDataValue6 = response.data;
           this.initBarChart();
         })
       }else if(type === 8){
+        let startDate = this.dataRange7[0]
+        let endDate = this.dataRange7[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
         diamondFlashTransformTwo(data).then(response =>{
           this.myChartDataValue7 = response.data;
           this.initBarChart();
         })
       }else if(type === 9){
+        let startDate = this.dataRange8[0]
+        let endDate = this.dataRange8[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
         diamondFunctionTransformOne(data).then(response =>{
           this.myChartDataValue8 = response.data;
           this.initBarChart();
         })
       }else if(type === 10){
+        let startDate = this.dataRange9[0]
+        let endDate = this.dataRange9[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
         diamondFunctionTransformTwo(data).then(response =>{
           this.myChartDataValue9 = response.data;
           this.initBarChart();
         })
       }else if(type === 11){
+        let startDate = this.dataRange10[0]
+        let endDate = this.dataRange10[1]
+        let data = {
+          startDate: startDate,
+          endDate: endDate
+        }
         diamondFunctionTransformThree(data).then(response =>{
           this.myChartDataValue10 = response.data;
           this.initBarChart();
@@ -442,7 +524,7 @@ export default {
             data: [
               { value: this.myChartDataValue1.homepageExposure, name: '主页曝光UV' },
               { value: this.myChartDataValue1.subscriberSwipe, name: '付费卡点用户UV' },
-              { value: this.myChartDataValue1.subscriberSwipe, name: '最终付费用户' }
+              { value: this.myChartDataValue1.subscriber, name: '最终付费用户' }
             ]
           }
         ]
