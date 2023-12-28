@@ -9,6 +9,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item>
+        <el-row style="text-align: center">
+          <el-date-picker
+            v-model="dataRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            @blur=""
+            @change="getList()">
+          </el-date-picker>
+        </el-row>
+      </el-form-item>
 <!--      <el-form-item label="用户昵称" prop="nickName">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.nickName"-->
@@ -226,6 +239,7 @@ export default {
   data() {
     return {
       warrantName: [],
+      dataRange:[],
       tagList: ['Flirt', 'Texting', 'Advice', 'Confession', 'Lifestyle', 'Other', 'Relationship', 'Cooking', 'Friendship', 'Couples', 'Watching', 'Dancing', 'Drawing', 'Dates', 'Group', 'Novelty', 'Reading', 'Singing', 'Singles', 'Sport'],
       avatarHost: 'https://chat-island.s3.us-west-1.amazonaws.com/avatar/',
       avatarList: ['man_1', 'man_2', 'man_3', 'man_4', 'other_1', 'other_2', 'other_3', 'other_4', 'other_5', 'other_6', 'other_7', 'woman_1', 'woman_2', 'woman_3', 'woman_4'],
@@ -284,6 +298,8 @@ export default {
         sex: undefined,
         avatar: undefined,
         password: undefined,
+        startDate: undefined,
+        endDate: undefined,
         status: undefined,
         loginIp: undefined,
         loginDate: undefined,
@@ -379,6 +395,19 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
+      console.log(this.dataRange)
+      if(null === this.dataRange){
+        console.log(this.dataRange[0])
+        this.queryParams.startDate = '2023-01-01'
+      }else{
+        this.queryParams.startDate = this.dataRange[0]+ ''
+      }
+      if(null === this.dataRange){
+        console.log(this.dataRange[1])
+        this.queryParams.endDate = '2023-01-01'
+      }else{
+        this.queryParams.endDate = this.dataRange[1] + ''
+      }
       this.loading = true;
       selectChatHistory(this.queryParams).then(response => {
         this.userList = response.rows;
@@ -441,6 +470,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.dataRange = ['',''];
       this.getList();
     },
     /** 重置按钮操作 */
