@@ -44,21 +44,21 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="chatterSalaryList">
-          <el-table-column label="chatter编号" align="center" key="chatterId" prop="chatterId"/>
-          <el-table-column label="chatter昵称" align="center" key="nickName" prop="nickName"/>
-          <el-table-column label="真实名称" align="center" key="name" prop="name"/>
-          <el-table-column label="在线时长(分钟)" align="center" key="onlineDuration" prop="onlineDuration"/>
-          <el-table-column label="送达会话数" align="center" key="firstRecordSum" prop="firstRecordSum"/>
-          <el-table-column label="有效接单率(%)" align="center" key="effectiveOrder" prop="effectiveOrder"/>
-          <el-table-column label="平均响应时间(秒)" align="center" key="avgRespTime" prop="avgRespTime"/>
-          <el-table-column label="深度会话率(%)" align="center" key="deepSession" prop="deepSession"/>
-          <el-table-column label="用户lock数" align="center" key="lockSum" prop="lockSum"/>
-          <el-table-column label="礼物钻石" align="center" key="giftDiamond" prop="giftDiamond"/>
-          <el-table-column label="Card转化个数" align="center" key="unlockChatislandSum" prop="unlockChatislandSum"/>
-          <el-table-column label="Card转化钻石" align="center" key="unlockDiamond" prop="unlockDiamond"/>
-          <el-table-column label="VIP转化个数" align="center" key="memberSum" prop="memberSum"/>
-          <el-table-column label="VIP转化收益($)" align="center" key="memberPriceSum" prop="memberPriceSum"/>
+        <el-table v-loading="loading" :data="chatterSalaryList" height="680">
+<!--          <el-table-column label="chatter编号" align="center" key="chatterId" prop="chatterId"/>-->
+          <el-table-column label="Chatter No." align="center" key="nickName" prop="nickName"/>
+          <el-table-column label="Name" align="center" key="name" prop="name"/>
+<!--          <el-table-column label="在线时长(分钟)" align="center" key="onlineDuration" prop="onlineDuration"/>-->
+<!--          <el-table-column label="送达会话数" align="center" key="firstRecordSum" prop="firstRecordSum"/>-->
+          <el-table-column label="Effective Order Acceptance Rate" align="center" key="effectiveOrder" prop="effectiveOrder"/>
+          <el-table-column label="Average Response Time" align="center" key="avgRespTime" prop="avgRespTime"/>
+          <el-table-column label="Deep Session Rate(%)" align="center" key="deepSession" prop="deepSession"/>
+<!--          <el-table-column label="用户lock数" align="center" key="lockSum" prop="lockSum"/>-->
+          <el-table-column label="Diamond Gift" align="center" key="giftDiamond" prop="giftDiamond"/>
+          <el-table-column label="Card Unlocked" align="center" key="unlockChatislandSum" prop="unlockChatislandSum"/>
+          <el-table-column label="Card Unlocked Diamond" align="center" key="unlockDiamond" prop="unlockDiamond"/>
+<!--          <el-table-column label="VIP转化个数" align="center" key="memberSum" prop="memberSum"/>-->
+          <el-table-column label="VIP Conversion" align="center" key="memberPriceSum" prop="memberPriceSum"/>
         </el-table>
 
       </el-col>
