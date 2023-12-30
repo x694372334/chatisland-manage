@@ -50,12 +50,24 @@
           <el-table-column label="Name" align="center" key="name" prop="name"/>
 <!--          <el-table-column label="在线时长(分钟)" align="center" key="onlineDuration" prop="onlineDuration"/>-->
 <!--          <el-table-column label="送达会话数" align="center" key="firstRecordSum" prop="firstRecordSum"/>-->
-          <el-table-column label="Effective Order Acceptance Rate" align="center" key="effectiveOrder" prop="effectiveOrder"/>
-          <el-table-column label="Average Response Time" align="center" key="avgRespTime" prop="avgRespTime"/>
-          <el-table-column label="Deep Session Rate(%)" align="center" key="deepSession" prop="deepSession"/>
+          <el-table-column label="Effective Order Acceptance Rate" align="center" key="effectiveOrder" prop="effectiveOrder">
+            <template slot-scope="scope">
+              <span>{{scope.row.effectiveOrder}}%</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="Average Response Time" align="center" key="avgRespTime" prop="avgRespTime">
+            <template slot-scope="scope">
+              <span>{{scope.row.avgRespTime}}s</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="Deep Session Rate" align="center" key="deepSession" prop="deepSession">
+            <template slot-scope="scope">
+              <span>{{scope.row.deepSession}}%</span>
+            </template>
+          </el-table-column>
 <!--          <el-table-column label="用户lock数" align="center" key="lockSum" prop="lockSum"/>-->
           <el-table-column label="Diamond Gift" align="center" key="giftDiamond" prop="giftDiamond"/>
-          <el-table-column label="Card Unlocked" align="center" key="unlockChatislandSum" prop="unlockChatislandSum"/>
+<!--          <el-table-column label="Card Unlocked" align="center" key="unlockChatislandSum" prop="unlockChatislandSum"/>-->
           <el-table-column label="Card Unlocked Diamond" align="center" key="unlockDiamond" prop="unlockDiamond"/>
 <!--          <el-table-column label="VIP转化个数" align="center" key="memberSum" prop="memberSum"/>-->
           <el-table-column label="VIP Conversion" align="center" key="memberPriceSum" prop="memberPriceSum"/>
