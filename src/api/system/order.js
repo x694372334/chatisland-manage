@@ -8,3 +8,11 @@ export function listOrder(query) {
     data: query
   })
 }
+
+export function deleteOrder(id) {
+  return request({
+    url: '/pay/order/deleteOrder',
+    method: 'post',
+    data: {id: id}
+  })
+}

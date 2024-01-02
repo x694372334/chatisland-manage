@@ -71,10 +71,81 @@
           <el-table-column label="Card Unlocked Diamond" align="center" key="unlockDiamond" prop="unlockDiamond"/>
 <!--          <el-table-column label="VIP转化个数" align="center" key="memberSum" prop="memberSum"/>-->
           <el-table-column label="VIP Conversion" align="center" key="memberPriceSum" prop="memberPriceSum"/>
+          <el-table-column label="Violation Diamond" align="center" key="violationDiamond" prop="violationDiamond"/>
+          <el-table-column label="The Final Diamond Obtained" align="center" >
+            <template slot-scope="scope">
+              <span>{{scope.row.giftDiamond+scope.row.unlockDiamond+scope.row.memberPriceSum-scope.row.violationDiamond}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            align="center"
+            width="160"
+            class-name="small-padding fixed-width"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-plus"
+                @click="handleAdd(scope.row)"
+              >添加扣除信息
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
 
       </el-col>
     </el-row>
+
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-row>
+          <el-form-item label="chatter" prop="chatterId">
+            <el-select clearable placeholder="请选择chatter" v-model="form.chatterId">
+              <el-option v-for="item in allChatters" :key="item.chatterId"  :value="item.chatterId" :label="item.nickName"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="扣除时间" prop="violationTime">
+            <el-date-picker
+              v-model="form.violationTime"
+              type="datetime"
+              placeholder="选择扣除时间">
+            </el-date-picker>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="扣除截图上传" prop="violationFilePath">
+            <el-image v-if="form.violationFilePath !== undefined" :src="form.violationFilePath"></el-image>
+            <el-upload
+              v-if="form.violationFilePath === undefined"
+              class="upload-demo"
+              drag
+              :on-success="uploadSuccess"
+              :action="uploadUrl">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="扣除钻石数量" prop="violationDiamond">
+            <el-input v-model="form.violationDiamond" placeholder="请输入扣除钻石数量" maxlength="30"/>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="扣除原因" prop="violationReason">
+            <el-input v-model="form.violationReason" placeholder="请输入扣除原因" maxlength="30"/>
+          </el-form-item>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -83,13 +154,15 @@
 import {listChatterSalaryParams} from "@/api/system/chatterBindName";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {violationChatterDiamond} from "../../../api/system/chatterViolationLog";
+import {listAllChatter} from "../../../api/system/chatterBindName";
 
 export default {
   name: "Chatter",
   components: {Treeselect},
   data() {
     return {
-      editDialog: false,
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/oss/upload", // 上传的图片服务器地址
       // 遮罩层
       loading: true,
       // 选中数组
@@ -122,6 +195,20 @@ export default {
       roleOptions: [],
       // 表单参数
       form: {},
+      rules:{
+        chatterId: [
+          {required: true, message: "chatter不能为空", trigger: "blur"}
+        ],
+        violationReason: [
+          {required: true, message: "扣除原因不能为空", trigger: "blur"}
+        ],
+        violationTime: [
+          {required: true, message: "扣除时间不能为空", trigger: "blur"}
+        ],
+        violationDiamond: [
+          {required: true, message: "扣除钻石不能为空", trigger: "blur"}
+        ]
+      },
       allChatters:[],
       editForm: {},
       defaultProps: {
@@ -144,8 +231,19 @@ export default {
   },
   created() {
     this.getList();
+    this.getChatterList()
   },
   methods: {
+    uploadSuccess(response, file, fileList) {
+      this.form.violationFilePath = response.data.fileRoute
+    },
+    /** 查询chatter列表 */
+    getChatterList() {
+      listAllChatter().then(response => {
+          this.allChatters = response.data;
+        }
+      );
+    },
     getList() {
       this.loading = true;
       listChatterSalaryParams(this.queryParams).then(response => {
@@ -153,6 +251,43 @@ export default {
           this.loading = false;
         }
       );
+    },
+    /** 新增按钮操作 */
+    handleAdd(row) {
+      this.reset();
+      this.form.chatterId = row.chatterId
+      this.open = true;
+      this.title = "添加chatter扣除信息";
+    },// 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.userLabel = []
+      this.form = {
+        chatterId: undefined,
+        violationReason: undefined,
+        violationDiamond: undefined,
+        violationFilePath: undefined,
+        violationTime: undefined
+      };
+      this.resetForm("form");
+    },
+    /** 提交按钮 */
+    submitForm: function () {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          let data = this.form
+          data.violationTime = new Date(this.form.violationTime).getTime()
+          violationChatterDiamond(data).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          });
+        }
+      });
     },
     /** 搜索按钮操作 */
     handleQuery() {

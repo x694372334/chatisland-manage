@@ -49,7 +49,7 @@
           <el-table-column label="支付方式" align="center" key="payType" prop="payType"/>
           <el-table-column label="充值来源" align="center" key="rechargeSource" prop="rechargeSource"/>
           <el-table-column label="关联chatter" align="center" key="chatterName" prop="chatterName"/>
-<!--          <el-table-column
+          <el-table-column
             label="操作"
             align="center"
             width="160"
@@ -64,7 +64,7 @@
               >删除
               </el-button>
             </template>
-          </el-table-column>-->
+          </el-table-column>
         </el-table>
 
         <pagination
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import {listOrder} from "../../../api/system/order";
+import {deleteOrder, listOrder} from "../../../api/system/order";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -179,15 +179,19 @@ export default {
       this.handleQuery();
     },
     /** 删除按钮操作 */
-    /*handleDelete(row) {
-      this.$modal.confirm('是否确认删除订单编号为"' + row.userId + '"的数据项？').then(function () {
-        return delOrder(row.userId);
+    handleDelete(row) {
+      this.$modal.confirm('是否确认删除用户信息编号为"' + row.orderId + '"的订单？').then(() => {
+        this.loading = true;
+        return deleteOrder(row.orderId);
       }).then(() => {
+        this.loading = false;
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {
+      }).finally(() => {
+        this.loading = false;
       });
-    }*/
+    }
   }
 };
 </script>

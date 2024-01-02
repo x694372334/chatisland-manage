@@ -93,7 +93,7 @@
           <el-col>
             <el-form-item label="chatter" prop="chatterId">
               <el-select clearable placeholder="请选择chatter" v-model="form.chatterId">
-                <el-option v-for="item in allChatters" :value="item.chatterId" :label="item.nickName"></el-option>
+                <el-option v-for="item in allChatters" :key="item.chatterId"  :value="item.chatterId" :label="item.nickName"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
