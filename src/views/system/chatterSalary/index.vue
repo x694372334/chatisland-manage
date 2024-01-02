@@ -74,7 +74,7 @@
           <el-table-column label="Violation Diamond" align="center" key="violationDiamond" prop="violationDiamond"/>
           <el-table-column label="The Final Diamond Obtained" align="center" >
             <template slot-scope="scope">
-              <span>{{scope.row.giftDiamond+scope.row.unlockDiamond+parseFloat(scope.row.memberPriceSum)-scope.row.violationDiamond}}</span>
+              <span>{{Number(scope.row.giftDiamond+scope.row.unlockDiamond+Number(scope.row.memberPriceSum)-scope.row.violationDiamond).toFixed(2)}}</span>
             </template>
           </el-table-column>
           <el-table-column
