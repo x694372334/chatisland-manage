@@ -292,8 +292,8 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       if (this.dateRange.length > 0) {
-        this.queryParams.startDate = this.dateRange[0].getTime() - 8 * 3600000
-        this.queryParams.endDate = this.dateRange[1].getTime() - 8 * 3600000
+        this.queryParams.startDate = this.dateRange[0].getTime()
+        this.queryParams.endDate = this.dateRange[1].getTime()
       }
       this.getList();
     },
