@@ -57,3 +57,12 @@ export function changePass(data) {
     data: data
   })
 }
+
+// 分组获取
+export function groupChatterHourCountMsg(data) {
+  return request({
+    url: '/system/chatter/groupChatterHourCountMsg',
+    method: 'post',
+    data: data
+  })
+}
