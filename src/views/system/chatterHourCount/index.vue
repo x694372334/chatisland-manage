@@ -133,10 +133,12 @@ export default {
                 if (data) {
                   countMsg.chatterName = chatterName + '分单量'
                   countMsg[key.toString()] = data.countMsg ? data.countMsg : 0
-                  effectiveMsg.chatterName = chatterName + '有效接单率'
-                  effectiveMsg[key.toString()] = data.effectiveMsg ? data.effectiveMsg : 0
-                  active.chatterName = chatterName + '活跃时间'
-                  active[key.toString()] = data.active ? data.active : 0
+                  if(chatterName.toString() !== '0'){
+                    effectiveMsg.chatterName = chatterName + '有效接单率'
+                    effectiveMsg[key.toString()] = data.effectiveMsg ? data.effectiveMsg : 0
+                    active.chatterName = chatterName + '活跃时间'
+                    active[key.toString()] = data.active ? data.active : 0
+                  }
                 } else {
                   countMsg[key.toString()] = 0
                   effectiveMsg[key.toString()] = 0
