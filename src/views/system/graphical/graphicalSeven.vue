@@ -258,8 +258,8 @@ export default {
         let startDate = this.dataRange[0]
         let endDate = this.dataRange[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
 
         profileSelectTransform(data).then(response =>{
@@ -271,8 +271,8 @@ export default {
         let startDate = this.dataRange1[0]
         let endDate = this.dataRange1[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
 
         swipeSelectTransform(data).then(response =>{
@@ -285,8 +285,8 @@ export default {
         let startDate = this.dataRange2[0]
         let endDate = this.dataRange2[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
 
         diamondConstructionUnionTransformOne(data).then(response =>{
@@ -298,8 +298,8 @@ export default {
         let startDate = this.dataRange3[0]
         let endDate = this.dataRange3[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
 
         diamondConstructionUnionTransformTwo(data).then(response =>{
@@ -311,8 +311,8 @@ export default {
         let startDate = this.dataRange4[0]
         let endDate = this.dataRange4[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
 
 
@@ -325,8 +325,8 @@ export default {
         let startDate = this.dataRange5[0]
         let endDate = this.dataRange5[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
         diamondGiftTransform(data).then(response =>{
           this.myChartDataValue5 = response.data;
@@ -336,8 +336,8 @@ export default {
         let startDate = this.dataRange6[0]
         let endDate = this.dataRange6[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
         diamondFlashTransformOne(data).then(response =>{
           this.myChartDataValue6 = response.data;
@@ -347,8 +347,8 @@ export default {
         let startDate = this.dataRange7[0]
         let endDate = this.dataRange7[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
         diamondFlashTransformTwo(data).then(response =>{
           this.myChartDataValue7 = response.data;
@@ -358,8 +358,8 @@ export default {
         let startDate = this.dataRange8[0]
         let endDate = this.dataRange8[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
         diamondFunctionTransformOne(data).then(response =>{
           this.myChartDataValue8 = response.data;
@@ -369,8 +369,8 @@ export default {
         let startDate = this.dataRange9[0]
         let endDate = this.dataRange9[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
         diamondFunctionTransformTwo(data).then(response =>{
           this.myChartDataValue9 = response.data;
@@ -380,8 +380,8 @@ export default {
         let startDate = this.dataRange10[0]
         let endDate = this.dataRange10[1]
         let data = {
-          startDate: startDate,
-          endDate: endDate
+          startDate: new Date(startDate).getTime(),
+          endDate:  new Date(endDate).getTime()
         }
         diamondFunctionTransformThree(data).then(response =>{
           this.myChartDataValue10 = response.data;
