@@ -107,12 +107,9 @@ export default {
       let startDate = this.dataRange[0]
       let endDate = this.dataRange[1]
       let data = {
-        startDate: startDate,
-        endDate: endDate
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime()
       }
-      console.log(this.dataRange[0])
-      console.log(this.dataRange[1])
-
 
       basicsAppData(data).then(response =>{
         this.reportRangeDNU =[];
