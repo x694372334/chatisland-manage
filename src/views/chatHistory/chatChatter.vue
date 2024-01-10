@@ -316,7 +316,7 @@ export default {
       buttonLoading: false,
       checked: false,
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
