@@ -446,17 +446,9 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
-      console.log(this.dataRange[0])
-      console.log(this.dataRange[1])
-      if(undefined === this.dataRange[0]){
-        this.queryParams.startDate = '2023-01-01'
-      }else{
-        this.queryParams.startDate = this.dataRange[0]+ ''
-      }
-      if(undefined === this.dataRange[1]){
-        this.queryParams.endDate = '2023-01-01'
-      }else{
-        this.queryParams.endDate = this.dataRange[1] + ''
+      if(undefined !== this.dataRange[0]&& null !== this.dataRange[0]){
+        this.queryParams.startDate = new Date(this.dataRange[0]).getTime()
+        this.queryParams.endDate = new Date(this.dataRange[1]).getTime()
       }
 
       if (null != this.$route.query.userId) {
@@ -634,19 +626,11 @@ export default {
     },
 
     showChatislandList(row, index, done) {
-      const userId = row.userId;
-      console.log(userId)
-      let startDate = '2023-01-01';
-      let endDate = '2023-01-01';
-      if(undefined === this.dataRange[0]){
-        startDate = '2023-01-01'
-      }else{
-        startDate = this.dataRange[0]+ ''
-      }
-      if(undefined === this.dataRange[1]){
-        endDate = '2023-01-01'
-      }else{
-        endDate = this.dataRange[1] + ''
+      let startDate = null;
+      let endDate = null;
+      if(undefined !== this.dataRange[0]&& null !== this.dataRange[0]){
+        startDate = new Date(this.dataRange[0]).getTime()
+        endDate = new Date(this.dataRange[1]).getTime()
       }
       this.$router.push({
         path: "/chatHistory/chatList",
@@ -662,17 +646,11 @@ export default {
     /** 导出按钮操作 */
     handleExport(row) {
       // const userIds = row.userId || this.ids;
-      let startDate = '2023-01-01';
-      let endDate = '2023-01-01';
-      if(undefined === this.dataRange[0]){
-        startDate = '2023-01-01'
-      }else{
-        startDate = this.dataRange[0]+ ''
-      }
-      if(undefined === this.dataRange[1]){
-        endDate = '2023-01-01'
-      }else{
-        endDate = this.dataRange[1] + ''
+      let startDate = null;
+      let endDate = null;
+      if(undefined !== this.dataRange[0]&& null !== this.dataRange[0]){
+        startDate = new Date(this.dataRange[0]).getTime()
+        endDate = new Date(this.dataRange[1]).getTime()
       }
       if(null != row.toUserId){
         this.dataJson.toUserId = row.toUserId

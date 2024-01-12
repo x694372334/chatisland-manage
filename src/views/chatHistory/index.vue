@@ -22,25 +22,6 @@
           </el-date-picker>
         </el-row>
       </el-form-item>
-<!--      <el-form-item label="用户昵称" prop="nickName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.nickName"-->
-<!--          placeholder="请输入用户昵称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="是否会员" prop="isVip">-->
-<!--        <el-select-->
-<!--          v-model="queryParams.isVip"-->
-<!--          placeholder="请选择是否会员"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        >-->
-<!--          <el-option value="0" label="否" key="0"></el-option>-->
-<!--          <el-option value="1" label="是" key="1"></el-option>-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -395,18 +376,9 @@ export default {
     },
     /** 查询用户信息列表 */
     getList() {
-      console.log(this.dataRange)
-      if(null === this.dataRange){
-        console.log(this.dataRange[0])
-        this.queryParams.startDate = '2023-01-01'
-      }else{
-        this.queryParams.startDate = this.dataRange[0]+ ''
-      }
-      if(null === this.dataRange){
-        console.log(this.dataRange[1])
-        this.queryParams.endDate = '2023-01-01'
-      }else{
-        this.queryParams.endDate = this.dataRange[1] + ''
+      if(undefined !== this.dataRange[0]&& null !== this.dataRange[0]){
+        this.queryParams.startDate = new Date(this.dataRange[0]).getTime()
+        this.queryParams.endDate = new Date(this.dataRange[1]).getTime()
       }
       this.loading = true;
       selectChatHistory(this.queryParams).then(response => {
@@ -470,7 +442,6 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      this.dataRange = ['',''];
       this.getList();
     },
     /** 重置按钮操作 */

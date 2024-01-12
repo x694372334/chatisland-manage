@@ -400,17 +400,9 @@ export default {
     /** 查询用户信息列表 */
     getList() {
       console.log(this.dataRange)
-      if(null === this.dataRange){
-        console.log(this.dataRange[0])
-        this.queryParams.startDate = '2023-01-01'
-      }else{
-        this.queryParams.startDate = this.dataRange[0]+ ''
-      }
-      if(null === this.dataRange){
-        console.log(this.dataRange[1])
-        this.queryParams.endDate = '2023-01-01'
-      }else{
-        this.queryParams.endDate = this.dataRange[1] + ''
+      if(undefined !== this.dataRange[0]&& null !== this.dataRange[0]){
+        this.queryParams.startDate = new Date(this.dataRange[0]).getTime()
+        this.queryParams.endDate = new Date(this.dataRange[1]).getTime()
       }
       this.loading = true;
       selectChatHistoryFromChatter(this.queryParams).then(response => {
