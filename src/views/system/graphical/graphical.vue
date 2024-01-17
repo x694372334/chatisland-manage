@@ -135,10 +135,10 @@ export default {
         this.reportRangeSevenLeaveTest=[]
         this.reportRangeFourteenLeaveTest=[]
         this.reportRangeThirtyLeaveLeaveTest = []
-          if(response.data.length > 7){
-            this.$message.error("不可超过七天,否则无法展示！")
-            return;
-          }
+          // if(response.data.length > 7){
+          //   this.$message.error("不可超过七天,否则无法展示！")
+          //   return;
+          // }
 
         for (var i = 0; i < response.data.length; i++) {
           this.systemDate = response.data[i];
@@ -207,67 +207,67 @@ export default {
           {
             name: 'DNU',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeDNU
           },
           {
             name: 'WNU',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeWNU
           },
           {
             name: 'MNU',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeMNU
           },
           {
             name: 'DAU',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeDAU
           },
           {
             name: 'WAU',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeWAU
           },
           {
             name: 'MAU',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeMAU
           },
           {
             name: '次留',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeNextLeave
           },
           {
             name: '3留',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeThreeLeave
           },
           {
             name: '7留',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeSevenLeave
           },
           {
             name: '14留',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeFourteenLeave
           },
           {
             name: '30留',
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: this.reportRangeThirtyLeave
           }
         ]
