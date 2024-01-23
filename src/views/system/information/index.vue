@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="类型名称" prop="typeName">
+      <el-form-item label="系统公告状态" prop="status">
         <el-select
           v-model="queryParams.status"
-          placeholder="请输入道具类型名称"
+          placeholder="请选择系统公告状态"
           clearable
           style="width: 240px"
           @keyup.enter.native="handleQuery"
