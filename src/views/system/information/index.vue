@@ -79,7 +79,7 @@
             size="mini"
             type="text"
             icon="el-icon-s-promotion"
-            @click="handleDelete(scope.row)"
+            @click="handlePublish(scope.row)"
           >发布
           </el-button>
         </template>
