@@ -2,29 +2,6 @@
   <div>
 
     <el-row>
-      <el-card style="height: 1300px;" class="box-card">
-        <div slot="header" class="clearfix">
-          <el-row style="text-align: center;font-size:24px; font-weight: bold;">营收数据</el-row>
-          <el-row style="text-align: center;margin: 30px 0;">
-            <el-date-picker
-              v-model="revenueDataRange"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              @blur="">
-            </el-date-picker>
-
-            <el-button @click="searchRevenueData">查询</el-button>
-          </el-row>
-        </div>
-        <div class="home" style="height: 1100px;width: 100%;">
-          <div class="barChart" ref="revenueDataChart"></div>
-        </div>
-      </el-card>
-    </el-row>
-
-    <el-row>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <el-row style="text-align: center;font-size:24px; font-weight: bold;">付费深度分布</el-row>
@@ -177,8 +154,6 @@ export default {
     return {
       // 版本号
       version: "4.8.0",
-      revenueDataRange: [],
-      revenueDateList: [],
       paymentDepthRange: [],
       paymentDepthDateList: [],
       paymentDepthZeroPaidList: [],
@@ -248,10 +223,6 @@ export default {
     })
   },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-
-    },
     initBarChart() {
       // 通过 $ref 进行挂载
       let myChart = this.$echarts.init(this.$refs.barChart);
@@ -423,205 +394,6 @@ export default {
         ]
       };
       // myChart3.setOption(option3);
-    },
-    searchRevenueData(){
-      let startDate = this.revenueDataRange[0]
-      let endDate = this.revenueDataRange[1]
-      let data = {
-        startDate: new Date(startDate).getTime()+8*3600000,
-        endDate: new Date(endDate).getTime()+8*3600000
-      }
-      this.revenueData(data)
-    },
-    revenueData(data){
-      revenueData(data).then(response => {
-        if (response.data.dateMap) {
-          this.revenueDateList = Object.keys(response.data.dateMap)
-          let memberList = []
-          let payList = []
-          let arPuList = []
-          let arpPuList = []
-          let memberSumList = []
-          let flashChatSumList = []
-          let diamondSumList = []
-          let freeFlashChatProduceList = []
-          let freeDiamondProduceList = []
-          let flashChatProduceList = []
-          let diamondProduceList = []
-          let freeFlashChatConsumeList = []
-          let freeDiamondUnblockConsumeList = []
-          let freeDiamondGiftConsumeList = []
-          let flashChatConsumeList = []
-          let diamondUnblockConsumeList = []
-          let diamondGiftConsumeList = []
-          for (let i = 0; i < this.revenueDateList.length; i++) {
-            let key = this.revenueDateList[i]
-            let data = response.data.dateMap[key]
-            console.log(data)
-            memberList.push(data.member)
-            payList.push(data.pay)
-            arPuList.push(data.arPu)
-            arpPuList.push(data.arpPu)
-            memberSumList.push(data.memberSum)
-            flashChatSumList.push(data.flashChatSum)
-            diamondSumList.push(data.diamondSum)
-            freeFlashChatProduceList.push(data.freeFlashChatProduce)
-            freeDiamondProduceList.push(data.freeDiamondProduce)
-            flashChatProduceList.push(data.flashChatProduce)
-            diamondProduceList.push(data.diamondProduce)
-            freeFlashChatConsumeList.push(data.freeFlashChatConsume)
-            freeDiamondUnblockConsumeList.push(data.freeDiamondUnblockConsume)
-            freeDiamondGiftConsumeList.push(data.freeDiamondGiftConsume)
-            flashChatConsumeList.push(data.flashChatConsume)
-            diamondUnblockConsumeList.push(data.diamondUnblockConsume)
-            diamondGiftConsumeList.push(data.diamondGiftConsume)
-          }
-
-          let myChart = this.$echarts.init(this.$refs.revenueDataChart);
-          let option = {
-            title: {
-              text: 'Stacked Line'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            legend: {
-              data: ['会员渗透', '付费渗透', '付费深度-arpu', '付费深度-arpPu',
-                '充值流水-解锁会员', '充值流水-闪聊', '充值流水-钻石',
-                '道具产出-免费闪聊', '道具产出-免费钻石', '道具产出-付费闪聊', '道具产出-付费钻石',
-                '道具消耗-免费闪聊', '道具消耗-付费闪聊', '道具消耗-免费钻石解锁', '道具消耗-免费钻石赠送', '道具消耗-付费钻石解锁', '道具消耗-付费钻石赠送']
-            },
-            grid: {
-              left: '3%',
-              right: '4%',
-              bottom: '3%',
-              containLabel: true
-            },
-            toolbox: {
-              feature: {
-                saveAsImage: {}
-              }
-            },
-            xAxis: {
-              type: 'category',
-              boundaryGap: false,
-              data: this.revenueDateList
-            },
-            yAxis: {
-              type: 'value'
-            },
-            series: [
-              {
-                name: '会员渗透',
-                type: 'line',
-                stack: 'Total',
-                data: memberList
-              },
-              {
-                name: '付费渗透',
-                type: 'line',
-                stack: 'Total',
-                data: payList
-              },
-              {
-                name: '付费深度-arpu',
-                type: 'line',
-                stack: 'Total',
-                data: arPuList
-              },
-              {
-                name: '付费深度-arpPu',
-                type: 'line',
-                stack: 'Total',
-                data: arpPuList
-              },
-              {
-                name: '充值流水-解锁会员',
-                type: 'line',
-                stack: 'Total',
-                data: memberSumList
-              },
-              {
-                name: '充值流水-闪聊',
-                type: 'line',
-                stack: 'Total',
-                data: flashChatSumList
-              },
-              {
-                name: '充值流水-钻石',
-                type: 'line',
-                stack: 'Total',
-                data: diamondSumList
-              },
-              {
-                name: '道具产出-免费闪聊',
-                type: 'line',
-                stack: 'Total',
-                data: freeFlashChatProduceList
-              },
-              {
-                name: '道具产出-免费钻石',
-                type: 'line',
-                stack: 'Total',
-                data: freeDiamondProduceList
-              },
-              {
-                name: '道具产出-付费闪聊',
-                type: 'line',
-                stack: 'Total',
-                data: flashChatProduceList
-              },
-              {
-                name: '道具产出-付费钻石',
-                type: 'line',
-                stack: 'Total',
-                data: diamondProduceList
-              },
-              {
-                name: '道具消耗-免费闪聊',
-                type: 'line',
-                stack: 'Total',
-                data: freeFlashChatConsumeList
-              },
-              {
-                name: '道具消耗-付费闪聊',
-                type: 'line',
-                stack: 'Total',
-                data: flashChatConsumeList
-              },
-              {
-                name: '道具消耗-免费钻石解锁',
-                type: 'line',
-                stack: 'Total',
-                data: freeDiamondUnblockConsumeList
-              },
-              {
-                name: '道具消耗-免费钻石赠送',
-                type: 'line',
-                stack: 'Total',
-                data: freeDiamondGiftConsumeList
-              },
-              {
-                name: '道具消耗-付费钻石解锁',
-                type: 'line',
-                stack: 'Total',
-                data: diamondUnblockConsumeList
-              },
-              {
-                name: '道具消耗-付费钻石赠送',
-                type: 'line',
-                stack: 'Total',
-                data: diamondGiftConsumeList
-              }
-            ]
-          };
-          myChart.clear();
-          myChart.setOption(option);
-        }
-      })
-    },
-    initRevenueDataBarChart() {
-      this.revenueData({})
     },
     searchPaymentDepth() {
       let startDate = this.paymentDepthRange[0]
