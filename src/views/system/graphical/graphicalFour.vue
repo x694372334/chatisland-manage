@@ -91,8 +91,10 @@ export default {
       this.unLockCountList = []
       this.giftCountList = []
       consumeDepth(data).then(response => {
-        if (response.data.list) {
-          for (let i = 0; i < response.data.list.length; i++) {
+        if (response.code===200) {
+          let list =  response.data.list
+          let length = list.length>20? 20: list.length
+          for (let i = 0; i <length; i++) {
             let obj = response.data.list[i]
             this.userList.push(obj.nickName)
             this.contactCountList.push(obj.contactCount)
