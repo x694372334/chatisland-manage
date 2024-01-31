@@ -32,6 +32,14 @@ export function basicsAppData(data) {
   })
 }
 
+export function tableBasicsAppData(data) {
+  return request({
+    url: '/report/tableBasicsAppData',
+    method: 'POST',
+    data: data
+  })
+}
+
 export function profileSelectTransform(data) {
   return request({
     url: '/report/profileSelectTransform',
